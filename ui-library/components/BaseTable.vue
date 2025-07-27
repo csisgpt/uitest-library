@@ -12,5 +12,5 @@
 </template>
 
 <script lang="ts" setup>
-// no props for now
+defineProps<{}>()
 </script>
