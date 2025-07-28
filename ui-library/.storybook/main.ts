@@ -1,24 +1,21 @@
-import { StorybookConfig } from '@storybook/vue3-vite';
-import { mergeConfig } from 'vite';
-import vue from '@vitejs/plugin-vue';
-import path from 'path';
+import type { StorybookConfig } from "@storybook/vue3-vite";
 
 const config: StorybookConfig = {
-  stories: ['../components/**/*.stories.@(ts|js)'],
-  addons: ['@storybook/addon-essentials'],
+  stories: [
+    "../stories/**/*.mdx",
+    "../components/**/*.stories.@(js|jsx|ts|tsx)", // ✅ اضافه کردن این خط برای پوشه components
+    "../stories/**/*.stories.@(js|jsx|mjs|ts|tsx)",
+  ],
+  addons: [
+    "@chromatic-com/storybook",
+    "@storybook/addon-docs",
+    "@storybook/addon-onboarding",
+    "@storybook/addon-a11y",
+    "@storybook/addon-vitest",
+  ],
   framework: {
-    name: '@storybook/vue3-vite',
-    options: {}
-  },
-  viteFinal: async (config) => {
-    return mergeConfig(config, {
-      plugins: [vue()],
-      resolve: {
-        alias: {
-          '@': path.resolve(__dirname, '../'),
-        },
-      },
-    });
+    name: "@storybook/vue3-vite",
+    options: {},
   },
 };
 export default config;

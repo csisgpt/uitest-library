@@ -1,0 +1,4 @@
+:root {
+  --transition-fast: 150ms ease-in-out;
+  --transition-base: 250ms ease-in-out;
+}

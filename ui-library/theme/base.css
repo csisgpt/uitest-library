@@ -1,6 +1,15 @@
-:root {
-  --color-primary: #42b883;
-  --color-on-primary: #ffffff;
-  --spacing-md: 0.5rem 1rem;
-  --radius-md: 4px;
+@import './tokens/colors.css';
+@import './tokens/spacing.css';
+@import './tokens/radius.css';
+@import './tokens/typography.css';
+@import './tokens/shadows.css';
+@import './tokens/zindex.css';
+@import './tokens/transitions.css';
+@import './tokens/border.css';
+
+* {
+  font-family: IRANYekanX;
+  font-feature-settings: "ss02";
+  -moz-font-feature-settings: "ss02";
+  -webkit-font-feature-settings: "ss02";
 }

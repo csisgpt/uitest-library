@@ -1,2 +1,13 @@
+
 @import './base.css';
 @import './themes/light.css';
+@import './themes/dark.css';
+@import "./fonts/IRANYekanX/Webfonts/fontiran.css" ;
+
+@import './base.css';
+@import './themes/light.css'; /* default theme */
+
+/* Optional: theme switch via data-theme */
+[data-theme='dark'] {
+  @import './themes/dark.css';
+}
