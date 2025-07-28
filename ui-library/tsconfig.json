@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "strict": true,
+    "jsx": "preserve",
+    "esModuleInterop": true,
+    "lib": ["dom", "esnext"],
+    "types": ["vite/client"],
+    "baseUrl": ".",
+    "paths": {
+      "ui-library": ["./index.ts"],
+      "ui-library/*": ["./*"],
+    },
+    "declaration": true,
+    "declarationDir": "types"
+  },
+  "include": ["components/**/*", "index.ts", "types/index.d.ts"],
+  "exclude": ["node_modules", "dist", "demo"]
+}

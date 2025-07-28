@@ -1,0 +1,6 @@
+[data-theme="light"] {
+  --color-primary: #42b883;
+  --color-on-primary: #ffffff;
+  background-color: #ffffff;
+  color: #000000;
+}

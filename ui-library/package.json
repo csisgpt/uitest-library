@@ -1,0 +1,24 @@
+{
+  "name": "ui-library",
+  "version": "0.1.0",
+  "main": "dist/ui-library.umd.js",
+  "module": "dist/ui-library.es.js",
+  "types": "types/index.d.ts",
+  "scripts": {
+    "dev": "vite --config vite.config.ts",
+    "build": "vite build",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build",
+    "preview": "vite preview",
+    "demo": "vite --config demo/vite.config.ts"
+  },
+  "dependencies": {
+    "vue": "^3.0.0"
+  },
+  "devDependencies": {
+    "@storybook/vue3": "^7.0.0",
+    "@vitejs/plugin-vue": "^4.0.0",
+    "typescript": "^5.0.0",
+    "vite": "^4.0.0"
+  }
+}
