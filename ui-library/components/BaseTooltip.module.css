@@ -1,0 +1,82 @@
+.wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip {
+  position: absolute;
+  background: var(--color-surface);
+  color: var(--color-text);
+  padding: var(--space-sm);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-md);
+  font-size: var(--font-size-sm);
+  font-family: var(--font-family-base);
+  max-width: calc(var(--space-2xl) * 5);
+  z-index: var(--tooltip-z-index, var(--z-index-tooltip));
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+  white-space: normal;
+}
+
+.isVisible {
+  opacity: 1;
+}
+
+.position-top {
+  bottom: calc(100% + var(--tooltip-offset, var(--space-sm)));
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.position-bottom {
+  top: calc(100% + var(--tooltip-offset, var(--space-sm)));
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.position-left {
+  right: calc(100% + var(--tooltip-offset, var(--space-sm)));
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.position-right {
+  left: calc(100% + var(--tooltip-offset, var(--space-sm)));
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.arrow {
+  position: absolute;
+  width: var(--space-sm);
+  height: var(--space-sm);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-md);
+  transform: rotate(45deg);
+}
+
+.position-top .arrow {
+  top: 100%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.position-bottom .arrow {
+  bottom: 100%;
+  left: 50%;
+  transform: translate(-50%, 50%) rotate(45deg);
+}
+
+.position-left .arrow {
+  left: 100%;
+  top: 50%;
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.position-right .arrow {
+  right: 100%;
+  top: 50%;
+  transform: translate(50%, -50%) rotate(45deg);
+}
