@@ -1,0 +1,95 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background-color: var(--modal-overlay-bg);
+  z-index: var(--z-index-modal);
+}
+
+.wrapper {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: var(--z-index-modal);
+}
+
+.wrapperFullscreen {
+  align-items: stretch;
+  justify-content: stretch;
+}
+
+.box {
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  width: var(--modal-width);
+  padding: var(--space-xl);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  border: var(--border-width) var(--border-style) var(--color-border);
+  display: flex;
+  flex-direction: column;
+}
+
+.fullscreen {
+  width: var(--modal-fullscreen-width);
+  height: var(--modal-fullscreen-height);
+  border-radius: var(--modal-fullscreen-radius);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: var(--space-md);
+  margin-bottom: var(--space-lg);
+  border-bottom: var(--border-width) var(--border-style) var(--color-border);
+}
+
+.title {
+  margin: 0;
+}
+
+.close {
+  width: var(--space-2xl);
+  height: var(--space-2xl);
+  background-color: var(--modal-close-bg, transparent);
+  border: var(--modal-close-border, none);
+  color: var(--color-text);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.body {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  margin-bottom: var(--space-lg);
+}
+
+.footer {
+  padding-top: var(--space-md);
+  border-top: var(--border-width) var(--border-style) var(--color-border);
+}
+
+:global(.modal-enter-active),
+:global(.modal-leave-active) {
+  transition: opacity var(--transition-base), transform var(--transition-base);
+}
+
+:global(.modal-enter-from),
+:global(.modal-leave-to) {
+  opacity: 0;
+  transform: scale(0.95);
+}
+
+:global(.overlay-enter-active),
+:global(.overlay-leave-active) {
+  transition: opacity var(--transition-base);
+}
+
+:global(.overlay-enter-from),
+:global(.overlay-leave-to) {
+  opacity: 0;
+}
