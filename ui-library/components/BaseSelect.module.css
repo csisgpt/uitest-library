@@ -157,3 +157,29 @@
   color: var(--color-muted);
   font-size: var(--font-size-sm);
 }
+
+.dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: var(--space-xs);
+  border: var(--border-width) var(--border-style) var(--color-border);
+  background: var(--color-surface);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: var(--z-index-dropdown, 10);
+  transition: opacity var(--transition-fast), transform var(--transition-fast);
+  opacity: 0;
+  transform: translateY(-4px);
+  pointer-events: none;
+}
+
+.dropdown[v-cloak], 
+.dropdown[v-show] {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: all;
+}

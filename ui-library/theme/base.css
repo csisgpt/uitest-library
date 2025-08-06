@@ -1,12 +1,12 @@
-@import './tokens/colors.css';
-@import './tokens/spacing.css';
-@import './tokens/radius.css';
-@import './tokens/typography.css';
-@import './tokens/shadows.css';
-@import './tokens/zindex.css';
-@import './tokens/transitions.css';
-@import './tokens/border.css';
-
+@import "./tokens/colors.css";
+@import "./tokens/spacing.css";
+@import "./tokens/radius.css";
+@import "./tokens/typography.css";
+@import "./tokens/shadows.css";
+@import "./tokens/zindex.css";
+@import "./tokens/transitions.css";
+@import "./tokens/border.css";
+@import "./tokens/animations.css";
 * {
   font-family: IRANYekanX;
   font-feature-settings: "ss02";

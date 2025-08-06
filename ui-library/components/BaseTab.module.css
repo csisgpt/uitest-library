@@ -1,12 +1,23 @@
 .tabWrapper {
   display: flex;
   flex-direction: column;
+  width: 100%;
 }
 
 .tabList {
   display: flex;
+  align-items: center;
   gap: var(--space-sm);
   overflow-x: auto;
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: var(--space-xs);
+  margin-bottom: var(--space-sm);
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+}
+
+.tabList::-webkit-scrollbar {
+  display: none;
 }
 
 .tabItem {
@@ -14,16 +25,21 @@
   border: none;
   padding: var(--space-sm) var(--space-md);
   color: var(--color-text);
-  cursor: pointer;
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
   border-radius: var(--radius-md);
+  cursor: pointer;
   transition: background-color var(--transition-fast), color var(--transition-fast);
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
 }
 
 .tabItem:hover:not(.tabItem--disabled) {
   color: var(--color-primary);
+  background-color: rgba(66, 184, 131, 0.08); /* subtle primary tint */
 }
 
 .tabItem--active {
@@ -33,11 +49,13 @@
 .tabItem--disabled {
   color: var(--color-disabled-text);
   cursor: not-allowed;
+  opacity: 0.6;
 }
 
 .tabIcon {
   margin-inline-end: var(--space-xs);
   display: inline-flex;
+  font-size: 1.2em;
 }
 
 .stacked {
@@ -50,18 +68,29 @@
 
 .tabContent {
   padding: var(--space-md) 0;
-}
-
-.variant-underline {
-  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text);
+  font-size: var(--font-size-md);
+  line-height: 1.6;
 }
 
 .variant-underline .tabItem {
   border-radius: 0;
+  position: relative;
 }
 
-.variant-underline .tabItem--active {
-  border-bottom: 2px solid var(--color-primary);
+.variant-underline .tabItem--active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: var(--color-primary);
+  border-radius: var(--radius-full);
+}
+
+.variant-pill .tabItem {
+  background-color: transparent;
 }
 
 .variant-pill .tabItem--active {
@@ -77,11 +106,13 @@
   border: 1px solid var(--color-border);
   border-bottom: none;
   border-radius: var(--radius-md) var(--radius-md) 0 0;
+  background-color: var(--color-surface);
 }
 
 .variant-card .tabItem--active {
-  background: var(--color-surface);
+  background: var(--color-background);
   border-color: var(--color-primary);
+  color: var(--color-primary);
 }
 
 .align-start {
