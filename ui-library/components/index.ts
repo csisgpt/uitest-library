@@ -12,3 +12,4 @@ export { default as BaseTab } from './BaseTab/BaseTab.vue';
 export { default as BaseTextarea } from './BaseTextarea/BaseTextarea.vue';
 export { default as BaseTooltip } from './BaseTooltip/BaseTooltip.vue';
 export { default as RichTextEditor } from './RichTextEditor/RichTextEditor.vue';
+export { default as BaseFormField } from './BaseFormField/BaseFormField.vue';
