@@ -1,0 +1,102 @@
+.container {
+  --sd-spacing: var(--space-xl);
+  --sd-size: 3rem;
+  --sd-radius: var(--radius-full);
+  --sd-circle-radius: 4rem;
+  position: fixed;
+}
+
+.top-left {
+  top: var(--sd-spacing);
+  left: var(--sd-spacing);
+}
+.top-right {
+  top: var(--sd-spacing);
+  right: var(--sd-spacing);
+}
+.bottom-left {
+  bottom: var(--sd-spacing);
+  left: var(--sd-spacing);
+}
+.bottom-right {
+  bottom: var(--sd-spacing);
+  right: var(--sd-spacing);
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+
+.button {
+  width: var(--sd-size);
+  height: var(--sd-size);
+  border-radius: var(--sd-radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  border: none;
+  cursor: pointer;
+}
+
+.action {
+  width: var(--sd-size);
+  height: var(--sd-size);
+  border-radius: var(--sd-radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  border: none;
+  cursor: pointer;
+}
+
+.item {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  pointer-events: none;
+  transform: var(--_transform, scale(0));
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.open .item {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.noTransition .item {
+  transition: none;
+}
+
+.tooltip {
+  position: absolute;
+  white-space: nowrap;
+  top: 50%;
+  right: calc(100% + var(--space-sm));
+  transform: translateY(-50%);
+  background: var(--color-surface);
+  color: var(--color-text);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+}
+
+.left .tooltip {
+  left: calc(100% + var(--space-sm));
+  right: auto;
+}
+
+.up .tooltip,
+.down .tooltip {
+  left: 50%;
+  transform: translateX(-50%);
+  top: auto;
+  bottom: calc(100% + var(--space-sm));
+}
