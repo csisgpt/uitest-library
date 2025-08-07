@@ -1,0 +1,70 @@
+.splitButton {
+  display: inline-flex;
+  position: relative;
+}
+
+.main {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.toggle {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  padding-inline: var(--space-sm);
+}
+
+.caret {
+  font-size: 0.75em;
+}
+
+.icon {
+  margin-inline-end: var(--space-sm);
+}
+
+.menu {
+  position: absolute;
+  top: calc(100% + var(--space-xs));
+  right: 0;
+  min-width: 100%;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  padding: var(--space-xs) 0;
+  z-index: 10;
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  cursor: pointer;
+}
+
+.menuItem:hover,
+.focused {
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+}
+
+.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.itemIcon {
+  font-size: var(--font-size-sm);
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+  transform: translateY(-0.25rem);
+}
