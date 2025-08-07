@@ -1,0 +1,40 @@
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+  padding: var(--space-xs);
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+
+.button {
+  border: none;
+  background: transparent;
+  padding: var(--space-xs);
+  cursor: pointer;
+  color: var(--color-text);
+  transition: background var(--transition-fast, 0.2s);
+  border-radius: var(--radius-sm);
+}
+
+.button:hover {
+  background: var(--color-border);
+}
+
+.button.active {
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.color {
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0;
+  border: none;
+  background: transparent;
+}
