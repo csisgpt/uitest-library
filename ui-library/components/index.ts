@@ -15,6 +15,6 @@ export { default as BaseToggleButton } from './BaseToggleButton/BaseToggleButton
 export { default as BaseTooltip } from './BaseTooltip/BaseTooltip.vue';
 export { default as RichTextEditor } from './RichTextEditor/RichTextEditor.vue';
 export { default as BaseFormField } from './BaseFormField/BaseFormField.vue';
-
+export { default as BaseSpeedDial } from './BaseSpeedDial/BaseSpeedDial.vue';
 export { default as BaseImage } from './BaseImage/BaseImage.vue';
 export { default as BaseIcon } from './BaseIcon/BaseIcon.vue';
