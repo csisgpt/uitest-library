@@ -3,7 +3,7 @@ import type { StorybookConfig } from "@storybook/vue3-vite";
 const config: StorybookConfig = {
   stories: [
     "../stories/**/*.mdx",
-    "../components/**/*.stories.@(js|jsx|ts|tsx)", // ✅ اضافه کردن این خط برای پوشه components
+    "../components/**/**/*.stories.ts",
     // "../stories/**/*.stories.@(js|jsx|mjs|ts|tsx)",
   ],
   addons: [
