@@ -5,6 +5,7 @@ export { default as BaseDropdown } from './BaseDropdown/BaseDropdown.vue';
 export { default as BaseInput } from './BaseInput/BaseInput.vue';
 export { default as BaseModal } from './BaseModal/BaseModal.vue';
 export { default as BaseSelect } from './BaseSelect/BaseSelect.vue';
+export { default as BaseRadio } from './BaseRadio/BaseRadio.vue';
 export { default as BaseSwitch } from './BaseSwitch/BaseSwitch.vue';
 export { default as BaseTab } from './BaseTab/BaseTab.vue';
 export { default as BaseTextarea } from './BaseTextarea/BaseTextarea.vue';
