@@ -1,0 +1,37 @@
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+  padding: var(--space-xs);
+  border-bottom: var(--border-width) var(--border-style) var(--color-border);
+  background-color: var(--color-surface);
+}
+
+.button {
+  background: none;
+  border: var(--border-width) var(--border-style) transparent;
+  color: var(--color-text);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: var(--transition-base);
+}
+
+.button:hover {
+  background-color: var(--color-muted-bg);
+}
+
+.button:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.button.active {
+  background-color: var(--color-primary);
+  color: var(--color-on-primary, #fff);
+}
