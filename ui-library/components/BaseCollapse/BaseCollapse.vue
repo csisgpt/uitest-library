@@ -213,30 +213,30 @@ export const BaseCollapseGroup = defineComponent({
     }
 
     return () =>
-      h('div', {},
-        groupProps.items.map((item) => {
-          const contentSlot = slots[`item-${item.key}`];
-          const iconSlot = slots[`icon-${item.key}`];
-          const iconVNode = iconSlot ? iconSlot()[0] : item.icon;
-          return h(
-            BaseCollapseComponent,
-            {
-              key: item.key,
-              title: item.title,
-              icon: iconVNode as any,
-              modelValue: openKeys.value.includes(item.key),
-              transition: groupProps.transition,
-              disabled: item.disabled,
-              onUpdate:modelValue: (val: boolean) => toggle(item.key, val),
-            },
-            contentSlot
-              ? { default: () => contentSlot() }
-              : item.content
-              ? { default: () => item.content as any }
-              : undefined
-          );
-        })
+  h('div', {},
+    groupProps.items.map((item) => {
+      const contentSlot = slots[`item-${item.key}`];
+      const iconSlot = slots[`icon-${item.key}`];
+      const iconVNode = iconSlot ? iconSlot()[0] : item.icon;
+      return h(
+        BaseCollapseComponent,
+        {
+          key: item.key,
+          title: item.title,
+          icon: iconVNode as any,
+          modelValue: openKeys.value.includes(item.key),
+          transition: groupProps.transition,
+          disabled: item.disabled,
+          ['onUpdate:modelValue']: (val: boolean) => toggle(item.key, val), // ✅ این درسته
+        },
+        contentSlot
+          ? { default: () => contentSlot() }
+          : item.content
+          ? { default: () => item.content as any }
+          : undefined
       );
+    })
+  );
   },
 });
 </script>

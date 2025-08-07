@@ -1,5 +1,5 @@
 import BaseTooltip from './BaseTooltip.vue'
-import BaseButton from './BaseButton.vue'
+import BaseButton from '../BaseButton/BaseButton.vue'
 import type { Meta, StoryFn } from '@storybook/vue3'
 import { ref } from 'vue'
 
