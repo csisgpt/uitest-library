@@ -1,0 +1,16 @@
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--icon-color, currentColor);
+  width: var(--icon-size);
+  height: var(--icon-size);
+  --icon-size-sm: 1rem;
+  --icon-size-md: 1.5rem;
+  --icon-size-lg: 2rem;
+  --icon-size: var(--icon-size-md);
+}
+
+.sm { --icon-size: var(--icon-size-sm); }
+.md { --icon-size: var(--icon-size-md); }
+.lg { --icon-size: var(--icon-size-lg); }
