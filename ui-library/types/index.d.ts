@@ -9,3 +9,4 @@ export { default as BaseSwitch } from '../components/BaseSwitch/BaseSwitch.vue';
 export { default as BaseTab } from '../components/BaseTab/BaseTab.vue';
 export { default as BaseTextarea } from '../components/BaseTextarea/BaseTextarea.vue';
 export { default as BaseTooltip } from '../components/BaseTooltip/BaseTooltip.vue';
+export { default as RichTextEditor } from '../components/RichTextEditor/RichTextEditor.vue';

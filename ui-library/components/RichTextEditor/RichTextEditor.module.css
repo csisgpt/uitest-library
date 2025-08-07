@@ -1,0 +1,25 @@
+.wrapper {
+  border: 1px solid var(--color-border);
+  background: var(--color-background);
+  color: var(--color-text);
+  display: flex;
+  flex-direction: column;
+}
+
+.editor {
+  min-height: 200px;
+  padding: var(--space-md);
+  line-height: 1.5;
+  outline: none;
+}
+
+.editor:empty:before {
+  content: attr(data-placeholder);
+  color: var(--color-muted);
+  pointer-events: none;
+}
+
+.editor[contenteditable='false'] {
+  background: var(--color-disabled-bg);
+  color: var(--color-disabled-text);
+}
