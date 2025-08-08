@@ -1,7 +1,8 @@
 // AdvancedDataTable.stories.ts - Storybook stories for AdvancedDataTable
 import AdvancedDataTable from './AdvancedDataTable.vue';
 import type { Meta, StoryFn } from '@storybook/vue3';
-import type { Column, Pagination } from './types';
+import type { Column, Pagination, SortState } from './types';
+import { ref } from 'vue';
 
 export default {
   title: 'Components/AdvancedDataTable',
@@ -135,4 +136,130 @@ AllColumnTypes.args = {
   pagination: { page: 1, pageSize: 10, total: 2 },
   selectionMode: null,
   loading: false,
+};
+
+export const RowExpansion: StoryFn<typeof AdvancedDataTable> = args => ({
+  components: { AdvancedDataTable },
+  setup() {
+    return { args };
+  },
+  template: `
+    <AdvancedDataTable v-bind="args">
+      <template #rowExpansion="{ row }">
+        <div style="padding:8px;">Expanded content for {{ row.name }}</div>
+      </template>
+    </AdvancedDataTable>
+  `,
+});
+
+RowExpansion.args = {
+  columns: sampleColumns,
+  data: sampleData,
+  expansionMode: 'multiple',
+};
+
+export const ColumnResizingReordering: StoryFn<typeof AdvancedDataTable> = args => ({
+  components: { AdvancedDataTable },
+  setup() {
+    return { args };
+  },
+  template: '<AdvancedDataTable v-bind="args" />',
+});
+
+ColumnResizingReordering.args = {
+  columns: sampleColumns,
+  data: sampleData,
+};
+
+export const MultiColumnSorting: StoryFn<typeof AdvancedDataTable> = args => ({
+  components: { AdvancedDataTable },
+  setup() {
+    return { args };
+  },
+  template: '<AdvancedDataTable v-bind="args" />',
+});
+
+MultiColumnSorting.args = {
+  columns: sampleColumns,
+  data: sampleData,
+};
+
+export const StickyHeaderFooter: StoryFn<typeof AdvancedDataTable> = args => ({
+  components: { AdvancedDataTable },
+  setup() {
+    return { args };
+  },
+  template: '<div style="height:300px;overflow:auto;"><AdvancedDataTable v-bind="args" /></div>',
+});
+
+StickyHeaderFooter.args = {
+  columns: sampleColumns,
+  data: sampleData,
+  stickyHeader: true,
+  stickyFooter: true,
+  pagination: defaultPagination,
+};
+
+export const VirtualScrolling: StoryFn<typeof AdvancedDataTable> = args => ({
+  components: { AdvancedDataTable },
+  setup() {
+    return { args };
+  },
+  template: '<AdvancedDataTable v-bind="args" />',
+});
+
+const largeData = Array.from({ length: 1000 }).map((_, i) => ({
+  id: i + 1,
+  name: `Name ${i + 1}`,
+  salary: 1000 + i,
+  hireDate: '2023-01-01',
+  active: i % 2 === 0,
+  resume: '#',
+}));
+
+VirtualScrolling.args = {
+  columns: sampleColumns,
+  data: largeData,
+  virtualScroll: true,
+};
+
+export const LazyLoading: StoryFn<typeof AdvancedDataTable> = args => ({
+  components: { AdvancedDataTable },
+  setup() {
+    const sort: SortState[] = [];
+    return { args, sort };
+  },
+  template: '<AdvancedDataTable v-bind="args" @lazy-load="onLazy" />',
+  methods: {
+    onLazy(e: any) {
+      console.log('lazy load', e);
+    },
+  },
+});
+
+LazyLoading.args = {
+  columns: sampleColumns,
+  data: sampleData,
+  lazy: true,
+  pagination: defaultPagination,
+};
+
+export const ExportButtons: StoryFn<typeof AdvancedDataTable> = args => ({
+  components: { AdvancedDataTable },
+  setup() {
+    const tableRef = ref();
+    return { args, tableRef };
+  },
+  template: `
+    <div>
+      <button @click="tableRef.exportCSV()">CSV</button>
+      <button @click="tableRef.exportExcel()">Excel</button>
+      <AdvancedDataTable ref="tableRef" v-bind="args" />
+    </div>
+  `,
+});
+
+ExportButtons.args = {
+  columns: sampleColumns,
+  data: sampleData,
 };

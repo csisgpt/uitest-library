@@ -26,3 +26,12 @@ export interface SortState {
 }
 
 export type FilterModel = Record<string, any>;
+
+export interface LazyLoadEvent {
+  page: number;
+  pageSize: number;
+  sort: SortState[];
+  filters: FilterModel;
+}
+
+export type RowExpansionMode = 'single' | 'multiple';

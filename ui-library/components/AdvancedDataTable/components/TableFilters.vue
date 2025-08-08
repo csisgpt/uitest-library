@@ -1,6 +1,7 @@
 <!-- TableFilters.vue - Renders filter inputs for filterable columns -->
 <template>
   <tr>
+    <th v-if="hasRowExpansion"></th>
     <th v-for="col in columns" :key="col.field">
       <input
         v-if="col.filterable"
@@ -16,7 +17,7 @@
 import { ref, watch } from 'vue';
 import type { Column, FilterModel } from '../types';
 
-const props = defineProps<{ columns: Column[]; model: FilterModel }>();
+const props = defineProps<{ columns: Column[]; model: FilterModel; hasRowExpansion: boolean }>();
 const emit = defineEmits<{ (e: 'filter', model: FilterModel): void }>();
 
 const local = ref<Record<string, string>>({ ...props.model });
