@@ -1,5 +1,6 @@
 // AdvancedDataTable.stories.ts - Final demo stories for AdvancedDataTable
 import AdvancedDataTable from './AdvancedDataTable.vue';
+import BaseButton from '../BaseButton/BaseButton.vue';
 import type { Meta, StoryFn } from '@storybook/vue3';
 import { ref } from 'vue';
 import { datasetColumns, generateDataset } from './utils/datasetGenerator';
@@ -142,6 +143,33 @@ export const CustomStates: StoryFn<typeof AdvancedDataTable> = () => ({
     <AdvancedDataTable :columns="columns" :data="data" :loading="loading">
       <template #emptyState><div>No data!</div></template>
       <template #loadingState><div>Loading please wait...</div></template>
+    </AdvancedDataTable>
+  `,
+});
+
+// Row action buttons using custom slot
+export const WithActions: StoryFn<typeof AdvancedDataTable> = () => ({
+  components: { AdvancedDataTable, BaseButton },
+  setup() {
+    const data = generateDataset(5);
+    const columns = [
+      ...datasetColumns,
+      { field: 'actions', header: 'Actions', type: 'slot', slotName: 'actions' },
+    ];
+    function onEdit(payload: any) {
+      console.log('edit', payload);
+    }
+    function onDelete(payload: any) {
+      console.log('delete', payload);
+    }
+    return { data, columns, onEdit, onDelete };
+  },
+  template: `
+    <AdvancedDataTable :columns="columns" :data="data" @edit="onEdit" @delete="onDelete">
+      <template #actions="{ row, index }">
+        <BaseButton variant="primary" @click.stop="$emit('edit', { row, index })">Edit</BaseButton>
+        <BaseButton variant="danger" @click.stop="$emit('delete', { row, index })">Delete</BaseButton>
+      </template>
     </AdvancedDataTable>
   `,
 });

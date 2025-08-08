@@ -38,6 +38,13 @@
   color: var(--color-text);
 }
 
+/* Wrapper for custom slot content to align action buttons */
+.slot-container {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
 .selected {
   background: var(--table-row-selected-bg);
 }

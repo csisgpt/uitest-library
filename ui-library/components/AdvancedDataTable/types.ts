@@ -14,6 +14,7 @@ export interface Column {
   filterSlotName?: string;
   width?: string;
   align?: 'left' | 'center' | 'right';
+  /** Slot name for custom cell rendering when type is 'slot' */
   slotName?: string;
   formatOptions?: Record<string, any>;
 }
@@ -49,3 +50,17 @@ export interface ServerRequestQuery {
 }
 
 export type RowExpansionMode = 'single' | 'multiple';
+
+/** Props passed to custom column slots (e.g. action buttons) */
+export interface DataTableColumnSlotProps<Row = any> {
+  row: Row;
+  index: number;
+}
+
+/** Props passed to generic cell slots using "cell-<field>" naming */
+export interface DataTableCellSlotProps<Row = any, Value = any> {
+  row: Row;
+  value: Value;
+  column: Column;
+  index: number;
+}

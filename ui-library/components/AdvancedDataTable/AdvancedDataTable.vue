@@ -92,6 +92,7 @@ import type {
   RowExpansionMode,
   LazyLoadEvent,
   ServerRequestQuery,
+  DataTableColumnSlotProps,
 } from './types';
 import TableHeader from './components/TableHeader.vue';
 import TableBody from './components/TableBody.vue';
@@ -129,6 +130,9 @@ const emit = defineEmits<{
   (e: 'column-reorder', columns: Column[]): void;
   (e: 'lazy-load', evt: LazyLoadEvent): void;
   (e: 'server-request', query: ServerRequestQuery): void;
+  (e: 'edit', payload: DataTableColumnSlotProps): void;
+  (e: 'delete', payload: DataTableColumnSlotProps): void;
+  (e: 'add'): void;
 }>();
 
 const sortState = ref<SortState[]>([]);

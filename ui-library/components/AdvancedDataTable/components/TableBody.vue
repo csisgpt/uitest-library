@@ -43,7 +43,13 @@
           :style="{ textAlign: defaultAlign(col) }"
         >
           <template v-if="slots[`cell-${col.field}`]">
-            <component :is="slots[`cell-${col.field}`]" :row="row" :value="row[col.field]" :column="col" />
+            <component
+              :is="slots[`cell-${col.field}`]"
+              :row="row"
+              :value="row[col.field]"
+              :column="col"
+              :index="rowIndex"
+            />
           </template>
           <template v-else-if="col.type === 'number'">
             {{ formatNumber(row[col.field], undefined, col.formatOptions) }}
@@ -73,7 +79,9 @@
           <template
             v-else-if="col.type === 'slot' && col.slotName && slots[col.slotName]"
           >
-            <component :is="slots[col.slotName]" :row="row" />
+            <div :class="styles['slot-container']" @click.stop>
+              <component :is="slots[col.slotName]" :row="row" :index="rowIndex" />
+            </div>
           </template>
           <template v-else>
             {{ row[col.field] }}
