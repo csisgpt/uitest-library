@@ -3,7 +3,7 @@
   <div :class="[styles.root, stickyHeader ? styles['sticky-header'] : '', stickyFooter ? styles['sticky-footer'] : '']">
     <template v-if="virtualScroll">
       <TableVirtualScroller :rows="processedData" :row-height="rowHeight" :height="virtualHeight" v-slot="{ rows }">
-        <table :class="styles.table">
+        <table :class="styles.table" role="table">
           <thead>
             <TableHeader
               :columns="internalColumns"
@@ -30,15 +30,15 @@
             :model-value="selection"
             :expansion-mode="expansionMode"
             @update:modelValue="onSelection"
-            @row-expand="row => emit('row-expand', row)"
-            @row-collapse="row => emit('row-collapse', row)"
+            @row-expand="onRowExpand"
+            @row-collapse="onRowCollapse"
             v-slots="$slots"
           />
         </table>
       </TableVirtualScroller>
     </template>
     <template v-else>
-      <table :class="styles.table">
+      <table :class="styles.table" role="table">
         <thead>
           <TableHeader
             :columns="internalColumns"
@@ -65,8 +65,8 @@
           :model-value="selection"
           :expansion-mode="expansionMode"
           @update:modelValue="onSelection"
-          @row-expand="row => emit('row-expand', row)"
-          @row-collapse="row => emit('row-collapse', row)"
+          @row-expand="onRowExpand"
+          @row-collapse="onRowCollapse"
           v-slots="$slots"
         />
       </table>
@@ -91,13 +91,15 @@ import type {
   FilterModel,
   RowExpansionMode,
   LazyLoadEvent,
+  ServerRequestQuery,
 } from './types';
 import TableHeader from './components/TableHeader.vue';
 import TableBody from './components/TableBody.vue';
 import TableFooter from './components/TableFooter.vue';
 import TableFilters from './components/TableFilters.vue';
 import TableVirtualScroller from './components/TableVirtualScroller.vue';
-import { exportCSV, exportExcel } from './utils/exporters';
+import { exportCSV, exportExcel } from './utils/exportUtils';
+import { applyFilters } from './utils/filterUtils';
 
 const props = defineProps<{
   columns: Column[];
@@ -111,6 +113,9 @@ const props = defineProps<{
   virtualScroll?: boolean;
   lazy?: boolean;
   expansionMode?: RowExpansionMode;
+  serverMode?: boolean;
+  exportFilename?: string;
+  exportSheetName?: string;
 }>();
 
 const emit = defineEmits<{
@@ -123,12 +128,14 @@ const emit = defineEmits<{
   (e: 'column-resize', widths: Record<string, string | undefined>): void;
   (e: 'column-reorder', columns: Column[]): void;
   (e: 'lazy-load', evt: LazyLoadEvent): void;
+  (e: 'server-request', query: ServerRequestQuery): void;
 }>();
 
 const sortState = ref<SortState[]>([]);
 const filters = ref<FilterModel>({});
 
 const selection = ref<any[]>(props.modelValue ?? []);
+const expandedRows = ref<any[]>([]);
 const slots = useSlots();
 watch(
   () => props.modelValue,
@@ -161,16 +168,7 @@ const hasRowExpansion = computed(() => !!slots.rowExpansion);
 
 const filteredData = computed(() => {
   if (props.lazy) return props.data;
-  if (!Object.keys(filters.value).length) return props.data;
-  return props.data.filter(row => {
-    return Object.entries(filters.value).every(([field, value]) => {
-      if (value == null || value === '') return true;
-      const cell = row[field as keyof typeof row];
-      return String(cell ?? '')
-        .toLowerCase()
-        .includes(String(value).toLowerCase());
-    });
-  });
+  return applyFilters(props.data, filters.value, internalColumns.value);
 });
 
 const sortedData = computed(() => {
@@ -227,18 +225,21 @@ function onSort(payload: { field: string; append: boolean }) {
   }
   emit('sort', sortState.value);
   if (props.lazy) emitLazy();
+  if (props.serverMode) emitServerRequest();
 }
 
 function onFilter(model: FilterModel) {
   filters.value = model;
   emit('filter', model);
   if (props.lazy) emitLazy();
+  if (props.serverMode) emitServerRequest();
 }
 
 function onPagination(pag: Pagination) {
   paginationState.value = pag;
   emit('update:pagination', pag);
   if (props.lazy) emitLazy();
+  if (props.serverMode) emitServerRequest();
 }
 
 function onSelection(val: any[]) {
@@ -263,6 +264,18 @@ function onColumnReorder(payload: { from: number; to: number }) {
   emit('column-reorder', internalColumns.value);
 }
 
+function onRowExpand(row: any) {
+  if (!expandedRows.value.includes(row)) expandedRows.value.push(row);
+  emit('row-expand', row);
+  if (props.serverMode) emitServerRequest();
+}
+
+function onRowCollapse(row: any) {
+  expandedRows.value = expandedRows.value.filter(r => r !== row);
+  emit('row-collapse', row);
+  if (props.serverMode) emitServerRequest();
+}
+
 function emitLazy() {
   const evt: LazyLoadEvent = {
     page: paginationState.value?.page || 1,
@@ -273,16 +286,49 @@ function emitLazy() {
   emit('lazy-load', evt);
 }
 
+function emitServerRequest() {
+  const query: ServerRequestQuery = {
+    page: paginationState.value?.page || 1,
+    pageSize: paginationState.value?.pageSize || props.data.length,
+    sort: sortState.value,
+    filters: filters.value,
+    expandedRows: [...expandedRows.value],
+  };
+  emit('server-request', query);
+}
+
 const rowHeight = 40;
 const virtualHeight = 400;
 const processedData = computed(() => paginatedData.value);
 
-function exportCSVFn() {
-  exportCSV(internalColumns.value, sortedData.value);
+type ExportMode = 'current' | 'filtered' | 'all';
+
+function getExportData(mode: ExportMode) {
+  switch (mode) {
+    case 'all':
+      return props.data;
+    case 'filtered':
+      return sortedData.value;
+    default:
+      return paginatedData.value;
+  }
 }
 
-function exportExcelFn() {
-  exportExcel(internalColumns.value, sortedData.value);
+function exportCSVFn(mode: ExportMode = 'current') {
+  exportCSV(
+    internalColumns.value,
+    getExportData(mode),
+    props.exportFilename || 'export.csv'
+  );
+}
+
+function exportExcelFn(mode: ExportMode = 'current') {
+  exportExcel(
+    internalColumns.value,
+    getExportData(mode),
+    props.exportFilename?.replace(/\.csv$/i, '.xls') || 'export.xls',
+    props.exportSheetName || 'Sheet1'
+  );
 }
 
 defineExpose({ exportCSV: exportCSVFn, exportExcel: exportExcelFn });

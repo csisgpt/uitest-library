@@ -1,24 +1,37 @@
 <!-- TableBody.vue - Renders table body rows and handles selection -->
 <template>
-  <tbody>
+  <tbody role="rowgroup">
     <tr v-if="loading" :class="styles.loading">
-      <td :colspan="colspan">Loading...</td>
+      <td :colspan="colspan">
+        <slot name="loadingState">Loading...</slot>
+      </td>
     </tr>
     <tr v-else-if="empty" :class="styles.empty">
-      <td :colspan="colspan">No records found</td>
+      <td :colspan="colspan">
+        <slot name="emptyState">No records found</slot>
+      </td>
     </tr>
     <template v-else>
       <tr
         v-for="(row, rowIndex) in rows"
         :key="rowIndex"
         :class="[styles.row, { [styles.selected]: isSelected(row) }]"
+        role="row"
+        :aria-selected="isSelected(row)"
         tabindex="0"
+        :ref="el => setRowRef(el, rowIndex)"
         @click="toggle(row)"
         @keydown.enter.prevent="toggle(row)"
         @keydown.space.prevent="toggle(row)"
+        @keydown="e => onKeydown(e, rowIndex)"
       >
-        <td v-if="hasRowExpansion">
-          <button type="button" @click.stop="toggleExpand(row)">
+        <td v-if="hasRowExpansion" role="cell">
+          <button
+            type="button"
+            @click.stop="toggleExpand(row)"
+            :aria-expanded="isExpanded(row)"
+            aria-label="Toggle Row"
+          >
             {{ isExpanded(row) ? '-' : '+' }}
           </button>
         </td>
@@ -26,6 +39,7 @@
           v-for="col in columns"
           :key="col.field"
           :class="styles.cell"
+          role="cell"
           :style="{ textAlign: defaultAlign(col) }"
         >
           <template v-if="slots[`cell-${col.field}`]">
@@ -85,6 +99,7 @@ import { ref, watch, useSlots, computed } from 'vue';
 import styles from '../AdvancedDataTable.module.css';
 import type { Column, SelectionMode, RowExpansionMode } from '../types';
 import { formatNumber, formatCurrency, formatDate, formatDateFa, formatBoolean } from '../utils/formatters';
+import { handleTableKeydown } from '../utils/a11yUtils';
 
 const props = defineProps<{
   columns: Column[];
@@ -107,6 +122,7 @@ const selected = ref<any[]>(props.modelValue ?? []);
 const expanded = ref<any[]>([]);
 const hasRowExpansion = computed(() => !!slots.rowExpansion);
 const colspan = computed(() => props.columns.length + (hasRowExpansion.value ? 1 : 0));
+const rowRefs = ref<HTMLElement[]>([]);
 
 watch(
   () => props.modelValue,
@@ -153,5 +169,13 @@ function toggleExpand(row: any) {
       props.expansionMode === 'single' ? [row] : [...expanded.value, row];
     emit('row-expand', row);
   }
+}
+
+function setRowRef(el: HTMLElement | null, index: number) {
+  if (el) rowRefs.value[index] = el;
+}
+
+function onKeydown(e: KeyboardEvent, index: number) {
+  handleTableKeydown(e, rowRefs.value, index);
 }
 </script>

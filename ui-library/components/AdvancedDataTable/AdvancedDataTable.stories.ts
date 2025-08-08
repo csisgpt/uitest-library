@@ -1,265 +1,148 @@
-// AdvancedDataTable.stories.ts - Storybook stories for AdvancedDataTable
+// AdvancedDataTable.stories.ts - Final demo stories for AdvancedDataTable
 import AdvancedDataTable from './AdvancedDataTable.vue';
 import type { Meta, StoryFn } from '@storybook/vue3';
-import type { Column, Pagination, SortState } from './types';
 import { ref } from 'vue';
+import { datasetColumns, generateDataset } from './utils/datasetGenerator';
+import type { Pagination, ServerRequestQuery } from './types';
+import { applyFilters } from './utils/filterUtils';
 
 export default {
   title: 'Components/AdvancedDataTable',
   component: AdvancedDataTable,
-  argTypes: {
-    selectionMode: {
-      control: { type: 'select' },
-      options: ['single', 'multiple', null],
-    },
-  },
 } as Meta<typeof AdvancedDataTable>;
 
-const sampleColumns: Column[] = [
-  { field: 'id', header: 'ID', type: 'number', sortable: true, align: 'right' },
-  {
-    field: 'name',
-    header: 'Full Name',
-    type: 'text',
-    sortable: true,
-    filterable: true,
-  },
-  {
-    field: 'salary',
-    header: 'Salary',
-    type: 'currency',
-    sortable: true,
-    formatOptions: { currency: 'IRR' },
-    align: 'right',
-  },
-  { field: 'hireDate', header: 'Hire Date', type: 'date-fa', sortable: true },
-  { field: 'active', header: 'Active', type: 'boolean', sortable: true },
-  { field: 'resume', header: 'Resume File', type: 'file' },
-];
-
-const sampleData = [
-  {
-    id: 1,
-    name: 'Ali Rezaei',
-    salary: 12000000,
-    hireDate: '2023-02-15',
-    active: true,
-    resume: '/files/ali.pdf',
-  },
-  {
-    id: 2,
-    name: 'Sara Ahmadi',
-    salary: 9500000,
-    hireDate: '2022-11-01',
-    active: false,
-    resume: '/files/sara.pdf',
-  },
-  {
-    id: 3,
-    name: 'Hossein Karimi',
-    salary: 15000000,
-    hireDate: '2023-07-20',
-    active: true,
-    resume: '/files/hossein.pdf',
-  },
-];
-
-const defaultPagination: Pagination = {
-  page: 1,
-  pageSize: 5,
-  total: sampleData.length,
-};
-
-export const Basic: StoryFn<typeof AdvancedDataTable> = args => ({
+// Basic table
+export const Basic: StoryFn<typeof AdvancedDataTable> = () => ({
   components: { AdvancedDataTable },
   setup() {
-    return { args };
+    const data = generateDataset(20);
+    const pagination: Pagination = { page: 1, pageSize: 10, total: data.length };
+    return { data, columns: datasetColumns, pagination };
   },
-  template: '<AdvancedDataTable v-bind="args" />',
+  template: '<AdvancedDataTable :columns="columns" :data="data" :pagination="pagination" />',
 });
 
-Basic.args = {
-  columns: sampleColumns,
-  data: sampleData,
-  pagination: defaultPagination,
-  loading: false,
-  selectionMode: null,
-};
-
-export const AllColumnTypes: StoryFn<typeof AdvancedDataTable> = args => ({
+// Virtual scroll performance story
+export const Performance: StoryFn<typeof AdvancedDataTable> = () => ({
   components: { AdvancedDataTable },
   setup() {
-    return { args };
+    const data = generateDataset(50000);
+    return { data, columns: datasetColumns };
+  },
+  template: '<AdvancedDataTable virtualScroll :columns="columns" :data="data" />',
+});
+
+// Server side simulation
+export const ServerSide: StoryFn<typeof AdvancedDataTable> = () => ({
+  components: { AdvancedDataTable },
+  setup() {
+    const data = ref(generateDataset(100).slice(0, 10));
+    const pagination = ref<Pagination>({ page: 1, pageSize: 10, total: 100 });
+    const loading = ref(false);
+    function request(q: ServerRequestQuery) {
+      loading.value = true;
+      setTimeout(() => {
+        const full = generateDataset(100);
+        const filtered = applyFilters(full, q.filters, datasetColumns);
+        pagination.value.total = filtered.length;
+        const start = (q.page - 1) * q.pageSize;
+        data.value = filtered.slice(start, start + q.pageSize);
+        loading.value = false;
+      }, 500);
+    }
+    return { data, columns: datasetColumns, pagination, loading, request };
   },
   template: `
-    <AdvancedDataTable v-bind="args">
-      <template #custom="{ row }">
-        <strong>{{ row.name }}</strong>
-      </template>
-    </AdvancedDataTable>
+    <AdvancedDataTable
+      serverMode
+      :columns="columns"
+      :data="data"
+      :pagination="pagination"
+      :loading="loading"
+      @server-request="request"
+    />
   `,
 });
 
-AllColumnTypes.args = {
-  columns: [
-    { field: 'text', header: 'Text' },
-    { field: 'num', header: 'Number', type: 'number' },
-    { field: 'curr', header: 'Currency', type: 'currency', formatOptions: { currency: 'USD' } },
-    { field: 'date', header: 'Date', type: 'date' },
-    { field: 'dateFa', header: 'Date FA', type: 'date-fa' },
-    { field: 'bool', header: 'Boolean', type: 'boolean' },
-    { field: 'file', header: 'File', type: 'file' },
-    { field: 'slot', header: 'Slot', type: 'slot', slotName: 'custom' },
-  ] as Column[],
-  data: [
-    {
-      text: 'Row1',
-      num: 1000,
-      curr: 2000,
-      date: '2023-09-01',
-      dateFa: '2023-09-01',
-      bool: true,
-      file: '#',
-      name: 'Custom1',
-    },
-    {
-      text: 'Row2',
-      num: 2000,
-      curr: 3000,
-      date: '2023-09-02',
-      dateFa: '2023-09-02',
-      bool: false,
-      file: '#',
-      name: 'Custom2',
-    },
-  ],
-  pagination: { page: 1, pageSize: 10, total: 2 },
-  selectionMode: null,
-  loading: false,
-};
-
-export const RowExpansion: StoryFn<typeof AdvancedDataTable> = args => ({
+// Advanced filtering showcase
+export const AdvancedFiltering: StoryFn<typeof AdvancedDataTable> = () => ({
   components: { AdvancedDataTable },
   setup() {
-    return { args };
+    const data = generateDataset(100);
+    return { data, columns: datasetColumns };
   },
-  template: `
-    <AdvancedDataTable v-bind="args">
-      <template #rowExpansion="{ row }">
-        <div style="padding:8px;">Expanded content for {{ row.name }}</div>
-      </template>
-    </AdvancedDataTable>
-  `,
+  template: '<AdvancedDataTable :columns="columns" :data="data" />',
 });
 
-RowExpansion.args = {
-  columns: sampleColumns,
-  data: sampleData,
-  expansionMode: 'multiple',
-};
-
-export const ColumnResizingReordering: StoryFn<typeof AdvancedDataTable> = args => ({
+// Theme switching demo
+export const Theming: StoryFn<typeof AdvancedDataTable> = () => ({
   components: { AdvancedDataTable },
   setup() {
-    return { args };
-  },
-  template: '<AdvancedDataTable v-bind="args" />',
-});
-
-ColumnResizingReordering.args = {
-  columns: sampleColumns,
-  data: sampleData,
-};
-
-export const MultiColumnSorting: StoryFn<typeof AdvancedDataTable> = args => ({
-  components: { AdvancedDataTable },
-  setup() {
-    return { args };
-  },
-  template: '<AdvancedDataTable v-bind="args" />',
-});
-
-MultiColumnSorting.args = {
-  columns: sampleColumns,
-  data: sampleData,
-};
-
-export const StickyHeaderFooter: StoryFn<typeof AdvancedDataTable> = args => ({
-  components: { AdvancedDataTable },
-  setup() {
-    return { args };
-  },
-  template: '<div style="height:300px;overflow:auto;"><AdvancedDataTable v-bind="args" /></div>',
-});
-
-StickyHeaderFooter.args = {
-  columns: sampleColumns,
-  data: sampleData,
-  stickyHeader: true,
-  stickyFooter: true,
-  pagination: defaultPagination,
-};
-
-export const VirtualScrolling: StoryFn<typeof AdvancedDataTable> = args => ({
-  components: { AdvancedDataTable },
-  setup() {
-    return { args };
-  },
-  template: '<AdvancedDataTable v-bind="args" />',
-});
-
-const largeData = Array.from({ length: 1000 }).map((_, i) => ({
-  id: i + 1,
-  name: `Name ${i + 1}`,
-  salary: 1000 + i,
-  hireDate: '2023-01-01',
-  active: i % 2 === 0,
-  resume: '#',
-}));
-
-VirtualScrolling.args = {
-  columns: sampleColumns,
-  data: largeData,
-  virtualScroll: true,
-};
-
-export const LazyLoading: StoryFn<typeof AdvancedDataTable> = args => ({
-  components: { AdvancedDataTable },
-  setup() {
-    const sort: SortState[] = [];
-    return { args, sort };
-  },
-  template: '<AdvancedDataTable v-bind="args" @lazy-load="onLazy" />',
-  methods: {
-    onLazy(e: any) {
-      console.log('lazy load', e);
-    },
-  },
-});
-
-LazyLoading.args = {
-  columns: sampleColumns,
-  data: sampleData,
-  lazy: true,
-  pagination: defaultPagination,
-};
-
-export const ExportButtons: StoryFn<typeof AdvancedDataTable> = args => ({
-  components: { AdvancedDataTable },
-  setup() {
-    const tableRef = ref();
-    return { args, tableRef };
+    const data = generateDataset(20);
+    function setTheme(t: string) {
+      import(`./themes/${t}.css`);
+    }
+    setTheme('light');
+    return { data, columns: datasetColumns, setTheme };
   },
   template: `
     <div>
-      <button @click="tableRef.exportCSV()">CSV</button>
-      <button @click="tableRef.exportExcel()">Excel</button>
-      <AdvancedDataTable ref="tableRef" v-bind="args" />
+      <select @change="setTheme(($event.target as HTMLSelectElement).value)">
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+        <option value="brandX">BrandX</option>
+      </select>
+      <AdvancedDataTable :columns="columns" :data="data" />
     </div>
   `,
 });
 
-ExportButtons.args = {
-  columns: sampleColumns,
-  data: sampleData,
-};
+// Accessibility demo
+export const Accessibility: StoryFn<typeof AdvancedDataTable> = () => ({
+  components: { AdvancedDataTable },
+  setup() {
+    const data = generateDataset(20);
+    return { data, columns: datasetColumns };
+  },
+  template: '<AdvancedDataTable :columns="columns" :data="data" />',
+});
+
+// Export story
+export const Exporting: StoryFn<typeof AdvancedDataTable> = () => ({
+  components: { AdvancedDataTable },
+  setup() {
+    const tableRef = ref();
+    const data = generateDataset(20);
+    function exportCurrent() {
+      tableRef.value.exportCSV('current');
+    }
+    function exportFiltered() {
+      tableRef.value.exportExcel('filtered');
+    }
+    return { tableRef, data, columns: datasetColumns, exportCurrent, exportFiltered };
+  },
+  template: `
+    <div>
+      <button @click="exportCurrent">CSV Current</button>
+      <button @click="exportFiltered">Excel Filtered</button>
+      <AdvancedDataTable ref="tableRef" :columns="columns" :data="data" />
+    </div>
+  `,
+});
+
+// Custom empty/loading state
+export const CustomStates: StoryFn<typeof AdvancedDataTable> = () => ({
+  components: { AdvancedDataTable },
+  setup() {
+    const data: any[] = [];
+    const loading = ref(false);
+    return { data, columns: datasetColumns, loading };
+  },
+  template: `
+    <AdvancedDataTable :columns="columns" :data="data" :loading="loading">
+      <template #emptyState><div>No data!</div></template>
+      <template #loadingState><div>Loading please wait...</div></template>
+    </AdvancedDataTable>
+  `,
+});
+

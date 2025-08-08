@@ -1,0 +1,9 @@
+:root {
+  --table-header-bg: #004080;
+  --table-header-hover-bg: #0059b3;
+  --table-row-bg: #e6f0ff;
+  --table-row-hover-bg: #cce0ff;
+  --table-row-selected-bg: rgba(0, 64, 128, 0.2);
+  --table-row-expanded-bg: rgba(0, 64, 128, 0.15);
+  --table-resize-handle-bg: #0059b3;
+}

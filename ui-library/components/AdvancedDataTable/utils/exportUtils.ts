@@ -1,4 +1,4 @@
-// exporters.ts - Utility functions to export table data to CSV and Excel
+// exportUtils.ts - Utility functions to export table data to CSV and Excel
 import type { Column } from '../types';
 
 function createLink(blob: Blob, filename: string) {
@@ -29,7 +29,12 @@ export function exportCSV(columns: Column[], data: any[], filename = 'export.csv
   createLink(blob, filename);
 }
 
-export function exportExcel(columns: Column[], data: any[], filename = 'export.xls') {
+export function exportExcel(
+  columns: Column[],
+  data: any[],
+  filename = 'export.xls',
+  sheetName = 'Sheet1'
+) {
   const headerHtml = columns.map(c => `<th>${c.header}</th>`).join('');
   const bodyHtml = data
     .map(row =>

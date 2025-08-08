@@ -1,7 +1,7 @@
 <!-- TableHeader.vue - Renders table header cells and handles sorting, resizing, and reordering -->
 <template>
-  <tr :class="styles.header">
-    <th v-if="hasRowExpansion"></th>
+  <tr :class="styles.header" role="row">
+    <th v-if="hasRowExpansion" role="columnheader"></th>
     <TableColumnReorder
       v-for="(col, index) in columns"
       :key="col.field"
@@ -10,6 +10,7 @@
       :style="{ width: col.width, textAlign: col.align || 'left', position: 'relative' }"
       :class="{ [styles.sortable]: col.sortable }"
       :tabindex="col.sortable ? 0 : undefined"
+      :aria-sort="ariaSort(col.field)"
       @click="emitSort(col, $event)"
       @keydown.enter.prevent="emitSort(col, $event)"
       @keydown.space.prevent="emitSort(col, $event)"
@@ -51,5 +52,12 @@ function onReorder(payload: { from: number; to: number }) {
 function currentOrder(field: string): 'asc' | 'desc' | null {
   const s = props.sortState.find(s => s.field === field);
   return s ? s.order : null;
+}
+
+function ariaSort(field: string): string {
+  const order = currentOrder(field);
+  if (order === 'asc') return 'ascending';
+  if (order === 'desc') return 'descending';
+  return 'none';
 }
 </script>

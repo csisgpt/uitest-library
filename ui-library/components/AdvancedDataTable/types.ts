@@ -6,6 +6,12 @@ export interface Column {
   type?: 'text' | 'number' | 'currency' | 'date-fa' | 'date' | 'boolean' | 'file' | 'slot';
   sortable?: boolean;
   filterable?: boolean;
+  /** Type of filter input to render for this column */
+  filterType?: 'text' | 'number' | 'date' | 'boolean' | 'select' | 'custom';
+  /** Options used by select filters */
+  filterOptions?: Array<{ label: string; value: any }>;
+  /** Slot name for custom filter rendering */
+  filterSlotName?: string;
   width?: string;
   align?: 'left' | 'center' | 'right';
   slotName?: string;
@@ -32,6 +38,14 @@ export interface LazyLoadEvent {
   pageSize: number;
   sort: SortState[];
   filters: FilterModel;
+}
+
+export interface ServerRequestQuery {
+  page: number;
+  pageSize: number;
+  sort: SortState[];
+  filters: FilterModel;
+  expandedRows: any[];
 }
 
 export type RowExpansionMode = 'single' | 'multiple';

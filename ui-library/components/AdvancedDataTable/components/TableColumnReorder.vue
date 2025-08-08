@@ -2,6 +2,7 @@
 <template>
   <th
     draggable="true"
+    role="columnheader"
     @dragstart="onDragStart"
     @dragover.prevent
     @drop="onDrop"
