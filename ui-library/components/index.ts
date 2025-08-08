@@ -1,7 +1,6 @@
 export { default as BaseBadge } from './BaseBadge/BaseBadge.vue';
 export { default as BaseButton } from './BaseButton/BaseButton.vue';
 export { default as BaseCheckbox } from './BaseCheckbox/BaseCheckbox.vue';
-export { default as BaseCollapse } from './BaseCollapse/BaseCollapse.vue';
 export { default as BaseDropdown } from './BaseDropdown/BaseDropdown.vue';
 export { default as BaseInput } from './BaseInput/BaseInput.vue';
 export { default as BaseLabel } from './BaseLabel/BaseLabel.vue';

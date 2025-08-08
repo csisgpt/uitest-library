@@ -1,6 +1,5 @@
 export { default as BaseButton } from '../components/BaseButton/BaseButton.vue';
 export { default as BaseCheckbox } from '../components/BaseCheckbox/BaseCheckbox.vue';
-export { default as BaseCollapse } from '../components/BaseCollapse/BaseCollapse.vue';
 export { default as BaseDropdown } from '../components/BaseDropdown/BaseDropdown.vue';
 export { default as BaseInput } from '../components/BaseInput/BaseInput.vue';
 export { default as BaseModal } from '../components/BaseModal/BaseModal.vue';
