@@ -79,3 +79,37 @@
   background: var(--color-surface);
   border-radius: var(--radius);
 }
+
+.expanded {
+  background: var(--table-row-expanded-bg, var(--table-row-bg));
+}
+
+.resize-handle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 4px;
+  cursor: col-resize;
+  user-select: none;
+  background: var(--table-resize-handle-bg, var(--color-border));
+}
+
+.reorder-placeholder {
+  border: 2px dashed var(--color-primary);
+}
+
+.sticky-header thead {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.sticky-footer {
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
+}
+
+.virtual-scroll-container {
+  overflow-y: auto;
+}
