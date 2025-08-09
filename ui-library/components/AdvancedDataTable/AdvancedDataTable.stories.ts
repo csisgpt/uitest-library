@@ -6,6 +6,9 @@ import { ref } from 'vue';
 import { datasetColumns, generateDataset } from './utils/datasetGenerator';
 import type { Pagination, ServerRequestQuery } from './types';
 import { applyFilters } from './utils/filterUtils';
+import lightThemeHref from './themes/light.css?url';
+import darkThemeHref from './themes/dark.css?url';
+import brandXThemeHref from './themes/brandX.css?url';
 
 export default {
   title: 'Components/AdvancedDataTable',
@@ -89,30 +92,30 @@ export const AdvancedFiltering: StoryObj<typeof AdvancedDataTable> = {
 };
 
 // Theme switching demo
-export const Theming: StoryObj<typeof AdvancedDataTable> = {
-  render: (args) => ({
-    components: { AdvancedDataTable },
-    setup() {
-      function setTheme(t: string) {
-        import(`./themes/${t}.css`);
-      }
-      setTheme('light');
-      return { args, setTheme };
-    },
-    template: `
-      <div>
-        <select @change="setTheme(($event.target as HTMLSelectElement).value)">
-          <option value="light">Light</option>
-          <option value="dark">Dark</option>
-          <option value="brandX">BrandX</option>
-        </select>
-        <AdvancedDataTable v-bind="args" />
-      </div>
-    `,
-  }),
-  args: {
-    columns: datasetColumns,
-    data: generateDataset(20),
+
+export const Theming: StoryFn<typeof AdvancedDataTable> = () => ({
+  components: { AdvancedDataTable },
+  setup() {
+    const data = generateDataset(20);
+    const themes: Record<string, HTMLLinkElement> = {
+      light: createLink(lightThemeHref, true),
+      dark: createLink(darkThemeHref),
+      brandX: createLink(brandXThemeHref),
+    };
+    function createLink(href: string, enabled = false) {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = href;
+      link.disabled = !enabled;
+      document.head.appendChild(link);
+      return link;
+    }
+    function setTheme(t: string) {
+      Object.entries(themes).forEach(([key, link]) => {
+        link.disabled = key !== t;
+      });
+    }
+    return { data, columns: datasetColumns, setTheme };
   },
 };
 

@@ -98,3 +98,27 @@
   --badge-color-value: var(--color-muted);
   --badge-on-color-value: var(--color-on-neutral, #fff);
 }
+
+
+.aspect-square {
+  padding: 0;
+  width: auto; /* از سایز انتخابی کنترل میشه */
+  aspect-ratio: 1 / 1;
+}
+
+/* سایزها رو با aspect-square هماهنگ می‌کنیم */
+.aspect-square.sm {
+  width: var(--space-md);  /* مثلا 12px */
+  height: var(--space-md);
+}
+
+.aspect-square.md {
+  width: var(--space-lg);  /* مثلا 16px */
+  height: var(--space-lg);
+}
+
+.aspect-square.lg {
+  width: calc(var(--space-lg) * 1.5); /* مثلا 24px */
+  height: calc(var(--space-lg) * 1.5);
+}
+
