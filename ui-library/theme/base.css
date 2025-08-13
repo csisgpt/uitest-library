@@ -1,4 +1,4 @@
-@import "./tokens/colors.css";
+/* Base: imports neutral tokens (no colors here) */
 @import "./tokens/spacing.css";
 @import "./tokens/radius.css";
 @import "./tokens/typography.css";
@@ -7,9 +7,32 @@
 @import "./tokens/transitions.css";
 @import "./tokens/border.css";
 @import "./tokens/animations.css";
-* {
-  font-family: IRANYekanX;
+@import "./tokens/states.css";
+
+:root {
+  /* Allow UA widgets (form controls, selection) to pick correct palette */
+  color-scheme: light dark;
+}
+
+html { box-sizing: border-box; }
+*, *::before, *::after { box-sizing: inherit; }
+
+body {
+  margin: 0;
+  font-family: var(--font-family-base);
+  background: var(--color-background);
+  color: var(--color-text);
   font-feature-settings: "ss02";
   -moz-font-feature-settings: "ss02";
   -webkit-font-feature-settings: "ss02";
+}
+
+/* Respect reduced motion preferences globally */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0ms !important;
+    scroll-behavior: auto !important;
+  }
 }

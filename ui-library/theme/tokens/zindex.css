@@ -1,4 +1,5 @@
 :root {
+  /* 🔘 Z-Index */
   --z-index-dropdown: 1000;
   --z-index-sticky: 1020;
   --z-index-modal: 1050;

@@ -12,6 +12,7 @@
     "preview": "vite preview",
     "demo": "vite demo"
   },
+  
   "dependencies": {
     "vue": "^3.0.0"
   },

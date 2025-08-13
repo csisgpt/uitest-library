@@ -1,13 +1,5 @@
-
+/* Clean theme entry: import tokens, default light theme, dark overrides, and fonts */
 @import './base.css';
-@import './themes/light.css';
-@import './themes/dark.css';
-@import "./fonts/IRANYekanX/Webfonts/fontiran.css" ;
-
-@import './base.css';
-@import './themes/light.css'; /* default theme */
-
-/* Optional: theme switch via data-theme */
-[data-theme='dark'] {
-  @import './themes/dark.css';
-}
+@import './themes/light.css';  /* default theme */
+@import './themes/dark.css';   /* dark overrides via [data-theme="dark"] */
+@import './fonts/IRANYekanX/Webfonts/fontiran.css';

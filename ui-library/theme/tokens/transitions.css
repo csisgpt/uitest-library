@@ -1,4 +1,6 @@
 :root {
-  --transition-fast: 150ms ease-in-out;
-  --transition-base: 250ms ease-in-out;
+  /* ⚡ Transitions */
+  --transition-ease: ease-in-out;
+  --transition-fast: 150ms var(--transition-ease);
+  --transition-base: 250ms var(--transition-ease);
 }

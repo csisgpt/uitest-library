@@ -1,4 +1,7 @@
 :root {
+  /* 🧱 Border */
   --border-width: 1px;
   --border-style: solid;
+  /* default border color can be overridden by themes */
+  --color-border: #e5e7eb;
 }

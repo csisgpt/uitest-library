@@ -1,0 +1,17 @@
+:root {
+  /* Focus ring */
+  --focus-ring-color: #3b82f6;
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 2px;
+
+  /* Interaction overlays */
+  --hover-overlay: rgba(0, 0, 0, 0.06);
+  --active-overlay: rgba(0, 0, 0, 0.12);
+
+  /* Disabled */
+  --opacity-disabled: 0.5;
+
+  /* Disabled tokens for bg/text (semantic) */
+  --color-disabled-bg: #e5e7eb;
+  --color-disabled-text: #9ca3af;
+}
