@@ -1,29 +1,43 @@
+/* ساختار پایه */
 .wrapper {
   position: relative;
   display: inline-block;
 }
 
+/* توجه: برای تجربهٔ کتابخانه‌ای، همهٔ مقادیر از theme میان */
 .tooltip {
   position: absolute;
+  inset: auto; /* شفاف‌سازی */
   background: var(--color-surface);
   color: var(--color-text);
-  padding: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
   border-radius: var(--radius-sm);
   box-shadow: var(--shadow-md);
   font-size: var(--font-size-sm);
   font-family: var(--font-family-base);
-  max-width: calc(var(--space-2xl) * 5);
+  max-width: var(--tooltip-max-width, 22rem); /* فیکس: از --space-2xl استفاده نکن */
   z-index: var(--tooltip-z-index, var(--z-index-tooltip));
-  pointer-events: none;
   opacity: 0;
-  transition: opacity var(--transition-fast);
+  pointer-events: none; /* در حالت عادی غیرتعاملی؛ با کلاس .isInteractive فعال می‌شه */
   white-space: normal;
+  line-height: 1.45;
+  border: var(--border-width) var(--border-style) var(--color-border);
+  backdrop-filter: saturate(1.1);
+  transition: opacity var(--transition-fast);
+  will-change: opacity, transform;
 }
 
+/* وقتی کاربر interactive فعال کند */
+.isInteractive {
+  pointer-events: auto;
+}
+
+/* وضعیت نمایش */
 .isVisible {
   opacity: 1;
 }
 
+/* جای‌گیری‌ها */
 .position-top {
   bottom: calc(100% + var(--tooltip-offset, var(--space-sm)));
   left: 50%;
@@ -48,15 +62,20 @@
   transform: translateY(-50%);
 }
 
+/* پیکان */
 .arrow {
+  --arrow-size: 8px;
   position: absolute;
-  width: var(--space-sm);
-  height: var(--space-sm);
+  width: var(--arrow-size);
+  height: var(--arrow-size);
   background: var(--color-surface);
-  box-shadow: var(--shadow-md);
+  border-left: var(--border-width) var(--border-style) var(--color-border);
+  border-top: var(--border-width) var(--border-style) var(--color-border);
+  box-shadow: var(--shadow-sm);
   transform: rotate(45deg);
 }
 
+/* موقعیت پیکان */
 .position-top .arrow {
   top: 100%;
   left: 50%;
@@ -79,4 +98,68 @@
   right: 100%;
   top: 50%;
   transform: translate(50%, -50%) rotate(45deg);
+}
+
+/* ========================= */
+/*  Vue Transitions (global) */
+/* ========================= */
+/* چون CSS Modules کلاس‌ها رو scope می‌کنه، باید global تعریف کنیم */
+:global(.tooltip-none-enter-active),
+:global(.tooltip-none-leave-active) {
+  transition: none;
+}
+
+:global(.tooltip-fade-enter-active),
+:global(.tooltip-fade-leave-active) {
+  transition: opacity var(--transition-base);
+}
+:global(.tooltip-fade-enter-from),
+:global(.tooltip-fade-leave-to) {
+  opacity: 0;
+}
+:global(.tooltip-fade-enter-to),
+:global(.tooltip-fade-leave-from) {
+  opacity: 1;
+}
+
+:global(.tooltip-scale-enter-active),
+:global(.tooltip-scale-leave-active) {
+  transition: opacity var(--transition-base), transform var(--transition-base);
+  transform-origin: var(--tooltip-origin, center);
+}
+:global(.tooltip-scale-enter-from),
+:global(.tooltip-scale-leave-to) {
+  opacity: 0;
+  transform: scale(0.96);
+}
+
+:global(.tooltip-slide-top-enter-active),
+:global(.tooltip-slide-top-leave-active),
+:global(.tooltip-slide-bottom-enter-active),
+:global(.tooltip-slide-bottom-leave-active) {
+  transition: opacity var(--transition-base), transform var(--transition-base);
+}
+:global(.tooltip-slide-top-enter-from),
+:global(.tooltip-slide-top-leave-to) {
+  opacity: 0;
+  transform: translateY(4px);
+}
+:global(.tooltip-slide-bottom-enter-from),
+:global(.tooltip-slide-bottom-leave-to) {
+  opacity: 0;
+  transform: translateY(-4px);
+}
+
+/* کاهش حرکت برای کاربران prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  :global(.tooltip-fade-enter-active),
+  :global(.tooltip-fade-leave-active),
+  :global(.tooltip-scale-enter-active),
+  :global(.tooltip-scale-leave-active),
+  :global(.tooltip-slide-top-enter-active),
+  :global(.tooltip-slide-top-leave-active),
+  :global(.tooltip-slide-bottom-enter-active),
+  :global(.tooltip-slide-bottom-leave-active) {
+    transition-duration: 0ms !important;
+  }
 }

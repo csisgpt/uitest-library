@@ -1,70 +1,83 @@
 .splitButton {
   display: inline-flex;
   position: relative;
+  vertical-align: middle;
 }
 
+/* دو دکمه کنار هم */
 .main {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
 }
-
 .toggle {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
   padding-inline: var(--space-sm);
 }
 
-.caret {
-  font-size: 0.75em;
-}
+/* آیکن */
+.icon { margin-inline-end: var(--space-sm); }
+.caret { font-size: 0.75em; line-height: 1; }
 
-.icon {
-  margin-inline-end: var(--space-sm);
-}
-
+/* منو */
 .menu {
   position: absolute;
-  top: calc(100% + var(--space-xs));
-  right: 0;
-  min-width: 100%;
+  z-index: var(--z-index-dropdown);
   background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
+  border: var(--border-width) var(--border-style) var(--color-border);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-md);
   padding: var(--space-xs) 0;
-  z-index: 10;
+  /* موقعیت توسط JS تعیین می‌شود (top/bottom + left/right) */
 }
 
+/* آیتم‌ها */
 .menuItem {
   display: flex;
   align-items: center;
   gap: var(--space-sm);
   padding: var(--space-sm) var(--space-md);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-md);
+  color: var(--color-text);
   cursor: pointer;
+  transition: background var(--transition-base), color var(--transition-base);
+  outline: none;
 }
 
 .menuItem:hover,
-.focused {
-  background-color: var(--color-primary);
-  color: var(--color-on-primary);
+.menuItem:focus {
+  background-color: color-mix(in srgb, var(--color-primary), var(--color-surface) 90%);
+  color: var(--color-text);
+}
+
+.danger:hover,
+.danger:focus {
+  background-color: color-mix(in srgb, var(--color-error), var(--color-surface) 90%);
 }
 
 .disabled {
-  opacity: 0.6;
+  opacity: 0.5;
   cursor: not-allowed;
 }
-
-.itemIcon {
-  font-size: var(--font-size-sm);
+.disabled:hover, .disabled:focus {
+  background: transparent;
 }
 
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.15s ease, transform 0.15s ease;
+.itemIcon { font-size: var(--font-size-sm); }
+
+/* Divider */
+.divider {
+  height: 1px;
+  margin: var(--space-xs) 0;
+  background: var(--color-border);
 }
 
-.fade-enter-from,
-.fade-leave-to {
+/* انیمیشن */
+.fade-enter-active, .fade-leave-active {
+  transition: opacity var(--transition-fast), transform var(--transition-fast);
+}
+.fade-enter-from, .fade-leave-to {
   opacity: 0;
-  transform: translateY(-0.25rem);
+  transform: translateY(-4px);
 }

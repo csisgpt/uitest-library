@@ -1,20 +1,31 @@
 <!-- AdvancedDataTable.vue - Reusable data table component -->
 <template>
-  <div :class="[styles.root, stickyHeader ? styles['sticky-header'] : '', stickyFooter ? styles['sticky-footer'] : '']">
+  <div
+    dir="rtl"
+    :class="[
+      styles.root,
+      stickyHeader ? styles['sticky-header'] : '',
+      stickyFooter ? styles['sticky-footer'] : '',
+    ]"
+  >
     <template v-if="virtualScroll">
-      <TableVirtualScroller :rows="processedData" :row-height="rowHeight" :height="virtualHeight" v-slot="{ rows }">
+      <TableVirtualScroller
+        :rows="processedData"
+        :row-height="rowHeight"
+        :height="virtualHeight"
+        v-slot="{ rows }"
+      >
+        <TableHeader
+          :columns="internalColumns"
+          :sort-state="sortState"
+          :has-row-expansion="hasRowExpansion"
+          @sort="onSort"
+          @resize="onColumnResize"
+          @reorder="onColumnReorder"
+        />
         <table :class="styles.table" role="table">
           <thead>
-            <TableHeader
-              :columns="internalColumns"
-              :sort-state="sortState"
-              :has-row-expansion="hasRowExpansion"
-              @sort="onSort"
-              @resize="onColumnResize"
-              @reorder="onColumnReorder"
-            />
             <TableFilters
-              v-if="hasFilters"
               :columns="internalColumns"
               :model="filters"
               :has-row-expansion="hasRowExpansion"
@@ -38,6 +49,12 @@
       </TableVirtualScroller>
     </template>
     <template v-else>
+      <TableFilters
+        :columns="internalColumns"
+        :model="filters"
+        :has-row-expansion="hasRowExpansion"
+        @filter="onFilter"
+      />
       <table :class="styles.table" role="table">
         <thead>
           <TableHeader
@@ -47,13 +64,6 @@
             @sort="onSort"
             @resize="onColumnResize"
             @reorder="onColumnReorder"
-          />
-          <TableFilters
-            v-if="hasFilters"
-            :columns="internalColumns"
-            :model="filters"
-            :has-row-expansion="hasRowExpansion"
-            @filter="onFilter"
           />
         </thead>
         <TableBody
@@ -81,8 +91,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch, useSlots } from 'vue';
-import styles from './AdvancedDataTable.module.css';
+import { computed, ref, watch, useSlots } from "vue";
+import styles from "./AdvancedDataTable.module.css";
 import type {
   Column,
   Pagination,
@@ -93,14 +103,14 @@ import type {
   LazyLoadEvent,
   ServerRequestQuery,
   DataTableColumnSlotProps,
-} from './types';
-import TableHeader from './components/TableHeader.vue';
-import TableBody from './components/TableBody.vue';
-import TableFooter from './components/TableFooter.vue';
-import TableFilters from './components/TableFilters.vue';
-import TableVirtualScroller from './components/TableVirtualScroller.vue';
-import { exportCSV, exportExcel } from './utils/exportUtils';
-import { applyFilters } from './utils/filterUtils';
+} from "./types";
+import TableHeader from "./components/TableHeader.vue";
+import TableBody from "./components/TableBody.vue";
+import TableFooter from "./components/TableFooter.vue";
+import TableFilters from "./components/TableFilters.vue";
+import TableVirtualScroller from "./components/TableVirtualScroller.vue";
+import { exportCSV, exportExcel } from "./utils/exportUtils";
+import { applyFilters } from "./utils/filterUtils";
 
 const props = defineProps<{
   columns: Column[];
@@ -117,22 +127,24 @@ const props = defineProps<{
   serverMode?: boolean;
   exportFilename?: string;
   exportSheetName?: string;
+  rowHeight?: number;
+  virtualHeight?: number;
 }>();
 
 const emit = defineEmits<{
-  (e: 'update:modelValue', value: any[]): void;
-  (e: 'update:pagination', value: Pagination): void;
-  (e: 'sort', value: SortState[]): void;
-  (e: 'filter', value: FilterModel): void;
-  (e: 'row-expand', row: any): void;
-  (e: 'row-collapse', row: any): void;
-  (e: 'column-resize', widths: Record<string, string | undefined>): void;
-  (e: 'column-reorder', columns: Column[]): void;
-  (e: 'lazy-load', evt: LazyLoadEvent): void;
-  (e: 'server-request', query: ServerRequestQuery): void;
-  (e: 'edit', payload: DataTableColumnSlotProps): void;
-  (e: 'delete', payload: DataTableColumnSlotProps): void;
-  (e: 'add'): void;
+  (e: "update:modelValue", value: any[]): void;
+  (e: "update:pagination", value: Pagination): void;
+  (e: "sort", value: SortState[]): void;
+  (e: "filter", value: FilterModel): void;
+  (e: "row-expand", row: any): void;
+  (e: "row-collapse", row: any): void;
+  (e: "column-resize", widths: Record<string, string | undefined>): void;
+  (e: "column-reorder", columns: Column[]): void;
+  (e: "lazy-load", evt: LazyLoadEvent): void;
+  (e: "server-request", query: ServerRequestQuery): void;
+  (e: "edit", payload: DataTableColumnSlotProps): void;
+  (e: "delete", payload: DataTableColumnSlotProps): void;
+  (e: "add"): void;
 }>();
 
 const sortState = ref<SortState[]>([]);
@@ -143,7 +155,7 @@ const expandedRows = ref<any[]>([]);
 const slots = useSlots();
 watch(
   () => props.modelValue,
-  v => {
+  (v) => {
     selection.value = v ?? [];
   }
 );
@@ -153,7 +165,7 @@ const paginationState = ref<Pagination | undefined>(
 );
 watch(
   () => props.pagination,
-  v => {
+  (v) => {
     paginationState.value = v ? { ...v } : undefined;
   },
   { deep: true }
@@ -162,11 +174,14 @@ watch(
 const internalColumns = ref<Column[]>([...props.columns]);
 watch(
   () => props.columns,
-  v => {
+  (v) => {
     internalColumns.value = [...v];
   },
   { deep: true }
 );
+
+const rowHeight = computed(() => props.rowHeight ?? 40);
+const virtualHeight = computed(() => props.virtualHeight ?? 400);
 
 const hasRowExpansion = computed(() => !!slots.rowExpansion);
 
@@ -186,12 +201,12 @@ const sortedData = computed(() => {
       if (av == null) return -1;
       if (bv == null) return 1;
       let cmp = 0;
-      if (typeof av === 'number' && typeof bv === 'number') {
+      if (typeof av === "number" && typeof bv === "number") {
         cmp = av - bv;
       } else {
         cmp = String(av).localeCompare(String(bv));
       }
-      if (cmp !== 0) return s.order === 'asc' ? cmp : -cmp;
+      if (cmp !== 0) return s.order === "asc" ? cmp : -cmp;
     }
     return 0;
   });
@@ -200,14 +215,15 @@ const sortedData = computed(() => {
 const paginatedData = computed(() => {
   if (props.virtualScroll) return sortedData.value;
   if (!paginationState.value) return sortedData.value;
-  const start = (paginationState.value.page - 1) * paginationState.value.pageSize;
+  const start =
+    (paginationState.value.page - 1) * paginationState.value.pageSize;
   const end = start + paginationState.value.pageSize;
   return sortedData.value.slice(start, end);
 });
 
 watch(
   sortedData,
-  val => {
+  (val) => {
     if (paginationState.value && !props.lazy) {
       paginationState.value.total = val.length;
     }
@@ -215,49 +231,52 @@ watch(
   { immediate: true }
 );
 
-const hasFilters = computed(() => internalColumns.value.some(c => c.filterable));
+const hasFilters = computed(() =>
+  internalColumns.value.some((c) => c.filterable)
+);
 
 function onSort(payload: { field: string; append: boolean }) {
-  const idx = sortState.value.findIndex(s => s.field === payload.field);
+  const idx = sortState.value.findIndex((s) => s.field === payload.field);
   if (idx >= 0) {
-    sortState.value[idx].order = sortState.value[idx].order === 'asc' ? 'desc' : 'asc';
+    sortState.value[idx].order =
+      sortState.value[idx].order === "asc" ? "desc" : "asc";
     if (!payload.append) sortState.value = [sortState.value[idx]];
   } else {
     sortState.value = payload.append
-      ? [...sortState.value, { field: payload.field, order: 'asc' }]
-      : [{ field: payload.field, order: 'asc' }];
+      ? [...sortState.value, { field: payload.field, order: "asc" }]
+      : [{ field: payload.field, order: "asc" }];
   }
-  emit('sort', sortState.value);
+  emit("sort", sortState.value);
   if (props.lazy) emitLazy();
   if (props.serverMode) emitServerRequest();
 }
 
 function onFilter(model: FilterModel) {
   filters.value = model;
-  emit('filter', model);
+  emit("filter", model);
   if (props.lazy) emitLazy();
   if (props.serverMode) emitServerRequest();
 }
 
 function onPagination(pag: Pagination) {
   paginationState.value = pag;
-  emit('update:pagination', pag);
+  emit("update:pagination", pag);
   if (props.lazy) emitLazy();
   if (props.serverMode) emitServerRequest();
 }
 
 function onSelection(val: any[]) {
   selection.value = val;
-  emit('update:modelValue', val);
+  emit("update:modelValue", val);
 }
 
 function onColumnResize(payload: { field: string; width: string }) {
-  const col = internalColumns.value.find(c => c.field === payload.field);
+  const col = internalColumns.value.find((c) => c.field === payload.field);
   if (col) col.width = payload.width;
   const widths = Object.fromEntries(
-    internalColumns.value.map(c => [c.field, c.width])
+    internalColumns.value.map((c) => [c.field, c.width])
   );
-  emit('column-resize', widths);
+  emit("column-resize", widths);
 }
 
 function onColumnReorder(payload: { from: number; to: number }) {
@@ -265,18 +284,18 @@ function onColumnReorder(payload: { from: number; to: number }) {
   const [moved] = cols.splice(payload.from, 1);
   cols.splice(payload.to, 0, moved);
   internalColumns.value = [...cols];
-  emit('column-reorder', internalColumns.value);
+  emit("column-reorder", internalColumns.value);
 }
 
 function onRowExpand(row: any) {
   if (!expandedRows.value.includes(row)) expandedRows.value.push(row);
-  emit('row-expand', row);
+  emit("row-expand", row);
   if (props.serverMode) emitServerRequest();
 }
 
 function onRowCollapse(row: any) {
-  expandedRows.value = expandedRows.value.filter(r => r !== row);
-  emit('row-collapse', row);
+  expandedRows.value = expandedRows.value.filter((r) => r !== row);
+  emit("row-collapse", row);
   if (props.serverMode) emitServerRequest();
 }
 
@@ -287,7 +306,7 @@ function emitLazy() {
     sort: sortState.value,
     filters: filters.value,
   };
-  emit('lazy-load', evt);
+  emit("lazy-load", evt);
 }
 
 function emitServerRequest() {
@@ -298,40 +317,38 @@ function emitServerRequest() {
     filters: filters.value,
     expandedRows: [...expandedRows.value],
   };
-  emit('server-request', query);
+  emit("server-request", query);
 }
 
-const rowHeight = 40;
-const virtualHeight = 400;
 const processedData = computed(() => paginatedData.value);
 
-type ExportMode = 'current' | 'filtered' | 'all';
+type ExportMode = "current" | "filtered" | "all";
 
 function getExportData(mode: ExportMode) {
   switch (mode) {
-    case 'all':
+    case "all":
       return props.data;
-    case 'filtered':
+    case "filtered":
       return sortedData.value;
     default:
       return paginatedData.value;
   }
 }
 
-function exportCSVFn(mode: ExportMode = 'current') {
+function exportCSVFn(mode: ExportMode = "current") {
   exportCSV(
     internalColumns.value,
     getExportData(mode),
-    props.exportFilename || 'export.csv'
+    props.exportFilename || "export.csv"
   );
 }
 
-function exportExcelFn(mode: ExportMode = 'current') {
+function exportExcelFn(mode: ExportMode = "current") {
   exportExcel(
     internalColumns.value,
     getExportData(mode),
-    props.exportFilename?.replace(/\.csv$/i, '.xls') || 'export.xls',
-    props.exportSheetName || 'Sheet1'
+    props.exportFilename?.replace(/\.csv$/i, ".xls") || "export.xls",
+    props.exportSheetName || "Sheet1"
   );
 }
 

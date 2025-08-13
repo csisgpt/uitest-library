@@ -1,5 +1,5 @@
 // datasetGenerator.ts - Creates large datasets for performance testing
-import type { Column } from '../types';
+import type { Column } from "../types";
 
 export interface EmployeeRow {
   id: number;
@@ -10,8 +10,24 @@ export interface EmployeeRow {
   resume: string;
 }
 
-const firstNames = ['Ali', 'Sara', 'Hossein', 'Reza', 'Mina', 'Neda', 'Hassan', 'Leila'];
-const lastNames = ['Rezaei', 'Ahmadi', 'Karimi', 'Hosseini', 'Moradi', 'Mohammadi'];
+const firstNames = [
+  "Ali",
+  "Sara",
+  "Hossein",
+  "Reza",
+  "Mina",
+  "Neda",
+  "Hassan",
+  "Leila",
+];
+const lastNames = [
+  "Rezaei",
+  "Ahmadi",
+  "Karimi",
+  "Hosseini",
+  "Moradi",
+  "Mohammadi",
+];
 
 function randomName() {
   const f = firstNames[Math.floor(Math.random() * firstNames.length)];
@@ -32,47 +48,47 @@ export function generateDataset(count = 50000): EmployeeRow[] {
         .toISOString()
         .slice(0, 10),
       active: Math.random() > 0.5,
-      resume: '#',
+      resume: "#",
     });
   }
   return rows;
 }
 
 export const datasetColumns: Column[] = [
-  { field: 'id', header: 'ID', type: 'number', sortable: true, align: 'right' },
+  { field: "id", header: "ID", type: "number", sortable: true, align: "right" },
   {
-    field: 'name',
-    header: 'Full Name',
-    type: 'text',
+    field: "name",
+    header: "Full Name",
+    type: "text",
     sortable: true,
     filterable: true,
-    filterType: 'text',
+    filterType: "text",
   },
   {
-    field: 'salary',
-    header: 'Salary',
-    type: 'currency',
+    field: "salary",
+    header: "Salary",
+    type: "currency",
     sortable: true,
-    formatOptions: { currency: 'IRR' },
-    align: 'right',
-    filterable: true,
-    filterType: 'number',
+    formatOptions: { currency: "IRR" },
+    align: "right",
+    filterable: false,
+    filterType: "number",
   },
   {
-    field: 'hireDate',
-    header: 'Hire Date',
-    type: 'date-fa',
+    field: "hireDate",
+    header: "Hire Date",
+    type: "date-fa",
     sortable: true,
     filterable: true,
-    filterType: 'date',
+    filterType: "date",
   },
   {
-    field: 'active',
-    header: 'Active',
-    type: 'boolean',
+    field: "active",
+    header: "Active",
+    type: "boolean",
     sortable: true,
     filterable: true,
-    filterType: 'boolean',
+    filterType: "boolean",
   },
-  { field: 'resume', header: 'Resume', type: 'file' },
+  { field: "resume", header: "Resume", type: "file" },
 ];

@@ -7,7 +7,7 @@
       :key="col.field"
       :index="index"
       @reorder="onReorder"
-      :style="{ width: col.width, textAlign: col.align || 'left', position: 'relative' }"
+      :style="{ width: col.width, textAlign: 'center', position: 'relative' }"
       :class="{ [styles.sortable]: col.sortable }"
       :tabindex="col.sortable ? 0 : undefined"
       :aria-sort="ariaSort(col.field)"

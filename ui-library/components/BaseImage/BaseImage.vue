@@ -15,7 +15,11 @@
         :alt="alt"
         :loading="lazy ? 'lazy' : 'eager'"
         :style="imgStyle"
-        :class="[$style.image, transition && $style.transition, transition && isLoaded && $style.loaded]"
+        :class="[
+          $style.image,
+          transition && $style.transition,
+          transition && isLoaded && $style.loaded,
+        ]"
         @load="onLoad"
         @error="onError"
         role="img"
@@ -31,16 +35,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch } from "vue";
 
 const props = withDefaults(
-  defineProps<{ 
+  defineProps<{
     src: string;
     alt?: string;
     width?: string | number;
+    maxWidth?: string | number;
     height?: string | number;
-    fit?: 'cover' | 'contain' | 'fill' | 'none' | 'scale-down';
-    radius?: 'none' | 'sm' | 'md' | 'lg' | 'full';
+    fit?: "cover" | "contain" | "fill" | "none" | "scale-down";
+    radius?: "none" | "sm" | "md" | "lg" | "full";
     lazy?: boolean;
     placeholder?: string;
     fallback?: string;
@@ -50,22 +55,24 @@ const props = withDefaults(
     objectPosition?: string;
   }>(),
   {
-    alt: '',
-    fit: 'cover',
-    radius: 'none',
+    alt: "",
+    fit: "cover",
+    radius: "none",
+    width: "100%",
+    maxWidth: "300px",
     lazy: false,
-    placeholder: '',
-    fallback: '',
+    placeholder: "",
+    fallback: "",
     loadingIndicator: false,
     transition: false,
-    aspectRatio: '',
-    objectPosition: 'center'
+    aspectRatio: "",
+    objectPosition: "center",
   }
 );
 
 const emit = defineEmits<{
-  (e: 'load', event: Event): void;
-  (e: 'error', event: Event): void;
+  (e: "load", event: Event): void;
+  (e: "error", event: Event): void;
 }>();
 
 const isLoaded = ref(false);
@@ -83,12 +90,13 @@ watch(
 
 const addUnit = (val?: string | number) => {
   if (val === undefined || val === null) return undefined;
-  return typeof val === 'number' ? `${val}px` : val;
+  return typeof val === "number" ? `${val}px` : val;
 };
 
 const wrapperStyle = computed(() => ({
   width: addUnit(props.width),
   height: addUnit(props.height),
+  maxWidth: addUnit(props.maxWidth),
   aspectRatio: props.aspectRatio || undefined,
 }));
 
@@ -103,7 +111,7 @@ const radiusClass = computed(
 
 function onLoad(e: Event) {
   isLoaded.value = true;
-  emit('load', e);
+  emit("load", e);
 }
 
 function onError(e: Event) {
@@ -112,7 +120,7 @@ function onError(e: Event) {
     return;
   }
   isError.value = true;
-  emit('error', e);
+  emit("error", e);
 }
 </script>
 

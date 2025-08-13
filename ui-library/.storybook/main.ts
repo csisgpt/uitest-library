@@ -1,21 +1,22 @@
-import type { StorybookConfig } from "@storybook/vue3-vite";
+import type { StorybookConfig } from '@storybook/vue3-vite';
 
 const config: StorybookConfig = {
   stories: [
-    "../stories/**/*.mdx",
-    "../components/**/**/*.stories.ts",
-    // "../stories/**/*.stories.@(js|jsx|mjs|ts|tsx)",
+    '../stories/**/*.mdx',
+    '../components/**/**/*.stories.@(ts|tsx|js|jsx|mdx)',
   ],
   addons: [
-    "@chromatic-com/storybook",
-    "@storybook/addon-docs",
-    "@storybook/addon-onboarding",
-    "@storybook/addon-a11y",
-    "@storybook/addon-vitest",
+    // 'addon-actions' دیگه وجود نداره و نباید باشه
+    '@chromatic-com/storybook',
+    '@storybook/addon-docs',
+    '@storybook/addon-a11y',
+    '@storybook/addon-vitest',
+    // '@storybook/addon-onboarding' (اختیاری)
   ],
   framework: {
-    name: "@storybook/vue3-vite",
+    name: '@storybook/vue3-vite',
     options: {},
   },
 };
+
 export default config;
