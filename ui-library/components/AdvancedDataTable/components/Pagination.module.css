@@ -1,0 +1,2 @@
+.container { display: inline-flex; gap: var(--space-sm); align-items: center; }
+.info { padding: 0 var(--space-sm); color: var(--color-muted); }

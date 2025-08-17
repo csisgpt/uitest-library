@@ -1,9 +1,0 @@
-:root {
-  --table-header-bg: var(--color-surface);
-  --table-header-hover-bg: var(--color-background);
-  --table-row-bg: var(--color-background);
-  --table-row-hover-bg: var(--color-surface);
-  --table-row-selected-bg: rgba(66, 184, 131, 0.15);
-  --table-row-expanded-bg: rgba(66, 184, 131, 0.1);
-  --table-resize-handle-bg: var(--color-border);
-}

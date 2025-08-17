@@ -5,7 +5,7 @@
   max-width: fit-content;
   user-select: none;
   cursor: pointer;
-  font-family: inherit;
+  font-family: var(--font-family-base);
 }
 
 .disabled {
@@ -89,3 +89,6 @@
   background: var(--color-muted-10, #f3f4f644);
   padding: 2px 8px;
 }
+
+/* Standardized states */
+:focus-visible{outline:none;box-shadow:0 0 0 var(--focus-ring-offset) var(--color-background),0 0 0 calc(var(--focus-ring-offset) + var(--focus-ring-width)) var(--focus-ring-color);}

@@ -1,0 +1,6 @@
+<template><td :colspan="colspan" :class="styles.error"><BaseIcon name="alert-triangle" /> {{ text }}</td></template>
+<script setup lang="ts">
+import BaseIcon from "../../../BaseIcon/BaseIcon.vue";
+import styles from '../../UltimateDataTable.module.css';
+defineProps<{ colspan: number; text: string }>();
+</script>

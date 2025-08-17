@@ -45,7 +45,7 @@
   font-size: var(--font-size-sm);
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--space-xs);
   margin: 2px;
 }
 
@@ -70,7 +70,7 @@
   margin-right: auto;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-sm);
 }
 
 .dropdownClear {
@@ -143,7 +143,7 @@
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-sm);
   transition: background var(--transition-fast);
   white-space: nowrap;
   overflow: hidden;
@@ -212,3 +212,6 @@
 
 .iconLeft { margin-left: 8px; }
 .iconRight { margin-right: 8px; }
+
+/* Standardized states */
+:focus-visible{outline:none;box-shadow:0 0 0 var(--focus-ring-offset) var(--color-background),0 0 0 calc(var(--focus-ring-offset) + var(--focus-ring-width)) var(--focus-ring-color);}

@@ -18,6 +18,5 @@ export { default as BaseSplitButton } from './BaseSplitButton/BaseSplitButton.vu
 export { default as BaseSpeedDial } from './BaseSpeedDial/BaseSpeedDial.vue';
 export { default as BaseImage } from './BaseImage/BaseImage.vue';
 export { default as BaseIcon } from './BaseIcon/BaseIcon.vue';
-export { default as BaseDataTable } from './BaseDataTable/BaseDataTable.vue';
-export { default as AdvancedDataTable } from './AdvancedDataTable/AdvancedDataTable.vue';
-export * from './segment';
+export { default as BaseSegment } from './BaseSegment/BaseSegment.vue';
+export { default as AdvancedDataTable } from './AdvancedDataTable/UltimateDataTable.vue';

@@ -73,4 +73,7 @@ function toggle() {
 }
 </script>
 
-<style module src="./BaseToggleButton.module.css"></style>
+<style module src="./BaseToggleButton.module.css">
+/* Standardized states */
+:focus-visible{outline:none;box-shadow:0 0 0 var(--focus-ring-offset) var(--color-background),0 0 0 calc(var(--focus-ring-offset) + var(--focus-ring-width)) var(--focus-ring-color);}
+*{transition:background var(--transition-base),color var(--transition-base),box-shadow var(--transition-base),border-color var(--transition-base);}</style>

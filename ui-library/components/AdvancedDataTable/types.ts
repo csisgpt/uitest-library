@@ -1,125 +1,68 @@
-// types.ts - Interfaces for AdvancedDataTable component
+export type ColumnAlign = 'start' | 'center' | 'end';
+export type StickySide = 'left' | 'right' | undefined;
 
-/** Supported column content types */
-export type ColumnType =
-  | "text"
-  | "number"
-  | "currency"
-  | "date-fa"
-  | "date"
-  | "boolean"
-  | "file"
-  | "slot";
+export type TextOperator = 'contains' | 'startsWith' | 'endsWith' | 'equals';
+export type NumberOperator = 'eq' | 'neq' | 'gt' | 'gte' | 'lt' | 'lte' | 'between';
+export type DateOperator = 'on' | 'before' | 'after' | 'between';
 
-/** Supported filter input types */
-export type FilterType =
-  | "text"
-  | "number"
-  | "date"
-  | "boolean"
-  | "select"
-  | "custom";
+export type FilterKind = 'text' | 'number' | 'numberRange' | 'date' | 'dateRange' | 'boolean' | 'enum' | 'custom';
 
-/** Option type for select filters */
-export interface SelectOption {
-  label: string;
-  value: any;
-}
+export interface BaseFilterConfig { kind: FilterKind; enabled?: boolean; label?: string; }
+export interface TextFilterConfig extends BaseFilterConfig { kind: 'text'; operator?: TextOperator; caseSensitive?: boolean; }
+export interface NumberFilterConfig extends BaseFilterConfig { kind: 'number'; operator?: NumberOperator; }
+export interface NumberRangeFilterConfig extends BaseFilterConfig { kind: 'numberRange'; }
+export interface DateFilterConfig extends BaseFilterConfig { kind: 'date'; operator?: DateOperator; format?: string; }
+export interface DateRangeFilterConfig extends BaseFilterConfig { kind: 'dateRange'; format?: string; }
+export interface BooleanFilterConfig extends BaseFilterConfig { kind: 'boolean'; }
+export interface EnumFilterConfig<T = any> extends BaseFilterConfig { kind: 'enum'; options: Array<{ label: string; value: T }>; multiple?: boolean; }
+export interface CustomFilterConfig<Value = any> extends BaseFilterConfig { kind: 'custom'; predicate?: (value: Value, row: any) => boolean; }
 
-/** Column definition */
-export interface Column {
-  field: string;
-  header: string;
-  type?: ColumnType;
-  sortable?: boolean;
-  filterable?: boolean;
+export type FilterConfig =
+  | TextFilterConfig | NumberFilterConfig | NumberRangeFilterConfig
+  | DateFilterConfig | DateRangeFilterConfig | BooleanFilterConfig
+  | EnumFilterConfig | CustomFilterConfig;
 
-  /** Type of filter input to render for this column */
-  filterType?: FilterType;
-
-  /** Options used by select filters (single or multi) */
-  filterOptions?: SelectOption[];
-
-  /** Allow multi-select for select filters */
-  filterMultiple?: boolean;
-
-  /** Slot name for custom filter rendering */
-  filterSlotName?: string;
-
-  width?: string;
-  align?: "left" | "center" | "right";
-
-  /** Slot name for custom cell rendering when type is 'slot' */
-  slotName?: string;
-
-  /** Extra options for value formatting (currency symbol, date format, etc.) */
-  formatOptions?: Record<string, any>;
-}
-
-/** Pagination state */
-export interface Pagination {
-  page: number;
-  pageSize: number;
-  total: number;
-}
-
-export type SelectionMode = "single" | "multiple" | null;
-
-/** Sorting state for one column */
-export interface SortState {
-  field: string;
-  order: "asc" | "desc";
-}
-
-/** Filter model value types */
 export type FilterValue =
-  | string                              // text, single-select
-  | number                              // numeric exact
-  | boolean                             // boolean true/false
-  | "all"                               // boolean no filter
-  | string[]                            // multi-select
-  | number[]                            // multi-select numeric
-  | { min?: number | null; max?: number | null }  // numeric range
-  | { from?: string; to?: string };     // date range
+  | string | number | boolean | null | undefined
+  | { from?: number | string | Date; to?: number | string | Date }
+  | Array<any>;
 
-/** Map of field -> filter value */
 export type FilterModel = Record<string, FilterValue>;
 
-/** Event payload for lazy loading */
-export interface LazyLoadEvent {
-  page: number;
-  pageSize: number;
-  sort: SortState[];
-  filters: FilterModel;
+export interface SortState { id: string; desc?: boolean; priority?: number; }
+export interface PaginationState { page: number; pageSize: number; }
+
+export interface Column<Row = any, Value = any> {
+  id: string;
+  header?: string;
+  field?: string;
+  accessor?: (row: Row) => Value;
+  format?: (value: Value, row: Row) => string;
+  align?: ColumnAlign;
+  sticky?: StickySide;
+  width?: number;
+  minWidth?: number;
+  maxWidth?: number;
+  sortable?: boolean;
+  sortComparator?: (a: any, b: any, rowA: Row, rowB: Row) => number;
+  filter?: FilterConfig;
+  headerSlot?: string;
+  cellSlot?: string;
+  hideable?: boolean;
+  hidden?: boolean;
 }
 
-/** Event payload for server mode requests */
-export interface ServerRequestQuery {
-  page: number;
-  pageSize: number;
-  sort: SortState[];
-  filters: FilterModel;
-  expandedRows: any[];
+export interface ServerQuery { page: number; pageSize: number; sort: SortState[]; filters: FilterModel; global?: string; }
+export type RowKeyGetter<Row = any> = (row: Row, index: number) => string | number;
+
+export interface I18nText {
+  loading: string; empty: string; error: string; searchPlaceholder: string; selectAll: string;
 }
 
-export type RowExpansionMode = "single" | "multiple";
+export interface ExportOptions { filename?: string; sheetName?: string; columns?: string[]; }
 
-/** Props passed to custom column slots (e.g. action buttons) */
-export interface DataTableColumnSlotProps<Row = any> {
-  row: Row;
-  index: number;
-}
-
-/** Props passed to generic cell slots using "cell-<field>" naming */
-export interface DataTableCellSlotProps<Row = any, Value = any> {
-  row: Row;
-  value: Value;
-  column: Column;
-  index: number;
-}
-
-/** Props passed to custom filter slots */
-export interface DataTableFilterSlotProps<Value = any> {
-  model: Value;
-  update: (value: Value) => void;
-}
+// ---- CRUD Types ----
+export type FieldType = 'text' | 'number' | 'email' | 'textarea' | 'select' | 'checkbox' | 'date';
+export interface FieldSchema { id: string; type: FieldType; label: string; required?: boolean; placeholder?: string; options?: Array<{ label: string; value: any }>; }
+export interface FormSchema { fields: FieldSchema[]; }
+export interface CrudHandlers<Row = any> { create?: (payload: Record<string, any>) => Promise<Row>; update?: (row: Row, payload: Record<string, any>) => Promise<Row>; delete?: (row: Row) => Promise<void>; }

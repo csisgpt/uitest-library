@@ -1,0 +1,369 @@
+/* ── Track ─────────────────────────────────────────────── */
+.segment {
+  position: relative;
+  display: inline-flex;
+  align-items: stretch;
+  gap: 0;
+  padding: 1px;
+  border: var(--border-width) var(--border-style) var(--color-border);
+  background: var(--seg-track-bg);
+  box-shadow: var(--shadow-sm);
+  font-family: var(--font-family-base);
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  isolation: isolate;
+
+  /* Local tokens (overridable) */
+  --seg-accent: var(--color-primary);
+  --seg-text: var(--color-text);
+  --seg-muted: var(--color-muted);
+  --seg-thumb: var(--color-surface);
+  --seg-item-px: var(--space-md);
+}
+
+.fullWidth {
+  width: 100%;
+  display: flex;
+}
+.pill {
+  border-radius: var(--radius-full);
+}
+.rounded {
+  border-radius: var(--radius-lg);
+}
+.disabled {
+  opacity: 0.55;
+  pointer-events: none;
+}
+.readonly {
+  pointer-events: none;
+}
+
+/* اسکرول نرم + fade edges */
+.scrollable {
+  overflow: auto;
+  scrollbar-gutter: stable both-edges;
+  overscroll-behavior-inline: contain;
+  scroll-snap-type: inline proximity;
+}
+.scrollable .item {
+  scroll-snap-align: center;
+}
+.scrollable::before,
+.scrollable::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 16px;
+  pointer-events: none;
+  z-index: 2;
+}
+.scrollable::before {
+  left: 0;
+  background: linear-gradient(to right, var(--seg-track-bg), transparent);
+}
+.scrollable::after {
+  right: 0;
+  background: linear-gradient(to left, var(--seg-track-bg), transparent);
+}
+
+/* Sizes */
+.sm {
+  height: 28px;
+  padding: 2px;
+  line-height: 40px;
+}
+.md {
+  height: 34px;
+  padding: 4px;
+  line-height: 40px;
+}
+.lg {
+  height: 40px;
+  padding: 8px;
+  line-height: 40px;
+}
+
+/* ── Item ──────────────────────────────────────────────── */
+.item {
+  position: relative;
+  z-index: 1;
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--seg-muted);
+  padding-block: 0;
+  padding-inline: var(--seg-item-px);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  cursor: pointer;
+  min-inline-size: 2.5rem;
+  transition: color var(--transition-fast),
+    background-color var(--transition-fast), transform var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+.sm .item {
+  font-size: var(--font-size-sm);
+}
+.lg .item {
+  font-size: var(--font-size-lg);
+}
+
+.item:hover {
+  color: var(--seg-text);
+}
+.item:active {
+  transform: translateY(0.5px);
+}
+.itemDisabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Focus ring */
+.item:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--seg-accent) 18%, transparent),
+    0 0 0 1px var(--seg-accent);
+}
+
+/* متن فعال */
+.active {
+  color: var(--seg-text);
+  font-weight: var(--font-weight-bold);
+}
+
+/* آیکن/لیبل */
+.iconWrap {
+  display: inline-flex;
+  align-items: center;
+}
+.iconOnly {
+  padding-inline: calc(var(--seg-item-px) - 2px);
+}
+.label {
+  white-space: nowrap;
+}
+
+/* ── Indicator: iOS Thumb / MD Underline ──────────────── */
+.indicator {
+  position: absolute;
+  left: 0;
+  top: 2px;
+  height: calc(100% - 4px);
+  background: var(--seg-thumb);
+  border: var(--border-width) var(--border-style) var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-base), width var(--transition-base),
+    background var(--transition-base), box-shadow var(--transition-base);
+  z-index: 0;
+}
+
+/* Material */
+.mode_md {
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+  --seg-track-bg: transparent;
+}
+.mode_md .indicator {
+  top: auto;
+  bottom: 0;
+  height: 2px;
+  border-radius: var(--radius-sm);
+  background: var(--seg-accent);
+  border: none;
+  box-shadow: none;
+}
+.mode_md .active {
+  color: var(--seg-accent);
+  font-weight: var(--font-weight-medium);
+}
+.mode_md.multiple .item.active {
+  background: color-mix(in srgb, var(--seg-accent) 12%, transparent);
+  color: var(--seg-accent);
+  box-shadow: none;
+  border-radius: var(--radius-md);
+}
+
+/* iOS: متن اکتیو به رنگ accent + hover ملایم */
+.mode_ios .active {
+  color: var(--seg-accent);
+}
+.mode_ios .item:hover {
+  background: color-mix(in srgb, var(--seg-accent) 8%, transparent);
+  border-radius: var(--radius-md);
+}
+
+/* Variants (accent) */
+.variant_default {
+}
+.variant_primary {
+  --seg-accent: var(--color-primary);
+}
+.variant_secondary {
+  --seg-accent: var(--color-secondary);
+}
+.variant_tertiary {
+  --seg-accent: var(--color-tertiary, var(--color-info));
+}
+.variant_success {
+  --seg-accent: var(--color-success);
+}
+.variant_warning {
+  --seg-accent: var(--color-warning);
+}
+.variant_info {
+  --seg-accent: var(--color-info);
+}
+.variant_error {
+  --seg-accent: var(--color-error);
+}
+.variant_danger {
+  --seg-accent: var(--color-error);
+} /* alias */
+
+.variant_outline {
+  background: color-mix(in srgb, var(--color-text) 4%, var(--color-surface));
+}
+.variant_ghost {
+  background: transparent;
+  border-color: var(--color-border);
+}
+
+/* iOS track tint per variant (با --seg-track-bg) */
+.mode_ios.variant_primary {
+  --seg-track-bg: color-mix(
+    in srgb,
+    var(--color-primary) 14%,
+    var(--color-surface)
+  );
+}
+.mode_ios.variant_secondary {
+  --seg-track-bg: color-mix(
+    in srgb,
+    var(--color-secondary) 12%,
+    var(--color-surface)
+  );
+}
+.mode_ios.variant_tertiary {
+  --seg-track-bg: color-mix(
+    in srgb,
+    var(--color-tertiary, var(--color-info)) 12%,
+    var(--color-surface)
+  );
+}
+.mode_ios.variant_success {
+  --seg-track-bg: color-mix(
+    in srgb,
+    var(--color-success) 12%,
+    var(--color-surface)
+  );
+}
+.mode_ios.variant_warning {
+  --seg-track-bg: color-mix(
+    in srgb,
+    var(--color-warning) 12%,
+    var(--color-surface)
+  );
+}
+.mode_ios.variant_info {
+  --seg-track-bg: color-mix(
+    in srgb,
+    var(--color-info) 12%,
+    var(--color-surface)
+  );
+}
+.mode_ios.variant_error,
+.mode_ios.variant_danger {
+  --seg-track-bg: color-mix(
+    in srgb,
+    var(--color-error) 12%,
+    var(--color-surface)
+  );
+}
+
+/* خنثی‌ها */
+.mode_ios.variant_default {
+  --seg-track-bg: color-mix(
+    in srgb,
+    var(--color-text) 6%,
+    var(--color-surface)
+  );
+}
+.mode_ios.variant_light {
+  --seg-track-bg: color-mix(
+    in srgb,
+    var(--color-text) 3%,
+    var(--color-surface)
+  );
+}
+.mode_ios.variant_medium {
+  --seg-track-bg: color-mix(
+    in srgb,
+    var(--color-text) 8%,
+    var(--color-surface)
+  );
+}
+.mode_ios.variant_dark {
+  --seg-track-bg: color-mix(
+    in srgb,
+    var(--color-text) 14%,
+    var(--color-surface)
+  );
+}
+
+/* Utilities */
+.fullWidth .item {
+  flex: 1 1 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  .item,
+  .indicator {
+    transition: none !important;
+  }
+}
+
+/* High contrast / forced colors */
+@media (prefers-contrast: more) {
+  .item:focus-visible {
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--seg-accent) 22%, transparent),
+      0 0 0 1px var(--seg-accent);
+  }
+}
+@media (forced-colors: active) {
+  .segment {
+    border-color: CanvasText;
+  }
+  .indicator {
+    border-color: CanvasText;
+  }
+  .item:focus-visible {
+    box-shadow: 0 0 0 2px Highlight;
+  }
+}
+
+/* SR helper */
+.visuallyHidden {
+  position: absolute !important;
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px);
+  white-space: nowrap;
+  border: 0;
+  padding: 0;
+  margin: -1px;
+}
+
+/* Optional: iOS شیشه‌ای اگر در تم دوست دارید */
+@supports (backdrop-filter: blur(6px)) {
+  .mode_ios {
+    backdrop-filter: saturate(140%) blur(8px);
+  }
+}
