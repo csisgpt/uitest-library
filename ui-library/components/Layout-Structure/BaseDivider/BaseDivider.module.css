@@ -1,0 +1,30 @@
+/* BaseDivider.module.css */
+
+/* استایل‌های عمومی دیوایدر */
+.base-divider {
+  height: 1px;
+  background-color: var(--color-border);
+  margin: var(--space-md) 0;
+  transition: background-color var(--transition-base), margin var(--transition-base);
+}
+
+/* زمانی که دیوایدر غیرفعال است */
+.base-divider--disabled {
+  opacity: var(--opacity-disabled);
+  pointer-events: none;
+}
+
+/* حالت هاور برای تغییر رنگ */
+.base-divider:hover {
+  background-color: var(--color-muted);
+}
+
+/* تم تاریک */
+[data-theme="dark"] .base-divider {
+  background-color: var(--color-border);
+}
+
+/* تم روشن */
+[data-theme="light"] .base-divider {
+  background-color: var(--color-border);
+}

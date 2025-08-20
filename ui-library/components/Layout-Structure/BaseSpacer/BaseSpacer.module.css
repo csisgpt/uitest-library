@@ -1,0 +1,58 @@
+/* =========================================
+   BaseSpacer – logical & token-driven
+   ========================================= */
+
+.spacer {
+  display: block;
+
+  /* مقدار پایه برای اندازه spacer (قابل override با کلاس size-* یا --spacer-size-*) */
+  --spacer-size: var(--space-md, 0.75rem);
+
+  /* برای جلوگیری از artifact بصری، هر دو محور را صفر می‌کنیم و
+     در کلاس جهت، اندازه‌ی محورِ هدف را set می‌کنیم. */
+  inline-size: 0;
+  block-size: 0;
+}
+
+/* -------- Direction (logical) -------- */
+.direction-horizontal { inline-size: var(--spacer-size); block-size: 0; }
+.direction-vertical   { block-size:  var(--spacer-size); inline-size: 0; }
+.direction-both       { inline-size: var(--spacer-size); block-size: var(--spacer-size); }
+
+/* -------- Size tokens -> --spacer-size -------- */
+/* توکن‌های پروژه: xs..xl. مقادیر بزرگ‌تر fallback دارند تا بعداً در tokens اضافه شوند. */
+.size-xs  { --spacer-size: var(--space-xs, 0.25rem); } /* 4px  */
+.size-sm  { --spacer-size: var(--space-sm, 0.5rem); }  /* 8px  */
+.size-md  { --spacer-size: var(--space-md, 0.75rem); } /* 12px */
+.size-lg  { --spacer-size: var(--space-lg, 1rem); }    /* 16px */
+.size-xl  { --spacer-size: var(--space-xl, 1.5rem); }  /* 24px */
+
+.size-2xl { --spacer-size: var(--space-2xl, 3rem); }   /* fallback 48px */
+.size-3xl { --spacer-size: var(--space-3xl, 4rem); }   /* fallback 64px */
+.size-4xl { --spacer-size: var(--space-4xl, 6rem); }   /* fallback 96px */
+
+/* -------- Flex grow -------- */
+.grow { flex: 1 1 0; min-inline-size: 0; min-block-size: 0; }
+
+/* -------- Responsive sizing via CSS vars -------- */
+/* mobile-first: xs = پایه‌ی فعلی؛ از sm به بالا override می‌کنیم. */
+@media (min-width: 640px) { /* sm */
+  .spacer { --spacer-size: var(--spacer-size-sm, var(--spacer-size)); }
+}
+@media (min-width: 768px) { /* md */
+  .spacer { --spacer-size: var(--spacer-size-md, var(--spacer-size)); }
+}
+@media (min-width: 1024px) { /* lg */
+  .spacer { --spacer-size: var(--spacer-size-lg, var(--spacer-size)); }
+}
+@media (min-width: 1280px) { /* xl */
+  .spacer { --spacer-size: var(--spacer-size-xl, var(--spacer-size)); }
+}
+
+/* -------- Print: حفظ فاصله‌ها -------- */
+@media print {
+  .spacer { visibility: hidden; }
+  .direction-horizontal { visibility: hidden; inline-size: var(--spacer-size); }
+  .direction-vertical   { visibility: hidden; block-size:  var(--spacer-size); }
+  .direction-both       { visibility: hidden; inline-size: var(--spacer-size); block-size: var(--spacer-size); }
+}

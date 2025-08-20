@@ -1,0 +1,359 @@
+/* ==========================================================================
+   BaseFlex Component Styles
+   ========================================================================== */
+
+.flex {
+  display: flex;
+  box-sizing: border-box;
+}
+
+.flex--inline {
+  display: inline-flex;
+}
+
+/* ==========================================================================
+   Direction Variants
+   ========================================================================== */
+
+.flex--row {
+  flex-direction: row;
+}
+
+.flex--column {
+  flex-direction: column;
+}
+
+.flex--row-reverse {
+  flex-direction: row-reverse;
+}
+
+.flex--column-reverse {
+  flex-direction: column-reverse;
+}
+
+/* ==========================================================================
+   Wrap Variants
+   ========================================================================== */
+
+.flex--wrap {
+  flex-wrap: wrap;
+}
+
+.flex--wrap-reverse {
+  flex-wrap: wrap-reverse;
+}
+
+.flex--nowrap {
+  flex-wrap: nowrap;
+}
+
+/* ==========================================================================
+   Align Variants (Cross Axis)
+   ========================================================================== */
+
+.flex--align-start {
+  align-items: flex-start;
+}
+
+.flex--align-center {
+  align-items: center;
+}
+
+.flex--align-end {
+  align-items: flex-end;
+}
+
+.flex--align-baseline {
+  align-items: baseline;
+}
+
+.flex--align-stretch {
+  align-items: stretch;
+}
+
+/* ==========================================================================
+   Justify Variants (Main Axis)
+   ========================================================================== */
+
+.flex--justify-start {
+  justify-content: flex-start;
+}
+
+.flex--justify-center {
+  justify-content: center;
+}
+
+.flex--justify-end {
+  justify-content: flex-end;
+}
+
+.flex--justify-between {
+  justify-content: space-between;
+}
+
+.flex--justify-around {
+  justify-content: space-around;
+}
+
+.flex--justify-evenly {
+  justify-content: space-evenly;
+}
+
+/* ==========================================================================
+   Gap Variants (Main)
+   ========================================================================== */
+
+.flex--gap-xs {
+  gap: var(--spacing-1, 0.25rem);
+}
+
+.flex--gap-sm {
+  gap: var(--spacing-2, 0.5rem);
+}
+
+.flex--gap-md {
+  gap: var(--spacing-4, 1rem);
+}
+
+.flex--gap-lg {
+  gap: var(--spacing-6, 1.5rem);
+}
+
+.flex--gap-xl {
+  gap: var(--spacing-8, 2rem);
+}
+
+.flex--gap-2xl {
+  gap: var(--spacing-12, 3rem);
+}
+
+.flex--gap-3xl {
+  gap: var(--spacing-16, 4rem);
+}
+
+/* Custom gap via CSS custom property */
+.flex:has([style*="--flex-gap-custom"]) {
+  gap: var(--flex-gap-custom);
+}
+
+/* ==========================================================================
+   Row Gap Variants (Specific)
+   ========================================================================== */
+
+.flex--row-gap-xs {
+  row-gap: var(--spacing-1, 0.25rem);
+}
+
+.flex--row-gap-sm {
+  row-gap: var(--spacing-2, 0.5rem);
+}
+
+.flex--row-gap-md {
+  row-gap: var(--spacing-4, 1rem);
+}
+
+.flex--row-gap-lg {
+  row-gap: var(--spacing-6, 1.5rem);
+}
+
+.flex--row-gap-xl {
+  row-gap: var(--spacing-8, 2rem);
+}
+
+.flex--row-gap-2xl {
+  row-gap: var(--spacing-12, 3rem);
+}
+
+.flex--row-gap-3xl {
+  row-gap: var(--spacing-16, 4rem);
+}
+
+/* ==========================================================================
+   Column Gap Variants (Specific)
+   ========================================================================== */
+
+.flex--column-gap-xs {
+  column-gap: var(--spacing-1, 0.25rem);
+}
+
+.flex--column-gap-sm {
+  column-gap: var(--spacing-2, 0.5rem);
+}
+
+.flex--column-gap-md {
+  column-gap: var(--spacing-4, 1rem);
+}
+
+.flex--column-gap-lg {
+  column-gap: var(--spacing-6, 1.5rem);
+}
+
+.flex--column-gap-xl {
+  column-gap: var(--spacing-8, 2rem);
+}
+
+.flex--column-gap-2xl {
+  column-gap: var(--spacing-12, 3rem);
+}
+
+.flex--column-gap-3xl {
+  column-gap: var(--spacing-16, 4rem);
+}
+
+/* ==========================================================================
+   Flex Item Properties
+   ========================================================================== */
+
+.flex--grow {
+  flex-grow: 1;
+}
+
+.flex--no-shrink {
+  flex-shrink: 0;
+}
+
+/* ==========================================================================
+   Flex Basis Variants
+   ========================================================================== */
+
+.flex--basis-auto {
+  flex-basis: auto;
+}
+
+.flex--basis-full {
+  flex-basis: 100%;
+}
+
+.flex--basis-1-2 {
+  flex-basis: 50%;
+}
+
+.flex--basis-1-3 {
+  flex-basis: 33.333333%;
+}
+
+.flex--basis-2-3 {
+  flex-basis: 66.666667%;
+}
+
+.flex--basis-1-4 {
+  flex-basis: 25%;
+}
+
+.flex--basis-3-4 {
+  flex-basis: 75%;
+}
+
+/* Custom basis via CSS custom property */
+.flex:has([style*="--flex-basis-custom"]) {
+  flex-basis: var(--flex-basis-custom);
+}
+
+/* ==========================================================================
+   Responsive Behavior
+   ========================================================================== */
+
+/* Small screens adjustments */
+@media (min-width: 640px) {
+  .flex--gap-sm {
+    gap: var(--spacing-3, 0.75rem);
+  }
+  
+  .flex--gap-md {
+    gap: var(--spacing-5, 1.25rem);
+  }
+  
+  .flex--gap-lg {
+    gap: var(--spacing-8, 2rem);
+  }
+}
+
+/* Medium screens adjustments */
+@media (min-width: 768px) {
+  .flex--gap-lg {
+    gap: var(--spacing-10, 2.5rem);
+  }
+  
+  .flex--gap-xl {
+    gap: var(--spacing-12, 3rem);
+  }
+  
+  .flex--gap-2xl {
+    gap: var(--spacing-16, 4rem);
+  }
+}
+
+/* Large screens adjustments */
+@media (min-width: 1024px) {
+  .flex--gap-2xl {
+    gap: var(--spacing-20, 5rem);
+  }
+  
+  .flex--gap-3xl {
+    gap: var(--spacing-24, 6rem);
+  }
+}
+
+/* ==========================================================================
+   State Variants
+   ========================================================================== */
+
+/* Empty flex container */
+.flex:empty {
+  min-height: 0;
+}
+
+/* Single child optimization */
+.flex:has(> :only-child) {
+  /* Optimize for single child scenarios */
+}
+
+/* ==========================================================================
+   Accessibility & Reduced Motion
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .flex {
+    /* Remove any potential transitions */
+    transition: none !important;
+  }
+}
+
+/* Focus management for keyboard navigation */
+.flex:focus-within {
+  /* Enhance focus visibility when children are focused */
+}
+
+/* ==========================================================================
+   Print Styles
+   ========================================================================== */
+
+@media print {
+  .flex {
+    /* Optimize for print layout */
+    flex-direction: column !important;
+    gap: var(--spacing-2, 0.5rem) !important;
+  }
+  
+  .flex--inline {
+    display: flex !important;
+  }
+  
+  /* Remove complex gap behaviors in print */
+  .flex--gap-xl,
+  .flex--gap-2xl,
+  .flex--gap-3xl {
+    gap: var(--spacing-4, 1rem) !important;
+  }
+}
+
+/* ==========================================================================
+   High Contrast Mode Support
+   ========================================================================== */
+
+@media (prefers-contrast: high) {
+  .flex {
+    /* Ensure proper contrast in high contrast mode */
+  }
+}
+

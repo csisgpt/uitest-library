@@ -1,0 +1,163 @@
+/* ─────────────────────────────────────────────────────────
+   BasePopover.module.css
+   - تم‌پذیری (color/variant/size/rounded)
+   - انیمیشن ورود/خروج با <Transition>
+   - A11y-friendly focus ring
+   ───────────────────────────────────────────────────────── */
+
+.root {
+  display: inline-block;
+  position: relative;
+}
+
+/* Trigger */
+.trigger {
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  font: inherit;
+  color: inherit;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2xs, 0.25rem);
+  border-radius: var(--radius-md);
+  -webkit-tap-highlight-color: transparent;
+}
+.trigger:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 var(--focus-ring-offset) var(--color-background),
+    0 0 0 calc(var(--focus-ring-offset) + var(--focus-ring-width)) var(--focus-ring-color);
+}
+.trigger[disabled],
+.trigger[data-disabled] {
+  cursor: not-allowed;
+  opacity: var(--state-disabled-opacity, 0.5);
+}
+
+/* Panel base */
+.panel {
+  position: var(--popover-position, absolute);
+  z-index: var(--z-index-dropdown, 1000);
+  background: var(--color-surface);
+  color: var(--color-text);
+  border: var(--border-width) var(--border-style) var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: var(--popover-padding, var(--space-md));
+  min-width: var(--popover-min-width, 12rem);
+  max-width: min(90vw, var(--popover-max-width, 28rem));
+  pointer-events: auto;
+  will-change: opacity, transform, box-shadow, background, color, border-color;
+  transition:
+    opacity var(--transition-base),
+    transform var(--transition-base),
+    box-shadow var(--transition-base),
+    background var(--transition-base),
+    color var(--transition-base),
+    border-color var(--transition-base);
+}
+
+/* Transform origins by placement (برای scale بهتر) */
+.panel[data-open][data-placement^="top"]    { transform-origin: bottom center; }
+.panel[data-open][data-placement^="bottom"] { transform-origin: top center; }
+.panel[data-open][data-placement^="left"]   { transform-origin: center right; }
+.panel[data-open][data-placement^="right"]  { transform-origin: center left; }
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .panel {
+    transition: opacity var(--transition-fast, 120ms) linear;
+    transform: none !important;
+  }
+}
+
+/* Arrow */
+.arrow {
+  position: absolute;
+  background: var(--color-surface);
+  border-left: var(--border-width) var(--border-style) var(--color-border);
+  border-top: var(--border-width) var(--border-style) var(--color-border);
+  filter: drop-shadow(0 1px 0 var(--shadow-color, rgba(0,0,0,0.04)));
+  transform-origin: center center;
+}
+
+.panel:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 var(--focus-ring-offset) var(--color-background),
+    0 0 0 calc(var(--focus-ring-offset) + var(--focus-ring-width)) var(--focus-ring-color);
+}
+
+/* حفظ لبه‌های گرد برای اسکرول داخلی */
+.panel > :first-child { border-top-left-radius: inherit; border-top-right-radius: inherit; }
+.panel > :last-child  { border-bottom-left-radius: inherit; border-bottom-right-radius: inherit; }
+
+/* ---------- Theming (color / variant) ---------- */
+/* انتظار می‌رود توکن‌های رنگی در Root تعریف شده باشند: 
+   --color-<name>-bg-soft, --color-<name>-bg-solid, --color-<name>-text, --color-<name>-border 
+*/
+
+.primary {}
+.success {}
+.error {}
+.warning {}
+.info {}
+.neutral {}
+
+/* Variant: soft (پیش‌فرض) */
+.variant-soft.primary  { background: var(--color-primary-bg-soft);  color: var(--color-primary-text);  border-color: var(--color-primary-border); }
+.variant-soft.success  { background: var(--color-success-bg-soft);  color: var(--color-success-text);  border-color: var(--color-success-border); }
+.variant-soft.error    { background: var(--color-error-bg-soft);    color: var(--color-error-text);    border-color: var(--color-error-border); }
+.variant-soft.warning  { background: var(--color-warning-bg-soft);  color: var(--color-warning-text);  border-color: var(--color-warning-border); }
+.variant-soft.info     { background: var(--color-info-bg-soft);     color: var(--color-info-text);     border-color: var(--color-info-border); }
+.variant-soft.neutral  { background: var(--color-neutral-bg-soft);  color: var(--color-neutral-text);  border-color: var(--color-neutral-border); }
+
+/* Variant: solid */
+.variant-solid.primary  { background: var(--color-primary-bg-solid);  color: var(--color-on-primary, #fff);  border-color: var(--color-primary-bg-solid); }
+.variant-solid.success  { background: var(--color-success-bg-solid);  color: var(--color-on-success, #fff);  border-color: var(--color-success-bg-solid); }
+.variant-solid.error    { background: var(--color-error-bg-solid);    color: var(--color-on-error, #fff);    border-color: var(--color-error-bg-solid); }
+.variant-solid.warning  { background: var(--color-warning-bg-solid);  color: var(--color-on-warning, #111);  border-color: var(--color-warning-bg-solid); }
+.variant-solid.info     { background: var(--color-info-bg-solid);     color: var(--color-on-info, #fff);     border-color: var(--color-info-bg-solid); }
+.variant-solid.neutral  { background: var(--color-neutral-bg-solid);  color: var(--color-on-neutral, #111);  border-color: var(--color-neutral-bg-solid); }
+
+/* Variant: outline */
+.variant-outline.primary  { background: var(--color-surface); color: var(--color-primary-text);  border-color: var(--color-primary-border); }
+.variant-outline.success  { background: var(--color-surface); color: var(--color-success-text);  border-color: var(--color-success-border); }
+.variant-outline.error    { background: var(--color-surface); color: var(--color-error-text);    border-color: var(--color-error-border); }
+.variant-outline.warning  { background: var(--color-surface); color: var(--color-warning-text);  border-color: var(--color-warning-border); }
+.variant-outline.info     { background: var(--color-surface); color: var(--color-info-text);     border-color: var(--color-info-border); }
+.variant-outline.neutral  { background: var(--color-surface); color: var(--color-neutral-text);  border-color: var(--color-neutral-border); }
+
+/* ---------- Size (padding) ---------- */
+.size-sm { padding: var(--space-sm); }
+.size-md { padding: var(--space-md); }
+.size-lg { padding: var(--space-lg); }
+
+/* ---------- Rounded ---------- */
+.rounded-sm { border-radius: var(--radius-sm); }
+.rounded-md { border-radius: var(--radius-md); }
+.rounded-lg { border-radius: var(--radius-lg); }
+.rounded-full { border-radius: 9999px; }
+
+/* ---------- Transition (enter/leave) ---------- */
+/* چون CSS Module است، کلاس‌های Transition باید global باشند */
+:global(.fade-scale-enter-from),
+:global(.fade-scale-leave-to) {
+  opacity: 0;
+  transform: translateY(2px) scale(0.98);
+}
+:global(.fade-scale-enter-active),
+:global(.fade-scale-leave-active) {
+  transition: opacity var(--transition-base), transform var(--transition-base);
+}
+
+/* فقط در این ماژول، تغییرات را محلی نگه داریم */
+.panel :focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 var(--focus-ring-offset) var(--color-background),
+    0 0 0 calc(var(--focus-ring-offset) + var(--focus-ring-width)) var(--focus-ring-color);
+}

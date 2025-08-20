@@ -22,6 +22,11 @@
   border-radius: var(--radius-md);
   transition: box-shadow var(--transition-fast), border-color var(--transition-fast), background var(--transition-fast);
   min-height: 38px;
+
+}
+
+input:focus {
+    outline: none !important;
 }
 
 .native {
@@ -31,7 +36,7 @@
   font-family: var(--font-family-base);
   font-size: var(--font-size-md);
   color: var(--color-text);
-  outline: none;
+  outline: none !important;
   padding: var(--space-sm) 0;
 }
 .native::placeholder { color: var(--color-muted); opacity: .85; }

@@ -1,0 +1,116 @@
+/* ==========================================================================
+   BaseContainer – uses design tokens (spacing, etc.)
+   ========================================================================== */
+
+.container {
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* ---------------- Max-width variants ---------------- */
+
+.container--max-xs  { max-width: 20rem; } /* 320px */
+.container--max-sm  { max-width: 24rem; } /* 384px */
+.container--max-md  { max-width: 28rem; } /* 448px */
+.container--max-lg  { max-width: 32rem; } /* 512px */
+.container--max-xl  { max-width: 36rem; } /* 576px */
+.container--max-2xl { max-width: 42rem; } /* 672px */
+.container--max-3xl { max-width: 48rem; } /* 768px */
+.container--max-4xl { max-width: 56rem; } /* 896px */
+.container--max-5xl { max-width: 64rem; } /* 1024px */
+.container--max-6xl { max-width: 72rem; } /* 1152px */
+.container--max-7xl { max-width: 80rem; } /* 1280px */
+.container--max-full { max-width: 100%; }
+
+/* Custom max via CSS var (بدون :has) */
+.container--max-custom { max-width: var(--container-max-width); }
+
+/* Fluid / none */
+.container--fluid {
+  max-width: none !important;
+  width: 100%;
+}
+
+/* ---------------- Layout modifiers ---------------- */
+
+.container--centered {
+  margin-inline: auto;
+}
+
+/* Breakout to viewport edges */
+.container--breakout {
+  margin-inline: calc(50% - 50vw);
+  width: 100vw;
+  max-width: 100vw;
+}
+@supports (width: 100svw) {
+  .container--breakout {
+    margin-inline: calc(50% - 50svw);
+    width: 100svw;
+    max-width: 100svw;
+  }
+}
+
+/* ---------------- Padding (logical) ---------------- */
+/* از توکن‌های spacing پروژه استفاده می‌کنیم: --space-*  */
+/* xs..xl در tokens هست؛ 2xl را دستی تعریف می‌کنیم.      */
+
+:root {
+  --pad-xs: var(--space-xs, 0.25rem);
+  --pad-sm: var(--space-sm, 0.5rem);
+  --pad-md: var(--space-md, 0.75rem);
+  --pad-lg: var(--space-lg, 1rem);
+  --pad-xl: var(--space-xl, 1.5rem);
+  --pad-2xl: 3rem; /* پروژه فعلاً space-2xl ندارد؛ مقدار معادل */
+}
+
+/* horizontal */
+.container--padding-x-none { padding-inline: 0; }
+.container--padding-x-xs   { padding-inline: var(--pad-xs); }
+.container--padding-x-sm   { padding-inline: var(--pad-sm); }
+.container--padding-x-md   { padding-inline: var(--pad-md); }
+.container--padding-x-lg   { padding-inline: var(--pad-lg); }
+.container--padding-x-xl   { padding-inline: var(--pad-xl); }
+.container--padding-x-2xl  { padding-inline: var(--pad-2xl); }
+
+/* vertical */
+.container--padding-y-none { padding-block: 0; }
+.container--padding-y-xs   { padding-block: var(--pad-xs); }
+.container--padding-y-sm   { padding-block: var(--pad-sm); }
+.container--padding-y-md   { padding-block: var(--pad-md); }
+.container--padding-y-lg   { padding-block: var(--pad-lg); }
+.container--padding-y-xl   { padding-block: var(--pad-xl); }
+.container--padding-y-2xl  { padding-block: var(--pad-2xl); }
+
+/* ---------------- Responsiveness (optional bumps) ---------------- */
+@media (min-width: 640px) {
+  .container--padding-x-md { padding-inline: var(--pad-lg); }
+  .container--padding-x-lg { padding-inline: var(--pad-xl); }
+}
+@media (min-width: 768px) {
+  .container--padding-x-lg { padding-inline: var(--pad-2xl); }
+  .container--padding-x-xl { padding-inline: calc(var(--pad-2xl) + 1rem); }
+}
+@media (min-width: 1024px) {
+  .container--padding-x-xl { padding-inline: calc(var(--pad-2xl) + 2rem); }
+}
+
+/* A11y: no transitions assumed here, اما اگر اضافه شد */
+@media (prefers-reduced-motion: reduce) {
+  .container { transition: none !important; }
+}
+
+/* Print */
+@media print {
+  .container {
+    max-width: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  .container--breakout {
+    margin-inline: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}

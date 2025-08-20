@@ -4,6 +4,7 @@ const config: StorybookConfig = {
   stories: [
     '../stories/**/*.mdx',
     '../components/**/**/*.stories.@(ts|tsx|js|jsx|mdx)',
+    '../components/Layout-Structure/**/**/*.stories.@(ts|tsx|js|jsx|mdx)',
   ],
   addons: [
     // 'addon-actions' دیگه وجود نداره و نباید باشه
