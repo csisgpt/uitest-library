@@ -1,112 +1,153 @@
-/* -------- Root & Trigger -------- */
-.root {
+/* BaseButton.module.css */
+
+/* ریشه دکمه */
+.button {
   position: relative;
-  display: inline-block;
-}
-
-.trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm); /* 8px */              /* spacing tokens */ 
+  border-width: var(--border-width);
+  border-style: var(--border-style);
+  border-color: transparent;                   /* default; variants تنظیم می‌کنن */
+  border-radius: var(--radius-lg);             /* 8px پیش‌فرض */                  /* radius tokens */
+  padding: var(--space-sm) var(--space-md);    /* 8px 12px */
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-medium);
+  line-height: 1;
   cursor: pointer;
-  background: var(--color-surface, #fff);
-  color: var(--color-text, #111);
-  border: 1px solid var(--color-border, #e5e7eb);
-  border-radius: var(--radius-md, 8px);
-  padding: 8px 12px;
-  transition: transform .16s ease, box-shadow .16s ease;
-}
-.trigger:focus-visible {
-  outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, #2684ff);
-  outline-offset: var(--focus-ring-offset, 2px);
-}
-.triggerScaled { transform: scale(0.98); }
-
-/* -------- Backdrop -------- */
-.backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: var(--z-index-overlay, 1000);
-}
-.backdrop--transparent { background: transparent; }
-.backdrop--opaque { background: rgba(0,0,0,.4); }
-.backdrop--blur { background: rgba(0,0,0,.25); backdrop-filter: blur(4px); }
-
-/* -------- Content (Popover panel) -------- */
-.content {
-  position: absolute; /* strategy via inline styles */
-  z-index: var(--z-index-dropdown, 1100);
-  min-width: 200px;
-  max-width: min(90vw, 360px);
-  padding: var(--popover-padding, 12px);
-
-  /* پایه‌ی خنثی */
-  --accent: var(--color-text, #111);  /* مقدار پیشفرض */
-  --accent-on: #fff;
-
-  background: var(--popover-bg, var(--color-surface, #fff));
-  color: var(--popover-fg, var(--color-text, #111));
-  border: 1px solid var(--popover-border, var(--color-border, #e5e7eb));
-  border-radius: var(--popover-radius, var(--radius-lg, 12px));
-  box-shadow: var(--popover-shadow, var(--shadow-lg, 0 12px 28px rgba(0,0,0,.14)));
-}
-.content:focus-visible { outline: none; }
-
-/* Sizes */
-.content[data-size="sm"] { --popover-padding: 8px; font-size: 0.92rem; }
-.content[data-size="md"] { --popover-padding: 12px; font-size: 1rem; }
-.content[data-size="lg"] { --popover-padding: 16px; font-size: 1.06rem; }
-
-/* Radius */
-.content[data-radius="none"] { --popover-radius: 0; }
-.content[data-radius="sm"]   { --popover-radius: var(--radius-sm, 6px); }
-.content[data-radius="md"]   { --popover-radius: var(--radius-md, 8px); }
-.content[data-radius="lg"]   { --popover-radius: var(--radius-lg, 12px); }
-.content[data-radius="full"] { --popover-radius: 9999px; }
-
-/* Shadow */
-.content[data-shadow="none"] { --popover-shadow: none; }
-.content[data-shadow="sm"]   { --popover-shadow: var(--shadow-sm, 0 4px 14px rgba(0,0,0,.08)); }
-.content[data-shadow="md"]   { --popover-shadow: var(--shadow-md, 0 8px 20px rgba(0,0,0,.10)); }
-.content[data-shadow="lg"]   { --popover-shadow: var(--shadow-lg, 0 12px 28px rgba(0,0,0,.14)); }
-
-/* ✨ رنگ‌ها با تینت و سایه‌ی هماهنگ (HeroUI-like) */
-.content[data-color="default"] { /* همون پایه */ }
-
-.content[data-color="primary"]   { --accent: var(--color-primary, #1e8759);   --accent-on: var(--color-on-primary, #fff); }
-.content[data-color="secondary"] { --accent: var(--color-secondary, #35495e); --accent-on: var(--color-on-secondary, #fff); }
-.content[data-color="success"]   { --accent: var(--color-success, #22c55e);   --accent-on: var(--color-on-success, #fff); }
-.content[data-color="warning"]   { --accent: var(--color-warning, #f59e0b);   --accent-on: var(--color-on-warning, #111); }
-.content[data-color="danger"]    { --accent: var(--color-error, #ef4444);     --accent-on: var(--color-on-error, #fff); }
-.content[data-color="foreground"]{ --accent: var(--color-text, #111);         --accent-on: var(--color-surface, #fff); }
-
-/* لبه و سایه براساس accent */
-.content[data-color]:not([data-color="default"]) {
-  /* ring نازک داخلی + سایه گرم هم‌رنگ accent */
-  --_ring: color-mix(in srgb, var(--accent), white 72%);
-  --_shadow: color-mix(in srgb, var(--accent), transparent 82%);
-  border-color: var(--_ring);
-  box-shadow:
-    0 12px 28px var(--_shadow),
-    0 0 0 1px var(--_ring) inset,
-    var(--popover-shadow);
-  /* های‌لایت خیلی ملایم */
-  background:
-    radial-gradient(120% 80% at 50% -20%, color-mix(in srgb, var(--accent), white 94%) 0%, transparent 60%) ,
-    var(--popover-bg, #fff);
+  user-select: none;
+  transition:
+    background-color var(--transition-base),
+    color var(--transition-base),
+    border-color var(--transition-base),
+    box-shadow var(--transition-base),
+    transform var(--transition-fast);          /* transitions tokens */
+  background: var(--color-surface);
+  color: var(--color-text);                    /* theme tokens */
 }
 
-/* فوکوس‌ویزیبل */
-.content[data-focus-visible] {
-  outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, #2684ff);
-  outline-offset: 2px;
+/* اندازه‌ها (size) */
+.size-sm { 
+  padding: calc(var(--space-sm) - 2px) var(--space-sm);
+  font-size: var(--font-size-sm);             /* 14px */                          /* typography tokens */
+  border-radius: var(--radius-md);            /* 4px */
+}
+.size-md { 
+  font-size: var(--font-size-md);             /* 16px */
+}
+.size-lg { 
+  padding: var(--space-lg) calc(var(--space-xl) - 4px);
+  font-size: var(--font-size-lg);             /* 18px */
+  border-radius: var(--radius-lg);            /* 8px */
 }
 
-/* -------- Arrow -------- */
-.arrow {
-  --popover-arrow-size: 10px;
+/* شکل (shape) */
+.shape-rounded { border-radius: var(--radius-lg); }
+.shape-pill    { border-radius: var(--radius-full); }
+.shape-square  { border-radius: var(--radius-sm); }
+.shape-circle  { border-radius: var(--radius-full); width: 40px; height: 40px; padding: 0; }
+
+/* تمام‌عرض و آیکن-محور */
+.block { width: 100%; display: inline-flex; }
+.iconOnly .label { display: none; }
+
+/* نگاشت tone به رنگ‌های تم */
+.tone-primary   { --_bg: var(--color-primary);   --_fg: var(--color-on-primary); }
+.tone-secondary { --_bg: var(--color-secondary); --_fg: var(--color-on-secondary); }
+.tone-success   { --_bg: var(--color-success);   --_fg: var(--color-on-success); }
+.tone-warning   { --_bg: var(--color-warning);   --_fg: var(--color-on-warning, #111); }
+.tone-info      { --_bg: var(--color-info);      --_fg: var(--color-on-info, #fff); }
+.tone-error     { --_bg: var(--color-error);     --_fg: var(--color-on-error); }
+.tone-neutral   { --_bg: var(--color-border);    --_fg: var(--color-text); }      /* خنثی: از border/text */
+
+/* واریانت‌ها */
+.variant-solid   { background: var(--_bg); color: var(--_fg); border-color: var(--_bg); }
+.variant-solid:hover   { filter: brightness(1.03); }
+.variant-solid:active  { transform: translateY(1px); }
+
+.variant-soft {
+  background: color-mix(in srgb, var(--_bg), white 88%);
+  color: var(--_bg);
+  border-color: color-mix(in srgb, var(--_bg), white 70%);
+}
+[data-theme="dark"] .variant-soft {
+  background: color-mix(in srgb, var(--_bg), black 85%);
+  border-color: color-mix(in srgb, var(--_bg), black 60%);
+}
+.variant-soft:hover { background: color-mix(in srgb, var(--_bg), white 82%); }
+.variant-soft:active { transform: translateY(1px); }
+
+.variant-outline { background: transparent; color: var(--_bg); border-color: var(--_bg); }
+.variant-outline:hover { background: var(--hover-overlay); }                    /* states tokens */
+.variant-outline:active { background: var(--active-overlay); transform: translateY(1px); }
+
+.variant-ghost { background: transparent; color: var(--_bg); border-color: transparent; }
+.variant-ghost:hover { background: var(--hover-overlay); }
+.variant-ghost:active { background: var(--active-overlay); transform: translateY(1px); }
+
+.variant-link,
+.variant-text {
+  background: transparent;
+  border-color: transparent;
+  color: var(--_bg);
+  padding: 0;
+}
+.variant-link { text-decoration: underline; }
+.variant-text:hover,
+.variant-link:hover { filter: brightness(0.95); }
+
+/* elevation (سایه) */
+.elev-none { box-shadow: none; }
+.elev-sm   { box-shadow: var(--shadow-sm); }                                      /* shadows tokens */
+.elev-md   { box-shadow: var(--shadow-md); }
+.elev-lg   { box-shadow: var(--shadow-lg); }
+
+/* حالت‌های دسترسی و تعامل */
+.button:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+.isDisabled,
+.isDisabled:hover,
+.isDisabled:active {
+  cursor: not-allowed;
+  opacity: var(--opacity-disabled);                                              /* states tokens */
+  transform: none;
+  background: var(--color-disabled-bg);
+  color: var(--color-disabled-text);
+  border-color: var(--color-disabled-bg);
+}
+.isLoading { position: relative; }
+
+/* اسلات‌ها */
+.prefix, .suffix, .label { display: inline-flex; align-items: center; }
+.prefix, .suffix { opacity: .9; }
+
+/* اسپینر لودینگ */
+.spinner {
   position: absolute;
-  width: var(--popover-arrow-size);
-  height: var(--popover-arrow-size);
-  background: var(--popover-bg, #fff);
-  border: 1px solid var(--popover-border, var(--color-border, #e5e7eb));
-  transform: rotate(45deg);
-  box-shadow: var(--shadow-sm, 0 4px 12px rgba(0,0,0,.08));
+  inset-inline-end: var(--space-sm);
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  animation: spin .8s linear infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ریپل */
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  background: currentColor;
+  opacity: .2;
+  transform: scale(0);
+  animation: ripple .6s var(--transition-ease) forwards;
+}
+@keyframes ripple {
+  to { opacity: 0; transform: scale(1); }
 }

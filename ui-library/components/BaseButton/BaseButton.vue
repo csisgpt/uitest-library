@@ -123,3 +123,6 @@ const cls = computed(() => [
     <span v-if="loading" :class="styles.spinner" aria-hidden="true" />
   </component>
 </template>
+
+
+<style lang="css" module src="./BaseButton.module.css" ></style>

@@ -1,0 +1,224 @@
+/* Toast Container Styles - ToastContainer.module.css */
+.container {
+  position: fixed;
+  z-index: var(--z-index-tooltip);
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  max-height: 100vh;
+  overflow: hidden;
+  transition: all var(--transition-fast);
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  transition: all var(--transition-base);
+}
+
+.stack > * {
+  pointer-events: auto;
+}
+
+/* Position Variants */
+.container.topright {
+  top: var(--space-xl);
+  right: var(--space-xl);
+  align-items: flex-end;
+}
+
+.container.topleft {
+  top: var(--space-xl);
+  left: var(--space-xl);
+  align-items: flex-start;
+}
+
+.container.topcenter {
+  top: var(--space-xl);
+  left: 50%;
+  transform: translateX(-50%);
+  align-items: center;
+}
+
+.container.bottomright {
+  bottom: var(--space-xl);
+  right: var(--space-xl);
+  align-items: flex-end;
+  flex-direction: column-reverse;
+}
+
+.container.bottomleft {
+  bottom: var(--space-xl);
+  left: var(--space-xl);
+  align-items: flex-start;
+  flex-direction: column-reverse;
+}
+
+.container.bottomcenter {
+  bottom: var(--space-xl);
+  left: 50%;
+  transform: translateX(-50%);
+  align-items: center;
+  flex-direction: column-reverse;
+}
+
+/* Stack Animations */
+.stack.topright,
+.stack.topleft,
+.stack.topcenter {
+  flex-direction: column;
+}
+
+.stack.bottomright,
+.stack.bottomleft,
+.stack.bottomcenter {
+  flex-direction: column-reverse;
+}
+
+/* Container States */
+.container.entering {
+  animation: containerSlideIn 0.3s ease-out;
+}
+
+.container.leaving {
+  animation: containerSlideOut 0.3s ease-out;
+}
+
+/* Container Animations */
+@keyframes containerSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes containerSlideOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .container {
+    left: var(--space-lg) !important;
+    right: var(--space-lg) !important;
+    top: var(--space-lg) !important;
+    bottom: var(--space-lg) !important;
+    transform: none !important;
+    align-items: stretch !important;
+    width: calc(100vw - 2 * var(--space-lg));
+  }
+
+  .container.topcenter,
+  .container.bottomcenter {
+    left: var(--space-lg);
+    right: var(--space-lg);
+  }
+
+  .stack {
+    gap: var(--space-sm);
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    left: var(--space-md) !important;
+    right: var(--space-md) !important;
+    top: var(--space-md) !important;
+    bottom: var(--space-md) !important;
+    width: calc(100vw - 2 * var(--space-md));
+  }
+}
+
+/* High density screens */
+@media (min-resolution: 2dppx) {
+  .container {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* Scroll handling for overflow */
+@media (max-height: 600px) {
+  .container {
+    max-height: calc(100vh - 2 * var(--space-xl));
+    overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .container::-webkit-scrollbar {
+    display: none;
+  }
+
+  .stack {
+    padding-bottom: var(--space-md);
+  }
+}
+
+@media (max-height: 400px) {
+  .container {
+    max-height: calc(100vh - var(--space-lg));
+    gap: var(--space-xs);
+  }
+
+  .stack {
+    gap: var(--space-xs);
+  }
+}
+
+/* Portrait tablets */
+@media (max-width: 768px) and (orientation: portrait) {
+  .container {
+    top: var(--space-lg) !important;
+    bottom: var(--space-lg) !important;
+  }
+}
+
+/* Landscape phones */
+@media (max-height: 480px) and (orientation: landscape) {
+  .container {
+    top: var(--space-sm) !important;
+    bottom: var(--space-sm) !important;
+    max-height: calc(100vh - 2 * var(--space-sm));
+  }
+
+  .stack {
+    gap: var(--space-xs);
+  }
+}
+
+/* Dark theme adaptations */
+[data-theme="dark"] .container {
+  /* Enhanced contrast for dark mode */
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .container {
+    animation: none !important;
+  }
+
+  .stack {
+    transition: none !important;
+  }
+}
+
+/* Print styles */
+@media print {
+  .container {
+    display: none !important;
+  }
+}
