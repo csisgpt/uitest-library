@@ -1,5 +1,6 @@
 .splitButton {
   display: inline-flex;
+  flex-direction: row-reverse;
   position: relative;
   vertical-align: middle;
 }

@@ -6,65 +6,109 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: var(--space-sm); /* 8px */              /* spacing tokens */ 
+  gap: var(--space-sm); /* 8px */ /* spacing tokens */
   border-width: var(--border-width);
   border-style: var(--border-style);
-  border-color: transparent;                   /* default; variants تنظیم می‌کنن */
-  border-radius: var(--radius-lg);             /* 8px پیش‌فرض */                  /* radius tokens */
-  padding: var(--space-sm) var(--space-md);    /* 8px 12px */
+  border-color: transparent; /* default; variants تنظیم می‌کنن */
+  border-radius: var(--radius-lg); /* 8px پیش‌فرض */ /* radius tokens */
+  padding: var(--space-sm) var(--space-md); /* 8px 12px */
   font-family: var(--font-family-base);
   font-weight: var(--font-weight-medium);
   line-height: 1;
   cursor: pointer;
   user-select: none;
-  transition:
-    background-color var(--transition-base),
-    color var(--transition-base),
-    border-color var(--transition-base),
-    box-shadow var(--transition-base),
-    transform var(--transition-fast);          /* transitions tokens */
+  transition: background-color var(--transition-base),
+    color var(--transition-base), border-color var(--transition-base),
+    box-shadow var(--transition-base), transform var(--transition-fast); /* transitions tokens */
   background: var(--color-surface);
-  color: var(--color-text);                    /* theme tokens */
+  color: var(--color-text);
+  min-height: 2rem; 
+  width: 100%;/* theme tokens */
 }
 
 /* اندازه‌ها (size) */
-.size-sm { 
+.size-sm {
   padding: calc(var(--space-sm) - 2px) var(--space-sm);
-  font-size: var(--font-size-sm);             /* 14px */                          /* typography tokens */
-  border-radius: var(--radius-md);            /* 4px */
+  font-size: var(--font-size-sm); /* 14px */ /* typography tokens */
+  border-radius: var(--radius-md); /* 4px */
 }
-.size-md { 
-  font-size: var(--font-size-md);             /* 16px */
+.size-md {
+  font-size: var(--font-size-md); /* 16px */
 }
-.size-lg { 
+.size-lg {
   padding: var(--space-lg) calc(var(--space-xl) - 4px);
-  font-size: var(--font-size-lg);             /* 18px */
-  border-radius: var(--radius-lg);            /* 8px */
+  font-size: var(--font-size-lg); /* 18px */
+  border-radius: var(--radius-lg); /* 8px */
 }
 
 /* شکل (shape) */
-.shape-rounded { border-radius: var(--radius-lg); }
-.shape-pill    { border-radius: var(--radius-full); }
-.shape-square  { border-radius: var(--radius-sm); }
-.shape-circle  { border-radius: var(--radius-full); width: 40px; height: 40px; padding: 0; }
+.shape-rounded {
+  border-radius: var(--radius-lg);
+}
+.shape-pill {
+  border-radius: var(--radius-full);
+}
+.shape-square {
+  border-radius: var(--radius-sm);
+}
+.shape-circle {
+  border-radius: var(--radius-full);
+  width: 40px;
+  height: 40px;
+  padding: 0;
+}
 
 /* تمام‌عرض و آیکن-محور */
-.block { width: 100%; display: inline-flex; }
-.iconOnly .label { display: none; }
+.block {
+  width: 100%;
+  display: inline-flex;
+}
+.iconOnly .label {
+  display: none;
+}
 
 /* نگاشت tone به رنگ‌های تم */
-.tone-primary   { --_bg: var(--color-primary);   --_fg: var(--color-on-primary); }
-.tone-secondary { --_bg: var(--color-secondary); --_fg: var(--color-on-secondary); }
-.tone-success   { --_bg: var(--color-success);   --_fg: var(--color-on-success); }
-.tone-warning   { --_bg: var(--color-warning);   --_fg: var(--color-on-warning, #111); }
-.tone-info      { --_bg: var(--color-info);      --_fg: var(--color-on-info, #fff); }
-.tone-error     { --_bg: var(--color-error);     --_fg: var(--color-on-error); }
-.tone-neutral   { --_bg: var(--color-border);    --_fg: var(--color-text); }      /* خنثی: از border/text */
+.tone-primary {
+  --_bg: var(--color-primary);
+  --_fg: var(--color-on-primary);
+}
+.tone-secondary {
+  --_bg: var(--color-secondary);
+  --_fg: var(--color-on-secondary);
+}
+.tone-success {
+  --_bg: var(--color-success);
+  --_fg: var(--color-on-success);
+}
+.tone-warning {
+  --_bg: var(--color-warning);
+  --_fg: var(--color-on-warning, #111);
+}
+.tone-info {
+  --_bg: var(--color-info);
+  --_fg: var(--color-on-info, #fff);
+}
+.tone-error {
+  --_bg: var(--color-error);
+  --_fg: var(--color-on-error);
+}
+.tone-neutral {
+  --_bg: var(--color-border);
+  --_fg: var(--color-text);
+} /* خنثی: از border/text */
 
 /* واریانت‌ها */
-.variant-solid   { background: var(--_bg); color: var(--_fg); border-color: var(--_bg); }
-.variant-solid:hover   { filter: brightness(1.03); }
-.variant-solid:active  { transform: translateY(1px); }
+.variant-solid {
+  background: var(--_bg);
+  color: var(--_fg);
+  border-color: var(--_bg);
+}
+.variant-solid:hover {
+  filter: brightness(1.03);
+}
+.variant-solid:active {
+  transform: translateY(1px);
+}
 
 .variant-soft {
   background: color-mix(in srgb, var(--_bg), white 88%);
@@ -75,16 +119,38 @@
   background: color-mix(in srgb, var(--_bg), black 85%);
   border-color: color-mix(in srgb, var(--_bg), black 60%);
 }
-.variant-soft:hover { background: color-mix(in srgb, var(--_bg), white 82%); }
-.variant-soft:active { transform: translateY(1px); }
+.variant-soft:hover {
+  background: color-mix(in srgb, var(--_bg), white 82%);
+}
+.variant-soft:active {
+  transform: translateY(1px);
+}
 
-.variant-outline { background: transparent; color: var(--_bg); border-color: var(--_bg); }
-.variant-outline:hover { background: var(--hover-overlay); }                    /* states tokens */
-.variant-outline:active { background: var(--active-overlay); transform: translateY(1px); }
+.variant-outline {
+  background: transparent;
+  color: var(--_bg);
+  border-color: var(--_bg);
+}
+.variant-outline:hover {
+  background: var(--hover-overlay);
+} /* states tokens */
+.variant-outline:active {
+  background: var(--active-overlay);
+  transform: translateY(1px);
+}
 
-.variant-ghost { background: transparent; color: var(--_bg); border-color: transparent; }
-.variant-ghost:hover { background: var(--hover-overlay); }
-.variant-ghost:active { background: var(--active-overlay); transform: translateY(1px); }
+.variant-ghost {
+  background: transparent;
+  color: var(--_bg);
+  border-color: transparent;
+}
+.variant-ghost:hover {
+  background: var(--hover-overlay);
+}
+.variant-ghost:active {
+  background: var(--active-overlay);
+  transform: translateY(1px);
+}
 
 .variant-link,
 .variant-text {
@@ -93,15 +159,27 @@
   color: var(--_bg);
   padding: 0;
 }
-.variant-link { text-decoration: underline; }
+.variant-link {
+  text-decoration: underline;
+}
 .variant-text:hover,
-.variant-link:hover { filter: brightness(0.95); }
+.variant-link:hover {
+  filter: brightness(0.95);
+}
 
 /* elevation (سایه) */
-.elev-none { box-shadow: none; }
-.elev-sm   { box-shadow: var(--shadow-sm); }                                      /* shadows tokens */
-.elev-md   { box-shadow: var(--shadow-md); }
-.elev-lg   { box-shadow: var(--shadow-lg); }
+.elev-none {
+  box-shadow: none;
+}
+.elev-sm {
+  box-shadow: var(--shadow-sm);
+} /* shadows tokens */
+.elev-md {
+  box-shadow: var(--shadow-md);
+}
+.elev-lg {
+  box-shadow: var(--shadow-lg);
+}
 
 /* حالت‌های دسترسی و تعامل */
 .button:focus-visible {
@@ -112,31 +190,45 @@
 .isDisabled:hover,
 .isDisabled:active {
   cursor: not-allowed;
-  opacity: var(--opacity-disabled);                                              /* states tokens */
+  opacity: var(--opacity-disabled); /* states tokens */
   transform: none;
   background: var(--color-disabled-bg);
   color: var(--color-disabled-text);
   border-color: var(--color-disabled-bg);
 }
-.isLoading { position: relative; }
+.isLoading {
+  position: relative;
+}
 
 /* اسلات‌ها */
-.prefix, .suffix, .label { display: inline-flex; align-items: center; }
-.prefix, .suffix { opacity: .9; }
+.prefix,
+.suffix,
+.label {
+  display: inline-flex;
+  align-items: center;
+}
+.prefix,
+.suffix {
+  opacity: 0.9;
+}
 
 /* اسپینر لودینگ */
 .spinner {
-  position: absolute;
   inset-inline-end: var(--space-sm);
-  width: 16px; height: 16px;
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
   border: 2px solid currentColor;
   border-top-color: transparent;
-  animation: spin .8s linear infinite;
+  animation: spin 0.8s linear infinite;
   pointer-events: none;
   z-index: 1;
 }
-@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
 
 /* ریپل */
 .ripple {
@@ -144,10 +236,13 @@
   border-radius: 50%;
   pointer-events: none;
   background: currentColor;
-  opacity: .2;
+  opacity: 0.2;
   transform: scale(0);
-  animation: ripple .6s var(--transition-ease) forwards;
+  animation: ripple 0.6s var(--transition-ease) forwards;
 }
 @keyframes ripple {
-  to { opacity: 0; transform: scale(1); }
+  to {
+    opacity: 0;
+    transform: scale(1);
+  }
 }

@@ -466,7 +466,7 @@ const enhancedStyles = `
    Meta Configuration
 ========================= */
 const meta: Meta<typeof ToastContainer> = {
-  title: "🔔 Feedback/Toast System",
+  title: "Feedback/Toast System",
   component: ToastContainer,
   tags: ["autodocs"],
   parameters: {
@@ -503,7 +503,10 @@ const meta: Meta<typeof ToastContainer> = {
       values: [
         { name: "light", value: "#f8fafc" },
         { name: "dark", value: "#0f172a" },
-        { name: "gradient", value: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)" },
+        {
+          name: "gradient",
+          value: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+        },
       ],
     },
   },
@@ -532,10 +535,25 @@ const createMockToast = (overrides: Partial<Toast> = {}): Toast => ({
   ...overrides,
 });
 
-const toastTypes: { type: ToastType; emoji: string; label: string; color: string }[] = [
-  { type: "success", emoji: "✅", label: "موفقیت", color: "var(--color-success)" },
+const toastTypes: {
+  type: ToastType;
+  emoji: string;
+  label: string;
+  color: string;
+}[] = [
+  {
+    type: "success",
+    emoji: "✅",
+    label: "موفقیت",
+    color: "var(--color-success)",
+  },
   { type: "error", emoji: "❌", label: "خطا", color: "var(--color-error)" },
-  { type: "warning", emoji: "⚠️", label: "هشدار", color: "var(--color-warning)" },
+  {
+    type: "warning",
+    emoji: "⚠️",
+    label: "هشدار",
+    color: "var(--color-warning)",
+  },
   { type: "info", emoji: "ℹ️", label: "اطلاعات", color: "var(--color-info)" },
 ];
 
@@ -609,14 +627,15 @@ export const Overview: Story = {
         showProgress: true,
         persistent: false,
         customTitle: "🎉 عنوان Toast سفارشی",
-        customMessage: "این یک پیام نمونه است که می‌توانید آن را به دلخواه ویرایش کنید و از امکانات مختلف استفاده کنید.",
+        customMessage:
+          "این یک پیام نمونه است که می‌توانید آن را به دلخواه ویرایش کنید و از امکانات مختلف استفاده کنید.",
       });
 
       const isLoading = ref(false);
 
       const incTypeCounter = (type: ToastType) => {
         const key = `${type}Count` as keyof typeof stats;
-        if (typeof stats[key] === 'number') {
+        if (typeof stats[key] === "number") {
           (stats[key] as number) + 1;
         }
         stats.totalShown++;
@@ -633,9 +652,13 @@ export const Overview: Story = {
         for (const demo of demos) {
           setTimeout(() => {
             demo.fn();
-            const type = demo.fn.toString().includes('success') ? 'success' : 
-                        demo.fn.toString().includes('info') ? 'info' : 
-                        demo.fn.toString().includes('warning') ? 'warning' : 'error';
+            const type = demo.fn.toString().includes("success")
+              ? "success"
+              : demo.fn.toString().includes("info")
+              ? "info"
+              : demo.fn.toString().includes("warning")
+              ? "warning"
+              : "error";
             incTypeCounter(type as ToastType);
           }, demo.delay);
         }
@@ -662,14 +685,15 @@ export const Overview: Story = {
           createMockToast({
             type: "warning",
             title: "🚀 Toast پیشرفته و تعاملی",
-            message: "این Toast شامل عنوان، دکمه‌های عملکرد، نوار پیشرفت، استایل سفارشی و تمام قابلیت‌های پیشرفته سیستم است.",
+            message:
+              "این Toast شامل عنوان، دکمه‌های عملکرد، نوار پیشرفت، استایل سفارشی و تمام قابلیت‌های پیشرفته سیستم است.",
             actions: [
               {
                 label: "عالی بود! 👏",
                 style: "primary",
                 handler: () => {
                   success("از نظر شما بسیار متشکریم! 🙏");
-                  incTypeCounter('success');
+                  incTypeCounter("success");
                 },
               },
               {
@@ -677,7 +701,7 @@ export const Overview: Story = {
                 style: "secondary",
                 handler: () => {
                   info("این Toast از تمام قابلیت‌های سیستم استفاده می‌کند!");
-                  incTypeCounter('info');
+                  incTypeCounter("info");
                 },
               },
             ] as ToastAction[],
@@ -685,21 +709,21 @@ export const Overview: Story = {
             duration: 10000,
           })
         );
-        incTypeCounter('warning');
+        incTypeCounter("warning");
       };
 
       const testPromiseIntegration = async () => {
         isLoading.value = true;
-        
+
         const mockApiCall = () =>
           new Promise<{ data: string; timestamp: number; status: string }>(
             (resolve, reject) => {
               setTimeout(() => {
                 Math.random() > 0.25
-                  ? resolve({ 
-                      data: "عملیات موفقیت‌آمیز", 
+                  ? resolve({
+                      data: "عملیات موفقیت‌آمیز",
                       timestamp: Date.now(),
-                      status: "success"
+                      status: "success",
                     })
                   : reject(new Error("خطا در اتصال به سرور"));
               }, 2000);
@@ -710,7 +734,9 @@ export const Overview: Story = {
           await promise(mockApiCall(), {
             loading: "🔄 در حال اتصال به سرور و دریافت اطلاعات...",
             success: (data) =>
-              `✅ ${data.data} در ${new Date(data.timestamp).toLocaleTimeString("fa")}`,
+              `✅ ${data.data} در ${new Date(data.timestamp).toLocaleTimeString(
+                "fa"
+              )}`,
             error: (err: Error) => `❌ خطا رخ داد: ${err.message}`,
           });
           stats.totalShown++;
@@ -725,27 +751,30 @@ export const Overview: Story = {
         info(
           `⚙️ تنظیمات سیستم به‌روزرسانی شد: موقعیت ${config.selectedPosition}, حداکثر ${config.maxToasts} Toast همزمان`
         );
-        incTypeCounter('info');
+        incTypeCounter("info");
       };
 
       const resetStats = () => {
-        Object.keys(stats).forEach(key => {
-          if (typeof stats[key as keyof typeof stats] === 'number' && key !== 'currentActive') {
+        Object.keys(stats).forEach((key) => {
+          if (
+            typeof stats[key as keyof typeof stats] === "number" &&
+            key !== "currentActive"
+          ) {
             (stats as any)[key] = 0;
           }
         });
         success("📊 آمار با موفقیت ریست شد");
-        incTypeCounter('success');
+        incTypeCounter("success");
       };
 
       const showTypeDemo = (type: ToastType) => {
         const messages = {
           success: "عملیات با موفقیت انجام شد! 🎉",
-          error: "خطایی در سیستم رخ داده است! ❌", 
+          error: "خطایی در سیستم رخ داده است! ❌",
           warning: "لطفاً به این موضوع توجه کنید! ⚠️",
-          info: "اطلاعات جدیدی برای شما آماده است! 📢"
+          info: "اطلاعات جدیدی برای شما آماده است! 📢",
         };
-        
+
         const fn = { success, error, warning, info }[type];
         fn(messages[type]);
         incTypeCounter(type);
@@ -756,7 +785,7 @@ export const Overview: Story = {
       //   setTimeout(() => {
       //     success("🎉 خوش آمدید به سیستم Toast پیشرفته!");
       //     incTypeCounter('success');
-          
+
       //     setTimeout(() => {
       //       info("💡 از کنترل‌های زیر برای تست تمام امکانات استفاده کنید");
       //       incTypeCounter('info');
@@ -1031,21 +1060,24 @@ export const Overview: Story = {
   }),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    
+
     // Wait for component to mount
     await waitFor(() => {
       const quickBtn = canvas.getByRole("button", { name: /نمایش سریع/i });
       expect(quickBtn).toBeInTheDocument();
     });
-    
+
     // Test quick demo functionality
     const quickBtn = canvas.getByRole("button", { name: /نمایش سریع/i });
     await userEvent.click(quickBtn);
-    
+
     // Wait for toasts to appear
-    await waitFor(() => {
-      expect(quickBtn).toBeEnabled();
-    }, { timeout: 3000 });
+    await waitFor(
+      () => {
+        expect(quickBtn).toBeEnabled();
+      },
+      { timeout: 3000 }
+    );
   },
 };
 
@@ -1057,7 +1089,7 @@ export const TypesShowcase: Story = {
     components: { ToastContainer },
     setup() {
       const { success, error, warning, info } = useToast();
-      
+
       // onMounted(() => {
       //   // Sequential display of different types
       //   setTimeout(() => success("🎉 عملیات با موفقیت انجام شد!"), 200);
@@ -1065,7 +1097,7 @@ export const TypesShowcase: Story = {
       //   setTimeout(() => warning("⚠️ لطفاً به این موضوع توجه کنید"), 1400);
       //   setTimeout(() => error("❌ خطایی در سیستم رخ داده است"), 2000);
       // });
-      
+
       return {};
     },
     template: `
@@ -1092,15 +1124,15 @@ export const PositionsDemo: Story = {
     components: { ToastContainer },
     setup() {
       const { show, setPosition } = useToast();
-      
+
       // onMounted(async () => {
       //   for (let i = 0; i < toastPositions.length; i++) {
       //     const pos = toastPositions[i];
       //     setTimeout(() => {
       //       setPosition(pos.position);
       //       show(
-      //         createMockToast({ 
-      //           title: `📍 ${pos.label}`, 
+      //         createMockToast({
+      //           title: `📍 ${pos.label}`,
       //           message: `Toast در موقعیت ${pos.label} نمایش داده شده است`,
       //           position: pos.position,
       //           duration: 4000
@@ -1109,7 +1141,7 @@ export const PositionsDemo: Story = {
       //     }, i * 800);
       //   }
       // });
-      
+
       return {};
     },
     template: `
@@ -1137,7 +1169,7 @@ export const AnimationsShowcase: Story = {
     components: { ToastContainer },
     setup() {
       const { show } = useToast();
-      
+
       // onMounted(() => {
       //   toastAnimations.forEach((anim, index) => {
       //     setTimeout(() => {
@@ -1153,7 +1185,7 @@ export const AnimationsShowcase: Story = {
       //     }, index * 600);
       //   });
       // });
-      
+
       return {};
     },
     template: `
@@ -1180,7 +1212,7 @@ export const InteractiveFeatures: Story = {
     components: { ToastContainer },
     setup() {
       const { show, success, info } = useToast();
-      
+
       // onMounted(() => {
       //   show(
       //     createMockToast({
@@ -1198,7 +1230,7 @@ export const InteractiveFeatures: Story = {
       //         },
       //         {
       //           label: "📖 اطلاعات بیشتر",
-      //           style: "secondary", 
+      //           style: "secondary",
       //           handler: () => {
       //             info("💡 این سیستم Toast شامل تمام امکانات مدرن است: انیمیشن، موقعیت‌بندی، Progress Bar، دکمه‌های تعاملی و...");
       //           },
@@ -1209,7 +1241,7 @@ export const InteractiveFeatures: Story = {
       //     })
       //   );
       // });
-      
+
       return {};
     },
     template: `
@@ -1236,14 +1268,14 @@ export const QueueManagement: Story = {
     components: { ToastContainer },
     setup() {
       const { show, setMaxToasts } = useToast();
-      
+
       // onMounted(() => {
       //   setMaxToasts(3); // Limit to 3 simultaneous toasts
-        
+
       //   // Create 8 toasts to demonstrate queue
       //   Array.from({ length: 8 }, (_, i) => {
       //     setTimeout(() => {
-      //       show(createMockToast({ 
+      //       show(createMockToast({
       //         title: `📦 Toast شماره ${i + 1}`,
       //         message: `این Toast در صف قرار گرفته و به ترتیب نمایش داده می‌شود`,
       //         type: ["success", "info", "warning", "error"][i % 4] as ToastType,
@@ -1252,7 +1284,7 @@ export const QueueManagement: Story = {
       //     }, i * 400);
       //   });
       // });
-      
+
       return {};
     },
     template: `
@@ -1279,16 +1311,16 @@ export const PromiseIntegration: Story = {
     components: { ToastContainer },
     setup() {
       const { promise } = useToast();
-      
+
       // onMounted(async () => {
       //   // Success scenario
       //   const successTask = new Promise<{ result: string; time: number }>((resolve) =>
-      //     setTimeout(() => resolve({ 
-      //       result: "داده‌ها با موفقیت دریافت شد", 
-      //       time: Date.now() 
+      //     setTimeout(() => resolve({
+      //       result: "داده‌ها با موفقیت دریافت شد",
+      //       time: Date.now()
       //     }), 2000)
       //   );
-        
+
       //   await promise(successTask, {
       //     loading: "🔄 در حال دریافت اطلاعات از سرور...",
       //     success: (data) => `✅ ${data.result} در ${new Date(data.time).toLocaleTimeString("fa")}`,
@@ -1300,7 +1332,7 @@ export const PromiseIntegration: Story = {
       //     const errorTask = new Promise<never>((_, reject) =>
       //       setTimeout(() => reject(new Error("خطا در اتصال به پایگاه داده")), 1500)
       //     );
-          
+
       //     try {
       //       await promise(errorTask, {
       //         loading: "🔄 در حال اتصال به پایگاه داده...",
@@ -1312,7 +1344,7 @@ export const PromiseIntegration: Story = {
       //     }
       //   }, 3000);
       // });
-      
+
       return {};
     },
     template: `
@@ -1339,7 +1371,7 @@ export const ErrorProcessing: Story = {
     components: { ToastContainer },
     setup() {
       const { processError } = useToast();
-      
+
       // onMounted(() => {
       //   // Simulate different types of errors
       //   setTimeout(() => {
@@ -1367,7 +1399,7 @@ export const ErrorProcessing: Story = {
       //     // @ts-expect-error: Simulating server response
       //     validationError.response = {
       //       status: 400,
-      //       data: { 
+      //       data: {
       //         message: "اطلاعات وارد شده نامعتبر است",
       //         errors: ["ایمیل الزامی است", "رمز عبور باید حداقل ۸ کاراکتر باشد"]
       //       },
@@ -1375,7 +1407,7 @@ export const ErrorProcessing: Story = {
       //     processError(validationError);
       //   }, 2500);
       // });
-      
+
       return {};
     },
     template: `
