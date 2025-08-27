@@ -63,6 +63,7 @@ export function useToast(): UseToastReturn {
 
   // Convenience methods
   const success = (message: string, options?: Partial<ToastOptions>) => {
+    console.log('asdasdasdsa')
     return toastManager.success(message, options)
   }
 

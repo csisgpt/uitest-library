@@ -96,6 +96,8 @@
   background-color: var(--color-background);
   border-radius: var(--radius-full);
   transition: transform var(--transition-base);
+    transform: translateX(2px);
+
 }
 
 .input:checked + .track {
@@ -103,7 +105,7 @@
 }
 
 .input:checked + .track .thumb {
-  transform: translateX(calc(var(--switch-width) - var(--switch-thumb-size) - var(--switch-padding) * 2));
+  transform: translateX(calc(-1 * (var(--switch-width) - var(--switch-padding)) / 2));
 }
 
 .input:focus-visible + .track {

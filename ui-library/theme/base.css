@@ -14,8 +14,14 @@
   color-scheme: light dark;
 }
 
-html { box-sizing: border-box; }
-*, *::before, *::after { box-sizing: inherit; }
+html {
+  box-sizing: border-box;
+}
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
 
 body {
   margin: 0;
@@ -35,4 +41,30 @@ body {
     transition-duration: 0ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply mb-[70px] md:mb-0;
+  background: #f0f0f0;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-primary-700;
+  border-radius: 9999px;
+  border: 2px solid #f0f0f0;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #64748b; /* slate-500 */
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-primary) var(--color-on-primary);
 }

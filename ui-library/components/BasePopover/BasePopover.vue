@@ -1,489 +1,550 @@
+<template>
+  <div ref="wrapperRef" :class="$style.wrapper">
+    <!-- Trigger -->
+    <div
+      ref="triggerRef"
+      :class="[$style.trigger, triggerClass]"
+      :tabindex="disabled ? -1 : 0"
+      role="button"
+      :aria-expanded="isOpen"
+      :aria-describedby="isOpen ? popoverId : undefined"
+      @click="handleTriggerClick"
+      @mouseenter="handleTriggerMouseEnter"
+      @mouseleave="handleTriggerMouseLeave"
+      @focus="handleTriggerFocus"
+      @blur="handleTriggerBlur"
+      @keydown="handleTriggerKeydown"
+    >
+      <slot name="trigger" :isOpen="isOpen" :toggle="toggle" :open="open" :close="close">
+        <button
+          type="button"
+          :class="$style.defaultTrigger"
+          :disabled="disabled"
+        >
+          {{ triggerText || 'Open Popover' }}
+        </button>
+      </slot>
+    </div>
+
+    <!-- Popover -->
+    <Teleport :to="teleportTo" :disabled="!shouldTeleport">
+      <Transition
+        :name="transitionName"
+        @before-enter="onBeforeEnter"
+        @after-enter="onAfterEnter"
+        @before-leave="onBeforeLeave"
+        @after-leave="onAfterLeave"
+      >
+        <div
+          v-if="isOpen"
+          ref="popoverRef"
+          :id="popoverId"
+          :class="popoverClasses"
+          :style="popoverStyle"
+          role="dialog"
+          :aria-labelledby="title ? titleId : undefined"
+          :aria-modal="modal"
+          @click.stop
+          @keydown="handlePopoverKeydown"
+        >
+          <!-- Backdrop -->
+          <div
+            v-if="showBackdrop"
+            :class="$style.backdrop"
+            @click="handleBackdropClick"
+          />
+
+          <!-- Arrow -->
+          <div
+            v-if="showArrow"
+            ref="arrowRef"
+            :class="$style.arrow"
+            :style="arrowStyle"
+            :data-placement="currentPlacement"
+          />
+
+          <!-- Header -->
+          <header
+            v-if="$slots.header || title || showClose"
+            :class="$style.header"
+          >
+            <slot name="header" :close="close" :title="title">
+              <h3
+                v-if="title"
+                :id="titleId"
+                :class="$style.title"
+              >
+                {{ title }}
+              </h3>
+              
+              <button
+                v-if="showClose"
+                type="button"
+                :class="$style.closeButton"
+                :aria-label="closeLabel"
+                @click="close"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="m18 6-12 12M6 6l12 12"/>
+                </svg>
+              </button>
+            </slot>
+          </header>
+
+          <!-- Content -->
+          <div :class="$style.content">
+            <slot :close="close" :isOpen="isOpen">
+              <p v-if="content" :class="$style.text">
+                {{ content }}
+              </p>
+            </slot>
+          </div>
+
+          <!-- Actions -->
+          <footer
+            v-if="$slots.actions || actions?.length"
+            :class="$style.actions"
+          >
+            <slot name="actions" :close="close" :actions="actions">
+              <button
+                v-for="action in actions"
+                :key="action.id || action.text"
+                type="button"
+                :class="getActionButtonClass(action)"
+                :disabled="action.disabled"
+                @click="handleActionClick(action)"
+              >
+                <component v-if="action.icon" :is="action.icon" :class="$style.actionIcon" />
+                <span>{{ action.text }}</span>
+              </button>
+            </slot>
+          </footer>
+        </div>
+      </Transition>
+    </Teleport>
+  </div>
+</template>
+
 <script setup lang="ts">
-import { computed, defineEmits, defineProps, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch, withDefaults, defineExpose } from 'vue';
-import s from './BasePopover.module.css';
+import {
+  ref,
+  computed,
+  watch,
+  nextTick,
+  onMounted,
+  onUnmounted,
+  type CSSProperties,
+  type Component
+} from 'vue'
+import { createPopper, type Instance as PopperInstance, type Placement } from '@popperjs/core'
+import $style from './BasePopover.module.css'
+// Types
+export interface PopoverAction {
+  id?: string | number
+  text: string
+  icon?: Component | string
+  variant?: 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'error'
+  disabled?: boolean
+  handler?: () => void | Promise<void>
+}
 
-type PlacementBase = 'top'|'bottom'|'left'|'right';
-type Placement =
-  | PlacementBase
-  | 'top-start'|'top-end'
-  | 'bottom-start'|'bottom-end'
-  | 'left-start'|'left-end'
-  | 'right-start'|'right-end';
+type TriggerType = 'click' | 'hover' | 'focus' | 'manual'
+type Size = 'sm' | 'md' | 'lg'
 
-type TriggerType = 'click'|'hover'|'focus'|'manual';
-type Strategy = 'absolute'|'fixed';
-
-type PanelRole = 'dialog'|'menu'|'listbox'|'tooltip';
-
-type Color = 'primary'|'success'|'error'|'warning'|'info'|'neutral';
-type Variant = 'solid'|'soft'|'outline';
-type Size = 'sm'|'md'|'lg';
-type Rounded = 'sm'|'md'|'lg'|'full';
-
+// Props
 interface Props {
-  modelValue?: boolean;
-  defaultOpen?: boolean;
-  disabled?: boolean;
-
-  placement?: Placement;
-  offset?: number;
-  strategy?: Strategy;
-  flip?: boolean;
-
-  trigger?: TriggerType;
-  openDelay?: number;
-  closeDelay?: number;
-
-  closeOnEsc?: boolean;
-  closeOnOutside?: boolean;
-  matchTriggerWidth?: boolean;
-  portal?: boolean;
-
-  arrow?: boolean;
-  arrowSize?: number;
-
-  autoFocus?: 'first'|'container'|false;
-
-  id?: string;
-  panelClass?: string;
-  triggerTag?: keyof HTMLElementTagNameMap | 'button';
-
-  /** A11y role (پیش‌فرض dialog) */
-  role?: PanelRole;
-
-  /** تم‌ها مانند BaseBadge */
-  color?: Color;
-  variant?: Variant;
-  size?: Size;
-  rounded?: Rounded;
+  // Core
+  modelValue?: boolean
+  trigger?: TriggerType
+  placement?: Placement
+  disabled?: boolean
+  
+  // Content
+  title?: string
+  content?: string
+  triggerText?: string
+  actions?: PopoverAction[]
+  
+  // Behavior
+  size?: Size
+  showArrow?: boolean
+  showClose?: boolean
+  showBackdrop?: boolean
+  modal?: boolean
+  closeOnClickOutside?: boolean
+  closeOnEscape?: boolean
+  shouldTeleport?: boolean
+  teleportTo?: string
+  
+  // Delays
+  openDelay?: number
+  closeDelay?: number
+  
+  // Styling
+  triggerClass?: string
+  popoverClass?: string
+  
+  // Accessibility
+  closeLabel?: string
+  
+  // Animation
+  transitionName?: string
+  
+  // Positioning
+  offset?: number
+  boundary?: string | Element
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  defaultOpen: false,
-  disabled: false,
-
-  placement: 'bottom-start',
-  offset: 8,
-  strategy: 'absolute',
-  flip: true,
-
+  modelValue: false,
   trigger: 'click',
-  openDelay: 75,
-  closeDelay: 100,
-
-  closeOnEsc: true,
-  closeOnOutside: true,
-  matchTriggerWidth: false,
-  portal: true,
-
-  arrow: true,
-  arrowSize: 8,
-
-  autoFocus: 'first',
-
-  triggerTag: 'button',
-  role: 'dialog',
-
-  color: 'neutral',
-  variant: 'soft',
+  placement: 'bottom',
+  disabled: false,
   size: 'md',
-  rounded: 'md',
-});
+  showArrow: true,
+  showClose: false,
+  showBackdrop: false,
+  modal: false,
+  closeOnClickOutside: true,
+  closeOnEscape: true,
+  shouldTeleport: true,
+  teleportTo: 'body',
+  openDelay: 0,
+  closeDelay: 0,
+  closeLabel: 'Close',
+  transitionName: 'popover',
+  offset: 8,
+  boundary: 'clippingParents'
+})
 
-const emit = defineEmits<{
-  (e: 'update:modelValue', v: boolean): void;
-  (e: 'open'): void;
-  (e: 'close'): void;
-  (e: 'toggle', v: boolean): void;
-  (e: 'positioned', payload: { top: number; left: number; placement: Placement }): void;
-}>();
-
-// ---------- State ----------
-const rootRef = ref<HTMLElement | null>(null);
-const triggerRef = ref<HTMLElement | null>(null);
-const panelRef = ref<HTMLElement | null>(null);
-const arrowRef = ref<HTMLElement | null>(null);
-
-const state = reactive({
-  internalOpen: props.defaultOpen,
-  panelStyles: {
-    top: '0px',
-    left: '0px',
-    '--popover-position': props.strategy,
-    position: props.strategy as Strategy,
-  } as Record<string, string>,
-  arrowStyles: {} as Record<string, string>,
-  placementResolved: props.placement as Placement,
-});
-
-const isControlled = computed(() => props.modelValue !== undefined);
-const isOpen = computed<boolean>(() => (isControlled.value ? !!props.modelValue : state.internalOpen));
-
-function setOpen(v: boolean) {
-  if (props.disabled) return;
-  if (isControlled.value) emit('update:modelValue', v);
-  else state.internalOpen = v;
-  emit(v ? 'open' : 'close');
-  emit('toggle', v);
+// Emits
+interface Emits {
+  'update:modelValue': [value: boolean]
+  'open': []
+  'close': []
+  'before-open': []
+  'after-open': []
+  'before-close': []
+  'after-close': []
+  'action-click': [action: PopoverAction]
 }
 
-function open() { if (!isOpen.value) setOpen(true); }
-function close() { if (isOpen.value) setOpen(false); }
-function toggle() { setOpen(!isOpen.value); }
+const emit = defineEmits<Emits>()
 
-// ---------- IDs & ARIA ----------
-let uidCounter = 0;
-function genId() {
-  if (typeof window === 'undefined') return `bp-${++uidCounter}`;
-  // SSR-safe
-  return (crypto as any)?.randomUUID?.() ?? `bp-${Date.now().toString(36)}-${Math.random().toString(36).slice(2,7)}`;
-}
+// Refs
+const wrapperRef = ref<HTMLElement>()
+const triggerRef = ref<HTMLElement>()
+const popoverRef = ref<HTMLElement>()
+const arrowRef = ref<HTMLElement>()
 
-const localId = ref(props.id || '');
-onMounted(() => { if (!localId.value) localId.value = genId(); });
-const baseId = computed(() => localId.value || 'bp-fallback');
-const triggerId = computed(() => `${baseId.value}-trigger`);
-const panelId = computed(() => `${baseId.value}-panel`);
+// State
+const isOpen = ref(props.modelValue)
+const popperInstance = ref<PopperInstance>()
+const currentPlacement = ref<Placement>(props.placement)
 
-// ---------- Positioning ----------
-function getViewportRect() {
-  return { width: window.innerWidth, height: window.innerHeight };
-}
-function getRects() {
-  const trigger = triggerRef.value!;
-  const panel = panelRef.value!;
-  const tr = trigger.getBoundingClientRect();
-  const pr = panel.getBoundingClientRect();
-  return { triggerRect: tr, panelRect: pr };
-}
+// Computed
+const popoverId = computed(() => 
+  `popover-${Math.random().toString(36).substring(2, 11)}`
+)
 
-function getDocumentDirection() {
-  const html = document?.documentElement;
-  const dirAttr = html?.getAttribute('dir');
-  if (dirAttr) return dirAttr.toLowerCase();
-  return window.getComputedStyle(html!).direction;
-}
+const titleId = computed(() => 
+  `${popoverId.value}-title`
+)
 
-function applyPosition() {
-  const trigger = triggerRef.value;
-  const panel = panelRef.value;
-  if (!trigger || !panel) return;
+const popoverClasses = computed(() => [
+  $style.popover,
+  $style[`popover--${props.size}`],
+  props.popoverClass
+].filter(Boolean))
 
-  const { triggerRect, panelRect } = getRects();
-  const vp = getViewportRect();
+const popoverStyle = ref<CSSProperties>({})
+const arrowStyle = ref<CSSProperties>({})
 
-  const [sideRaw, alignRaw] = props.placement.split('-') as [PlacementBase, 'start'|'end'|undefined];
-  let side: PlacementBase = sideRaw ?? 'bottom';
-  let align: 'start'|'center'|'end' = alignRaw ?? 'start';
+// Timers
+let openTimer: ReturnType<typeof setTimeout> | null = null
+let closeTimer: ReturnType<typeof setTimeout> | null = null
 
-  const isRTL = getDocumentDirection() === 'rtl';
-
-  function inlineAlignX() {
-    if (align === 'center') return triggerRect.left + triggerRect.width / 2 - panelRect.width / 2;
-    if (align === 'start') return (isRTL ? (triggerRect.right - panelRect.width) : triggerRect.left);
-    return (isRTL ? triggerRect.left : (triggerRect.right - panelRect.width));
+// Watchers
+watch(() => props.modelValue, (value) => {
+  if (value !== isOpen.value) {
+    value ? open() : close()
   }
-  function inlineAlignY() {
-    if (align === 'center') return triggerRect.top + triggerRect.height / 2 - panelRect.height / 2;
-    if (align === 'start') return triggerRect.top;
-    return triggerRect.bottom - panelRect.height;
+})
+
+watch(isOpen, (value) => {
+  emit('update:modelValue', value)
+})
+
+// Methods
+const clearTimers = () => {
+  if (openTimer) {
+    clearTimeout(openTimer)
+    openTimer = null
   }
+  if (closeTimer) {
+    clearTimeout(closeTimer)
+    closeTimer = null
+  }
+}
 
-  let top = 0, left = 0;
-
-  if (side === 'top') {
-    top = triggerRect.top - panelRect.height - props.offset;
-    left = inlineAlignX();
-  } else if (side === 'bottom') {
-    top = triggerRect.bottom + props.offset;
-    left = inlineAlignX();
-  } else if (side === 'left') {
-    top = inlineAlignY();
-    left = triggerRect.left - panelRect.width - props.offset;
+const open = () => {
+  if (props.disabled || isOpen.value) return
+  
+  clearTimers()
+  
+  const doOpen = () => {
+    emit('before-open')
+    isOpen.value = true
+    nextTick(createPopper)
+  }
+  
+  if (props.openDelay > 0) {
+    openTimer = setTimeout(doOpen, props.openDelay)
   } else {
-    top = inlineAlignY();
-    left = triggerRect.right + props.offset;
+    doOpen()
   }
+}
 
-  if (props.flip) {
-    const overflowTop = top < 0;
-    const overflowBottom = top + panelRect.height > vp.height;
-    const overflowLeft = left < 0;
-    const overflowRight = left + panelRect.width > vp.width;
+const close = () => {
+  if (!isOpen.value) return
+  
+  clearTimers()
+  
+  const doClose = () => {
+    emit('before-close')
+    isOpen.value = false
+    destroyPopper()
+  }
+  
+  if (props.closeDelay > 0) {
+    closeTimer = setTimeout(doClose, props.closeDelay)
+  } else {
+    doClose()
+  }
+}
 
-    // فلیپ سمت
-    if (side === 'top' && overflowTop) side = 'bottom';
-    else if (side === 'bottom' && overflowBottom) side = 'top';
-    else if (side === 'left' && overflowLeft) side = 'right';
-    else if (side === 'right' && overflowRight) side = 'left';
+const toggle = () => {
+  isOpen.value ? close() : open()
+}
 
-    // بازتنظیم پس از فلیپ
-    if (side === 'top') { top = triggerRect.top - panelRect.height - props.offset; left = inlineAlignX(); }
-    else if (side === 'bottom') { top = triggerRect.bottom + props.offset; left = inlineAlignX(); }
-    else if (side === 'left') { top = inlineAlignY(); left = triggerRect.left - panelRect.width - props.offset; }
-    else { top = inlineAlignY(); left = triggerRect.right + props.offset; }
-
-    // اگر هنوز افقی تنگ بود، align را برگردانیم
-    const stillOverflowLeft = left < 0;
-    const stillOverflowRight = left + panelRect.width > vp.width;
-    if ((stillOverflowLeft || stillOverflowRight) && align !== 'center') {
-      align = align === 'start' ? 'end' : 'start';
-      if (side === 'top' || side === 'bottom') left = inlineAlignX();
-      else top = inlineAlignY();
+// Popper.js integration
+const createPopper = async () => {
+  await nextTick()
+  
+  if (!triggerRef.value || !popoverRef.value) return
+  
+  destroyPopper()
+  
+  popperInstance.value = createPopper(triggerRef.value, popoverRef.value, {
+    placement: props.placement,
+    modifiers: [
+      {
+        name: 'offset',
+        options: {
+          offset: [0, props.offset]
+        }
+      },
+      {
+        name: 'arrow',
+        enabled: props.showArrow,
+        options: {
+          element: arrowRef.value
+        }
+      },
+      {
+        name: 'preventOverflow',
+        options: {
+          boundary: props.boundary,
+          padding: 8
+        }
+      },
+      {
+        name: 'flip',
+        options: {
+          fallbackPlacements: ['top', 'right', 'bottom', 'left']
+        }
+      }
+    ],
+    onFirstUpdate(state) {
+      currentPlacement.value = state.placement
+      updateArrow(state)
     }
-  }
-
-  // Clamp
-  top = Math.max(4, Math.min(top, vp.height - panelRect.height - 4));
-  left = Math.max(4, Math.min(left, vp.width - panelRect.width - 4));
-
-  const style: Record<string,string> = {
-    position: props.strategy,
-    '--popover-position': props.strategy,
-    top: `${Math.round(top)}px`,
-    left: `${Math.round(left)}px`,
-    // اگر واقعاً می‌خواهیم هم‌اندازهٔ تریگر باشد، width را ست کنیم
-    width: props.matchTriggerWidth ? `${Math.round(triggerRect.width)}px` : '',
-  };
-
-  state.panelStyles = style;
-  state.placementResolved = (alignRaw ? `${side}-${alignRaw}` : side) as Placement;
-
-  // Arrow
-  if (props.arrow && arrowRef.value) {
-    const size = props.arrowSize;
-    const centerX = triggerRect.left + triggerRect.width / 2;
-    const centerY = triggerRect.top + triggerRect.height / 2;
-
-    let ax = 0, ay = 0, rotate = 45;
-    if (side === 'top') { ay = panelRect.height - 1; ax = Math.max(size+6, Math.min(centerX - left - size, panelRect.width - size - 6)); }
-    if (side === 'bottom') { ay = -size + 1; ax = Math.max(size+6, Math.min(centerX - left - size, panelRect.width - size - 6)); }
-    if (side === 'left') { ax = panelRect.width - 1; ay = Math.max(size+6, Math.min(centerY - top - size, panelRect.height - size - 6)); }
-    if (side === 'right') { ax = -size + 1; ay = Math.max(size+6, Math.min(centerY - top - size, panelRect.height - size - 6)); }
-
-    state.arrowStyles = {
-      width: `${size}px`,
-      height: `${size}px`,
-      transform: `translate(${Math.round(ax)}px, ${Math.round(ay)}px) rotate(${rotate}deg)`,
-    };
-  }
-
-  emit('positioned', { top, left, placement: state.placementResolved });
+  })
 }
 
-async function updatePosition() {
-  await nextTick();
-  applyPosition();
+const updateArrow = (state: any) => {
+  if (!arrowRef.value || !props.showArrow) return
+  
+  const { placement } = state
+  const staticSide = {
+    top: 'bottom',
+    right: 'left',
+    bottom: 'top',
+    left: 'right'
+  }[placement.split('-')[0] as keyof typeof staticSide]
+  
+  if (staticSide) {
+    arrowStyle.value = { [staticSide]: '-4px' }
+  }
 }
 
-// ---------- Events ----------
-let outsideHandler = (e: Event) => {
-  if (!props.closeOnOutside || !isOpen.value) return;
-  const t = e.target as Node;
-  if (panelRef.value?.contains(t) || triggerRef.value?.contains(t)) return;
-  close();
-  // بازگرداندن فوکوس (به‌جز حالت hover)
-  if (props.trigger !== 'hover') triggerRef.value?.focus?.();
-};
-
-let keydownHandler = (e: KeyboardEvent) => {
-  if (!isOpen.value || !props.closeOnEsc) return;
-  if (e.key === 'Escape') {
-    e.stopPropagation();
-    close();
-    triggerRef.value?.focus?.();
+const destroyPopper = () => {
+  if (popperInstance.value) {
+    popperInstance.value.destroy()
+    popperInstance.value = undefined
   }
-};
+}
 
-let reflowHandler = () => { if (isOpen.value) updatePosition(); };
+// Action button classes
+const getActionButtonClass = (action: PopoverAction) => [
+  $style.actionButton,
+  action.variant && $style[`actionButton--${action.variant}`]
+].filter(Boolean)
 
-let ro: ResizeObserver | null = null;
+// Event handlers
+const handleTriggerClick = () => {
+  if (props.trigger === 'click') toggle()
+}
 
-onMounted(() => {
-  document.addEventListener('pointerdown', outsideHandler, { capture: true });
-  window.addEventListener('resize', reflowHandler, { passive: true });
-  window.addEventListener('scroll', reflowHandler, { passive: true, capture: true });
-  document.addEventListener('keydown', keydownHandler, true);
+const handleTriggerMouseEnter = () => {
+  if (props.trigger === 'hover') open()
+}
 
-  if ('ResizeObserver' in window) {
-    ro = new ResizeObserver(() => { if (isOpen.value) updatePosition(); });
-    triggerRef.value && ro.observe(triggerRef.value);
-    panelRef.value && ro.observe(panelRef.value);
+const handleTriggerMouseLeave = () => {
+  if (props.trigger === 'hover') close()
+}
+
+const handleTriggerFocus = () => {
+  if (props.trigger === 'focus') open()
+}
+
+const handleTriggerBlur = () => {
+  if (props.trigger === 'focus') close()
+}
+
+const handleTriggerKeydown = (event: KeyboardEvent) => {
+  if (event.key === 'Enter' || event.key === ' ') {
+    event.preventDefault()
+    if (props.trigger === 'click') toggle()
   }
-});
+}
 
-onBeforeUnmount(() => {
-  document.removeEventListener('pointerdown', outsideHandler, { capture: true });
-  window.removeEventListener('resize', reflowHandler);
-  window.removeEventListener('scroll', reflowHandler, true as any);
-  document.removeEventListener('keydown', keydownHandler, true);
-  ro?.disconnect();
-});
-
-// ---------- Watchers ----------
-watch(() => isOpen.value, async (v) => {
-  if (v) {
-    await updatePosition();
-    if (props.autoFocus) {
-      await nextTick();
-      if (props.autoFocus === 'container') panelRef.value?.focus?.();
-      else {
-        const el = panelRef.value?.querySelector<HTMLElement>(
-          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-        );
-        (el ?? panelRef.value)?.focus?.();
+const handlePopoverKeydown = (event: KeyboardEvent) => {
+  if (event.key === 'Escape' && props.closeOnEscape) {
+    close()
+  }
+  
+  // Tab navigation within popover
+  if (event.key === 'Tab') {
+    const focusableElements = popoverRef.value?.querySelectorAll(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    ) as NodeListOf<HTMLElement>
+    
+    if (!focusableElements?.length) return
+    
+    const firstElement = focusableElements[0]
+    const lastElement = focusableElements[focusableElements.length - 1]
+    
+    if (event.shiftKey) {
+      if (document.activeElement === firstElement) {
+        event.preventDefault()
+        lastElement.focus()
+      }
+    } else {
+      if (document.activeElement === lastElement) {
+        event.preventDefault()
+        firstElement.focus()
       }
     }
   }
-});
+}
 
-watch(() => [props.placement, props.offset, props.strategy, props.matchTriggerWidth] as const, () => {
-  if (isOpen.value) updatePosition();
-});
+const handleBackdropClick = () => {
+  if (props.closeOnClickOutside) close()
+}
 
-// ---------- Trigger interactions ----------
-let hoverTimer: number | undefined;
+const handleActionClick = async (action: PopoverAction) => {
+  if (action.disabled) return
+  
+  emit('action-click', action)
+  
+  if (action.handler) {
+    try {
+      await action.handler()
+    } catch (error) {
+      console.error('Action handler error:', error)
+    }
+  }
+  
+  close()
+}
 
-function onTriggerClick(e: MouseEvent) {
-  if (props.trigger !== 'click' || props.disabled) return;
-  e.stopPropagation();
-  toggle();
+const handleClickOutside = (event: Event) => {
+  if (!props.closeOnClickOutside || !isOpen.value) return
+  
+  const target = event.target as Node
+  if (
+    wrapperRef.value?.contains(target) ||
+    popoverRef.value?.contains(target)
+  ) return
+  
+  close()
 }
-function onTriggerMouseEnter() {
-  if (props.trigger !== 'hover' || props.disabled) return;
-  clearTimeout(hoverTimer);
-  hoverTimer = window.setTimeout(() => open(), props.openDelay);
-}
-function onTriggerMouseLeave() {
-  if (props.trigger !== 'hover' || props.disabled) return;
-  clearTimeout(hoverTimer);
-  hoverTimer = window.setTimeout(() => close(), props.closeDelay);
-}
-function onPanelMouseEnter() {
-  if (props.trigger !== 'hover') return;
-  clearTimeout(hoverTimer);
-}
-function onPanelMouseLeave() {
-  if (props.trigger !== 'hover') return;
-  clearTimeout(hoverTimer);
-  hoverTimer = window.setTimeout(() => close(), props.closeDelay);
-}
-function onTriggerFocus() {
-  if (props.trigger === 'focus' && !props.disabled) open();
-}
-function onTriggerBlur(e: FocusEvent) {
-  if (props.trigger === 'focus' && !props.disabled) {
-    const r = e.relatedTarget as Node | null;
-    if (!panelRef.value?.contains(r ?? null)) close();
+
+const handleKeyDown = (event: KeyboardEvent) => {
+  if (!isOpen.value) return
+  
+  if (event.key === 'Escape' && props.closeOnEscape) {
+    close()
   }
 }
 
-const triggerAttrs = computed(() => ({
-  id: triggerId.value,
-  'aria-haspopup': props.role === 'dialog' ? 'dialog' : (props.role as string),
-  'aria-expanded': String(isOpen.value),
-  'aria-controls': panelId.value,
-  'data-open': isOpen.value ? '' : undefined,
-  disabled: props.disabled ? true : undefined,
-  tabIndex: props.triggerTag !== 'button' ? 0 : undefined,
-  role: props.triggerTag !== 'button' ? 'button' : undefined,
-}));
+// Transition events
+const onBeforeEnter = () => {
+  emit('before-open')
+}
 
-const triggerListeners = {
-  click: onTriggerClick,
-  mouseenter: onTriggerMouseEnter,
-  mouseleave: onTriggerMouseLeave,
-  focus: onTriggerFocus,
-  blur: onTriggerBlur,
-  keydown: (e: KeyboardEvent) => {
-    if (props.disabled) return;
-    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); if (props.trigger !== 'hover') toggle(); }
-    if (e.key === 'ArrowDown') { e.preventDefault(); if (!isOpen.value) open(); nextTick(() => panelRef.value?.focus?.()); }
-    if (e.key === 'Escape') { if (isOpen.value) { e.stopPropagation(); close(); } }
-  },
-};
+const onAfterEnter = () => {
+  emit('after-open')
+  
+  // Focus management for modal
+  if (props.modal && popoverRef.value) {
+    const focusable = popoverRef.value.querySelector(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    ) as HTMLElement
+    focusable?.focus()
+  }
+}
 
-defineExpose({ open, close, toggle, updatePosition });
+const onBeforeLeave = () => {
+  emit('before-close')
+}
+
+const onAfterLeave = () => {
+  emit('after-close')
+}
+
+// Lifecycle
+onMounted(() => {
+  document.addEventListener('click', handleClickOutside)
+  document.addEventListener('keydown', handleKeyDown)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleClickOutside)
+  document.removeEventListener('keydown', handleKeyDown)
+  destroyPopper()
+  clearTimers()
+})
+
+// Public API
+defineExpose({
+  open,
+  close,
+  toggle,
+  isOpen: computed(() => isOpen.value)
+})
 </script>
 
-<template>
-  <div :class="s.root" ref="rootRef">
-    <!-- Trigger -->
-    <component
-      :is="triggerTag"
-      v-bind="triggerAttrs"
-      v-on="triggerListeners"
-      :class="s.trigger"
-      ref="triggerRef"
-      type="button"
-      :data-disabled="disabled ? '' : undefined"
-    >
-      <slot name="trigger" :open="isOpen" :attrs="triggerAttrs" />
-    </component>
 
-    <!-- Panel -->
-    <teleport to="body" v-if="portal">
-      <Transition name="fade-scale">
-        <div
-          v-if="isOpen"
-          :id="panelId"
-          :class="[
-            s.panel,
-            s[color],
-            s[`variant-${variant}`],
-            s[`size-${size}`],
-            s[`rounded-${rounded}`],
-            panelClass
-          ]"
-          :style="state.panelStyles"
-          :role="role"
-          :aria-labelledby="triggerId"
-          :aria-modal="role==='dialog' ? 'true' : undefined"
-          ref="panelRef"
-          tabindex="-1"
-          data-open
-          :data-placement="state.placementResolved"
-          :data-strategy="strategy"
-          @mouseenter="onPanelMouseEnter"
-          @mouseleave="onPanelMouseLeave"
-        >
-          <div v-if="arrow" :class="s.arrow" :style="state.arrowStyles" ref="arrowRef" />
-          <slot name="header" />
-          <slot />
-          <slot name="footer" />
-        </div>
-      </Transition>
-    </teleport>
-
-    <Transition name="fade-scale" v-else>
-      <div
-        v-if="isOpen"
-        :id="panelId"
-        :class="[
-          s.panel,
-          s[color],
-          s[`variant-${variant}`],
-          s[`size-${size}`],
-          s[`rounded-${rounded}`],
-          panelClass
-        ]"
-        :style="state.panelStyles"
-        :role="role"
-        :aria-labelledby="triggerId"
-        :aria-modal="role==='dialog' ? 'true' : undefined"
-        ref="panelRef"
-        tabindex="-1"
-        data-open
-        :data-placement="state.placementResolved"
-        :data-strategy="strategy"
-        @mouseenter="onPanelMouseEnter"
-        @mouseleave="onPanelMouseLeave"
-      >
-        <div v-if="arrow" :class="s.arrow" :style="state.arrowStyles" ref="arrowRef" />
-        <slot name="header" />
-        <slot />
-        <slot name="footer" />
-      </div>
-    </Transition>
-  </div>
-</template>
+<style lang="css" module src="./BasePopover.module.css" ></style>

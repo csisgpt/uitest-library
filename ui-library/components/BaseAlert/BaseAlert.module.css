@@ -15,7 +15,7 @@
 
 /* Container */
 .alert {
-  background: var(--surface, #fff);
+  background: var(--color-surface, #fff);
   color: var(--color-text);
   border: 1px solid var(--border, #e5e7eb);
   border-radius: 12px;
@@ -370,8 +370,9 @@
   position: relative;
 }
 .button:hover {
-  background: #f3f4f6;
+  background: var(--color-primary);
   border-color: #d1d5db;
+  color: white;
 }
 .button:active {
   transform: translateY(1px);

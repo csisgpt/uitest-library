@@ -1,158 +1,207 @@
 <template>
   <Teleport to="body">
-    <transition name="overlay">
-      <div v-if="modelValue && !hideOverlay" :class="styles.overlay"></div>
-    </transition>
-    <div
-      v-if="modelValue"
-      :class="[styles.wrapper, fullscreen && styles.wrapperFullscreen]"
-      @click.self="onOverlayClick"
-    >
-      <transition name="modal">
+    <Transition name="fade-base">
+      <div
+        v-if="visible"
+        :class="$style.overlay"
+        @click="onOverlayClick"
+        role="dialog"
+        :aria-modal="true"
+        :aria-labelledby="headerId"
+        :aria-describedby="contentId"
+      >
         <div
-          v-if="modelValue"
-          ref="modalRef"
-          :class="[styles.box, fullscreen && styles.fullscreen]"
-          role="dialog"
-          aria-modal="true"
-          :aria-labelledby="computedLabelledby"
-          :aria-describedby="ariaDescribedby"
-          :style="modalStyles"
-          tabindex="-1"
-          @keydown.stop
+          :class="[
+            $style.modal,
+            $style[size],
+            { [$style.maximized]: maximized },
+          ]"
+          @click.stop
         >
-          <header v-if="title || closable" :class="styles.header">
-            <h2 v-if="title" :id="computedLabelledby" :class="styles.title">{{ title }}</h2>
+          <!-- Header -->
+          <header v-if="showHeader" :class="$style.header" :id="headerId">
+            <slot name="header" :close="close">
+              <h2 :class="$style.title">{{ header }}</h2>
+            </slot>
+
             <button
               v-if="closable"
-              type="button"
-              :class="styles.close"
-              aria-label="Close"
+              :class="$style.closeButton"
               @click="close"
+              type="button"
+              :aria-label="closeLabel"
             >
-              ×
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M18 6L6 18M6 6l12 12" />
+              </svg>
             </button>
           </header>
-          <div :class="styles.body">
-            <slot />
-          </div>
-          <footer v-if="$slots.footer" :class="styles.footer">
-            <slot name="footer" />
+
+          <!-- Content -->
+          <main :class="$style.content" :id="contentId">
+            <slot :close="close" />
+          </main>
+
+          <!-- Footer -->
+          <footer v-if="showFooter" :class="$style.footer">
+            <slot name="footer" :close="close">
+              <div :class="$style.footerActions">
+                <button
+                  v-if="showCancelButton"
+                  :class="[$style.button, $style.secondary]"
+                  @click="cancel"
+                  type="button"
+                >
+                  {{ cancelLabel }}
+                </button>
+                <button
+                  v-if="showConfirmButton"
+                  :class="[$style.button, $style.primary]"
+                  @click="confirm"
+                  type="button"
+                >
+                  {{ confirmLabel }}
+                </button>
+              </div>
+            </slot>
           </footer>
         </div>
-      </transition>
-    </div>
+      </div>
+    </Transition>
   </Teleport>
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onBeforeUnmount, nextTick, computed } from 'vue'
-import styles from './BaseModal.module.css'
+import { computed, nextTick, onMounted, onUnmounted, ref, watch } from "vue";
+import style from "./BaseModal.module.css";
+interface Props {
+  visible?: boolean;
+  header?: string;
+  size?: "sm" | "md" | "lg" | "xl";
+  maximized?: boolean;
+  closable?: boolean;
+  closeOnEscape?: boolean;
+  closeOnOverlay?: boolean;
+  showHeader?: boolean;
+  showFooter?: boolean;
+  showCancelButton?: boolean;
+  showConfirmButton?: boolean;
+  cancelLabel?: string;
+  confirmLabel?: string;
+  closeLabel?: string;
+}
 
-const props = withDefaults(
-  defineProps<{
-    modelValue: boolean
-    title?: string
-    width?: string
-    fullscreen?: boolean
-    closable?: boolean
-    persistent?: boolean
-    hideOverlay?: boolean
-    ariaLabelledby?: string
-    ariaDescribedby?: string
-  }>(),
-  {
-    width: '600px',
-    fullscreen: false,
-    closable: true,
-    persistent: false,
-    hideOverlay: false
+interface Emits {
+  (e: "update:visible", value: boolean): void;
+  (e: "show"): void;
+  (e: "hide"): void;
+  (e: "confirm"): void;
+  (e: "cancel"): void;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  visible: false,
+  header: "",
+  size: "md",
+  maximized: false,
+  closable: true,
+  closeOnEscape: true,
+  closeOnOverlay: true,
+  showHeader: true,
+  showFooter: false,
+  showCancelButton: false,
+  showConfirmButton: false,
+  cancelLabel: "انصراف",
+  confirmLabel: "تأیید",
+  closeLabel: "بستن",
+});
+
+const emit = defineEmits<Emits>();
+
+// Generate unique IDs for accessibility
+const headerId = computed(
+  () => `modal-header-${Math.random().toString(36).substr(2, 9)}`
+);
+const contentId = computed(
+  () => `modal-content-${Math.random().toString(36).substr(2, 9)}`
+);
+
+// Body scroll lock
+const originalBodyOverflow = ref<string>("");
+
+const lockBodyScroll = () => {
+  originalBodyOverflow.value = document.body.style.overflow;
+  document.body.style.overflow = "hidden";
+};
+
+const unlockBodyScroll = () => {
+  document.body.style.overflow = originalBodyOverflow.value;
+};
+
+// Event handlers
+const close = () => {
+  emit("update:visible", false);
+  emit("hide");
+};
+
+const confirm = () => {
+  emit("confirm");
+};
+
+const cancel = () => {
+  emit("cancel");
+  close();
+};
+
+const onOverlayClick = () => {
+  if (props.closeOnOverlay) {
+    close();
   }
-)
+};
 
-const emit = defineEmits<{
-  (e: 'update:modelValue', value: boolean): void
-  (e: 'close'): void
-}>()
-
-const modalRef = ref<HTMLElement | null>(null)
-const previouslyFocused = ref<HTMLElement | null>(null)
-const id = `modal-${Math.random().toString(36).slice(2, 9)}`
-
-const computedLabelledby = computed(() => props.ariaLabelledby ?? (props.title ? id : undefined))
-
-const modalStyles = computed(() => ({
-  '--modal-width': props.width,
-  '--modal-fullscreen-width': '100vw',
-  '--modal-fullscreen-height': '100vh',
-  '--modal-fullscreen-radius': '0'
-}))
-
-const focusableSelector =
-  'a[href],area[href],input:not([disabled]):not([type="hidden"]),select:not([disabled]),textarea:not([disabled]),button:not([disabled]),iframe,object,embed,[tabindex]:not([tabindex="-1"]),[contenteditable]'
-
-function trap(e: KeyboardEvent) {
-  if (e.key === 'Escape' && !props.persistent) {
-    close()
-    return
+const onEscapeKey = (event: KeyboardEvent) => {
+  if (event.key === "Escape" && props.closeOnEscape && props.visible) {
+    close();
   }
-  if (e.key !== 'Tab') return
-  const focusables = modalRef.value?.querySelectorAll<HTMLElement>(focusableSelector)
-  if (!focusables || focusables.length === 0) {
-    e.preventDefault()
-    return
-  }
-  const first = focusables[0]
-  const last = focusables[focusables.length - 1]
-  const active = document.activeElement as HTMLElement
-  if (e.shiftKey) {
-    if (active === first || !modalRef.value?.contains(active)) {
-      e.preventDefault()
-      last.focus()
-    }
-  } else if (active === last) {
-    e.preventDefault()
-    first.focus()
-  }
-}
+};
 
-function open() {
-  previouslyFocused.value = document.activeElement as HTMLElement | null
-  document.addEventListener('keydown', trap)
-  nextTick(() => {
-    const focusables = modalRef.value?.querySelectorAll<HTMLElement>(focusableSelector)
-    ;(focusables && focusables[0] ? focusables[0] : modalRef.value)?.focus()
-  })
-}
-
-function cleanup() {
-  document.removeEventListener('keydown', trap)
-  previouslyFocused.value?.focus()
-}
-
-function close() {
-  emit('update:modelValue', false)
-  emit('close')
-}
-
-function onOverlayClick() {
-  if (props.persistent || !props.closable) return
-  close()
-}
-
+// Watchers
 watch(
-  () => props.modelValue,
-  (val) => {
-    if (val) open()
-    else cleanup()
+  () => props.visible,
+  (newValue) => {
+    if (newValue) {
+      lockBodyScroll();
+      emit("show");
+      nextTick(() => {
+        // Focus management could be added here
+      });
+    } else {
+      unlockBodyScroll();
+    }
   },
   { immediate: true }
-)
+);
 
-onBeforeUnmount(() => cleanup())
+// Lifecycle
+onMounted(() => {
+  document.addEventListener("keydown", onEscapeKey);
+  if (props.visible) {
+    lockBodyScroll();
+  }
+});
+
+onUnmounted(() => {
+  document.removeEventListener("keydown", onEscapeKey);
+  unlockBodyScroll();
+});
 </script>
 
 <style module src="./BaseModal.module.css">
-/* Standardized states */
-:focus-visible{outline:none;box-shadow:0 0 0 var(--focus-ring-offset) var(--color-background),0 0 0 calc(var(--focus-ring-offset) + var(--focus-ring-width)) var(--focus-ring-color);}
-*{transition:background var(--transition-base),color var(--transition-base),box-shadow var(--transition-base),border-color var(--transition-base);}</style>
+</style>

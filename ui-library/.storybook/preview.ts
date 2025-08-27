@@ -1,61 +1,72 @@
 // .storybook/preview.ts
-import type { Preview } from '@storybook/vue3'
+import type { Preview } from "@storybook/vue3";
 
 // ⬇️ تم و توکن‌ها + فونت (تو پروژه‌ات همین مسیرها هست)
-import '../theme/index.css' // شامل base + light + dark + IRANYekanX (طبق ساختار شما)
+import "../theme/index.css"; // شامل base + light + dark + IRANYekanX
 
 const preview: Preview = {
   globalTypes: {
     theme: {
-      name: 'Theme',
-      description: 'Switch light/dark theme',
-      defaultValue: 'light',
+      name: "Theme",
+      description: "Switch light/dark theme",
+      defaultValue: "light",
       toolbar: {
-        icon: 'mirror',
+        icon: "mirror",
         items: [
-          { value: 'light', title: 'Light' },
-          { value: 'dark', title: 'Dark' },
+          { value: "light", title: "Light" },
+          { value: "dark", title: "Dark" },
         ],
       },
     },
     direction: {
-      name: 'Direction',
-      description: 'Text direction',
-      defaultValue: 'rtl',
+      name: "Direction",
+      description: "Text direction",
+      defaultValue: "rtl",
       toolbar: {
-        icon: 'paragraph',
+        icon: "paragraph",
         items: [
-          { value: 'rtl', title: 'RTL' },
-          { value: 'ltr', title: 'LTR' },
+          { value: "rtl", title: "RTL" },
+          { value: "ltr", title: "LTR" },
         ],
       },
     },
   },
-  decorators: [
-    (story, context) => {
-      // تم را روی html ست کن
-      const html = document.documentElement
-      html.setAttribute('data-theme', context.globals.theme === 'dark' ? 'dark' : 'light') // uses themes/light.css & dark.css
-      html.setAttribute('dir', context.globals.direction || 'rtl')
+decorators: [
+  (story, context) => {
+    const html = document.documentElement;
+    html.setAttribute(
+      "data-theme",
+      context.globals.theme === "dark" ? "dark" : "light"
+    );
+    html.setAttribute("dir", context.globals.direction || "rtl");
 
-      return {
-        components: { Story: story() as any },
-        template: `<Story />`,
+    // اضافه کردن استایل‌های اضافی با استفاده از !important
+    const style = document.createElement("style");
+    style.innerHTML = `
+      body {
+        font-family: 'IRANYekanX', sans-serif !important;  /* استفاده از !important برای اطمینان از اعمال فونت */
       }
-    },
-  ],
+    `;
+    document.head.appendChild(style);
+
+    return {
+      components: { Story: story() as any },
+      template: `<Story />`,
+    };
+  },
+],
   parameters: {
-    layout: 'centered',
+    layout: "centered",
     controls: { expanded: true },
     backgrounds: {
-      default: 'Surface',
+      default: "Surface",
       values: [
-        { name: 'Surface', value: 'var(--color-surface)' },
-        { name: 'Plain', value: 'var(--color-background)' },
+        { name: "Surface", value: "var(--color-surface)" },
+        { name: "Plain", value: "var(--color-background)" },
       ],
     },
     options: { showPanel: true },
   },
-}
+};
 
-export default preview
+export default preview;

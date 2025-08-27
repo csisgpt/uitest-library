@@ -11,3 +11,233 @@
 /* Utility classes (optional) */
 .anim-fade-in { animation: fade-in var(--transition-base); }
 .anim-scale-in { animation: scale-in var(--transition-base); }
+
+
+.fade-stagger {
+  animation: fadeCard 0.7s ease forwards;
+  opacity: 0; /* ابتدا مخفی */
+  transform: translateX(100%); /* موقعیت شروع */
+}
+.fade-stagger-reverse {
+  animation: fadeCard 0.7s ease forwards;
+  opacity: 0; /* ابتدا مخفی */
+  transform: translateX(-100%); /* موقعیت شروع */
+}
+
+.fade-stagger-inner {
+  animation: fadeCard 0.7s ease forwards;
+  opacity: 0; /* ابتدا مخفی */
+  transform: translateX(100%); /* موقعیت شروع */
+}
+.fade-stagger-inner-reverse {
+  animation: fadeCard 0.7s ease forwards;
+  opacity: 0; /* ابتدا مخفی */
+  transform: translateX(-100%); /* موقعیت شروع */
+}
+
+.fade-stagger-horizontal {
+  animation: fadeCard 0.7s ease forwards;
+  opacity: 0; /* ابتدا مخفی */
+  transform: translateY(-100%); /* موقعیت شروع */
+}
+
+.slide-slide-y {
+  animation: fadeCard 0.7s ease forwards;
+  opacity: 0; /* ابتدا مخفی */
+  transform: translateY(-100px); /* موقعیت شروع */
+}
+
+.fade-loading-enter-active,
+.fade-loading-leave-active {
+  transition: opacity 0.7s ease, transform 0.7s ease, filter 0.7s ease;
+  will-change: opacity, transform, filter;
+}
+
+.fade-loading-enter-from,
+.fade-loading-leave-to {
+  opacity: 0;
+  transform: scale(0.98);
+  filter: blur(6px);
+}
+
+.fade-loading-enter-to,
+.fade-loading-leave-from {
+  opacity: 1;
+  transform: scale(1);
+  filter: blur(0px);
+}
+
+.fade-page-enter-active,
+.fade-page-leave-active {
+  transition: all .3s ease ;
+  will-change: opacity, transform, filter;
+}
+
+.fade-page-enter-from,
+.fade-page-leave-to {
+  opacity: 0;
+  transform: scale(0.98);
+  filter: blur(6px);
+}
+
+.fade-page-enter-to,
+.fade-page-leave-from {
+  opacity: 1;
+  transform: scale(1);
+  filter: blur(0px);
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 0.3s ease;
+  will-change: opacity, transform, filter;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+  transform: translateX(50%);
+}
+
+.fade-enter-to,
+.fade-leave-from {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.fade-stagger {
+  animation: fadeCard 0.5s ease forwards;
+  opacity: 0; /* ابتدا مخفی */
+  transform: translateX(100%); /* موقعیت شروع */
+}
+
+.fade-base-enter-active,
+.fade-base-leave-active {
+  transition: all 0.35s ease;
+  @apply duration-[600ms] ease-in-out;
+}
+
+.fade-base-enter-from,
+.fade-base-leave-to {
+  opacity: 0;
+  transform: scale(0.98);
+  filter: blur(4px);
+}
+
+.fade-base-enter-to,
+.fade-base-leave-from {
+  opacity: 1;
+  transform: scale(1);
+  filter: blur(0);
+}
+
+@keyframes slideInAdvanced {
+  0% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  30% {
+    transform: translateX(100%);
+    /* scale: 1.10; */
+    opacity: 0.7;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOutAdvanced {
+  0% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  20% {
+    transform: translateX(5%);
+  }
+  100% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+.slide-enter-active {
+  animation: slideInAdvanced 0.6s ease forwards;
+}
+
+.slide-leave-active {
+  animation: slideOutAdvanced 0.45s ease forwards;
+}
+
+.slide-slide-y {
+  animation: fadeCard 0.7s ease forwards;
+  opacity: 0; /* ابتدا مخفی */
+  transform: translateY(-100px); /* موقعیت شروع */
+}
+
+@keyframes fadeCard {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeCard {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulseCustom {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+.animate-pulseCustom {
+  animation: pulseCustom 1.6s ease-in-out infinite;
+}
+
+
+@keyframes shimmer {
+  0% {
+    background-position: -100% 0;
+  }
+  100% {
+    background-position: 100% 0;
+  }
+}
+
+.animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--base-200) 25%,
+    var(--base-100) 50%,
+    var(--base-200) 75%
+  );
+  background-size: 1000% 100%;
+  animation: shimmer 4.8s linear alternate infinite;
+}
+
+
+
+@keyframes fadeShow {
+  to {
+    opacity: 1;
+    transform: scale(1)
+  }
+
+  from {
+    opacity: 0;
+    transform: scale(.6)
+  }
+}
+
+.fade-stagger-scale {
+  animation: fadeShow 0.4s ease forwards;
+  opacity: 0; /* ابتدا مخفی */
+}

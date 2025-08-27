@@ -1,9 +1,9 @@
 :root {
   /* 🅰️ Typography */
-  --font-family-base: IRANYekanX, 'Inter', system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial, sans-serif;
-  --font-size-sm: 0.875rem;  /* 14px */
-  --font-size-md: 1rem;      /* 16px */
-  --font-size-lg: 1.125rem;  /* 18px */
+  --font-family-base: IRANYekanX;
+  --font-size-sm: 0.875rem; /* 14px */
+  --font-size-md: 1rem; /* 16px */
+  --font-size-lg: 1.125rem; /* 18px */
   --font-weight-normal: 400;
   --font-weight-medium: 500;
   --font-weight-bold: 700;

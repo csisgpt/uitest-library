@@ -12,8 +12,8 @@
     "preview": "vite preview",
     "demo": "vite demo"
   },
-  
   "dependencies": {
+    "@popperjs/core": "^2.11.8",
     "vue": "^3.0.0"
   },
   "devDependencies": {
