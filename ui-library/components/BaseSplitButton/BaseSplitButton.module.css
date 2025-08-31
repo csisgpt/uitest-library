@@ -1,87 +1,912 @@
-.splitButton {
+/* =======================
+   BaseSplitButton.module.css
+   Vue 3 SplitButton Component
+   ======================= */
+
+/* =======================
+   Container Styles
+   ======================= */
+
+.base-splitbutton {
   display: inline-flex;
-  flex-direction: row-reverse;
   position: relative;
-  vertical-align: middle;
+  border-radius: var(--radius-md);
+  overflow: visible;
+  vertical-align: top;
+  font-family: var(--font-family-base);
 }
 
-/* دو دکمه کنار هم */
-.main {
+.base-splitbutton { position: relative; display: inline-flex; }
+.base-splitbutton-overlay { position: absolute; z-index: 1000; }
+
+.base-splitbutton.base-splitbutton-rounded {
+  border-radius: var(--radius-full);
+}
+
+.base-splitbutton.base-splitbutton-raised {
+  box-shadow: var(--shadow-md);
+}
+
+.base-splitbutton.base-splitbutton-raised:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-1px);
+}
+
+/* =======================
+   Base Button Styles
+   ======================= */
+
+.base-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  padding: var(--space-md) var(--space-lg);
+  margin: 0;
+  border: 1px solid transparent;
+  font-family: inherit;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+  overflow: hidden;
+  outline: none;
+  position: relative;
+  transition: all var(--transition-base);
+  background: transparent;
+  color: inherit;
+}
+
+.base-button:disabled {
+  opacity: var(--opacity-disabled);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.base-button:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  z-index: 2;
+}
+
+/* Button Label */
+.base-button-label {
+  font-weight: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+/* Icon Only Button */
+.base-button-icon-only {
+  width: 3rem;
+  padding-left: 0;
+  padding-right: 0;
+  justify-content: center;
+}
+
+/* =======================
+   Split Button Parts
+   ======================= */
+
+/* Main Button */
+.base-splitbutton-defaultbutton {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
+  border-right: none;
+  flex: 1;
+  min-width: 0;
 }
-.toggle {
+
+/* Dropdown Button */
+.base-splitbutton-menubutton {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
-  padding-inline: var(--space-sm);
+  padding-left: var(--space-md);
+  padding-right: var(--space-md);
+  border-left: 1px solid rgba(255, 255, 255, 0.2);
+  flex-shrink: 0;
+  min-width: 2.5rem;
 }
 
-/* آیکن */
-.icon { margin-inline-end: var(--space-sm); }
-.caret { font-size: 0.75em; line-height: 1; }
+/* =======================
+   Size Variants
+   ======================= */
 
-/* منو */
-.menu {
-  position: absolute;
-  z-index: var(--z-index-dropdown);
+/* Small */
+.base-splitbutton-sm .base-button {
+  padding: var(--space-sm) var(--space-md);
+  font-size: var(--font-size-sm);
+  gap: calc(var(--space-sm) * 0.75);
+  min-height: 2rem;
+}
+
+.base-splitbutton-sm .base-splitbutton-menubutton {
+  padding-left: var(--space-sm);
+  padding-right: var(--space-sm);
+  min-width: 2rem;
+}
+
+.base-splitbutton-sm .base-button-icon-only {
+  width: 2.25rem;
+}
+
+/* Large */
+.base-splitbutton-lg .base-button {
+  padding: var(--space-lg) var(--space-xl);
+  font-size: var(--font-size-lg);
+  gap: var(--space-md);
+  min-height: 3.5rem;
+}
+
+.base-splitbutton-lg .base-splitbutton-menubutton {
+  padding-left: var(--space-lg);
+  padding-right: var(--space-lg);
+  min-width: 3rem;
+}
+
+.base-splitbutton-lg .base-button-icon-only {
+  width: 4rem;
+}
+
+/* =======================
+   Severity Variants - Filled
+   ======================= */
+
+/* Primary */
+.base-splitbutton-primary .base-button {
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+  border-color: var(--color-primary);
+}
+
+.base-splitbutton-primary .base-button:hover:not(:disabled) {
+  background-color: color-mix(in srgb, var(--color-primary) 85%, black);
+  border-color: color-mix(in srgb, var(--color-primary) 85%, black);
+  transform: translateY(-1px);
+}
+
+.base-splitbutton-primary .base-button:active:not(:disabled) {
+  background-color: color-mix(in srgb, var(--color-primary) 75%, black);
+  border-color: color-mix(in srgb, var(--color-primary) 75%, black);
+  transform: translateY(0);
+}
+
+/* Secondary */
+.base-splitbutton-secondary .base-button {
+  background-color: var(--color-secondary);
+  color: var(--color-on-secondary);
+  border-color: var(--color-secondary);
+}
+
+.base-splitbutton-secondary .base-button:hover:not(:disabled) {
+  background-color: color-mix(in srgb, var(--color-secondary) 85%, black);
+  border-color: color-mix(in srgb, var(--color-secondary) 85%, black);
+  transform: translateY(-1px);
+}
+
+.base-splitbutton-secondary .base-button:active:not(:disabled) {
+  background-color: color-mix(in srgb, var(--color-secondary) 75%, black);
+  border-color: color-mix(in srgb, var(--color-secondary) 75%, black);
+  transform: translateY(0);
+}
+
+/* Success */
+.base-splitbutton-success .base-button {
+  background-color: var(--color-success);
+  color: var(--color-on-success);
+  border-color: var(--color-success);
+}
+
+.base-splitbutton-success .base-button:hover:not(:disabled) {
+  background-color: color-mix(in srgb, var(--color-success) 85%, black);
+  border-color: color-mix(in srgb, var(--color-success) 85%, black);
+  transform: translateY(-1px);
+}
+
+.base-splitbutton-success .base-button:active:not(:disabled) {
+  background-color: color-mix(in srgb, var(--color-success) 75%, black);
+  border-color: color-mix(in srgb, var(--color-success) 75%, black);
+  transform: translateY(0);
+}
+
+/* Info */
+.base-splitbutton-info .base-button {
+  background-color: var(--color-info);
+  color: var(--color-on-info);
+  border-color: var(--color-info);
+}
+
+.base-splitbutton-info .base-button:hover:not(:disabled) {
+  background-color: color-mix(in srgb, var(--color-info) 85%, black);
+  border-color: color-mix(in srgb, var(--color-info) 85%, black);
+  transform: translateY(-1px);
+}
+
+.base-splitbutton-info .base-button:active:not(:disabled) {
+  background-color: color-mix(in srgb, var(--color-info) 75%, black);
+  border-color: color-mix(in srgb, var(--color-info) 75%, black);
+  transform: translateY(0);
+}
+
+/* Warning */
+.base-splitbutton-warning .base-button {
+  background-color: var(--color-warning);
+  color: var(--color-on-warning);
+  border-color: var(--color-warning);
+}
+
+.base-splitbutton-warning .base-button:hover:not(:disabled) {
+  background-color: color-mix(in srgb, var(--color-warning) 85%, black);
+  border-color: color-mix(in srgb, var(--color-warning) 85%, black);
+  transform: translateY(-1px);
+}
+
+.base-splitbutton-warning .base-button:active:not(:disabled) {
+  background-color: color-mix(in srgb, var(--color-warning) 75%, black);
+  border-color: color-mix(in srgb, var(--color-warning) 75%, black);
+  transform: translateY(0);
+}
+
+/* Danger */
+.base-splitbutton-danger .base-button {
+  background-color: var(--color-error);
+  color: var(--color-on-error);
+  border-color: var(--color-error);
+}
+
+.base-splitbutton-danger .base-button:hover:not(:disabled) {
+  background-color: color-mix(in srgb, var(--color-error) 85%, black);
+  border-color: color-mix(in srgb, var(--color-error) 85%, black);
+  transform: translateY(-1px);
+}
+
+.base-splitbutton-danger .base-button:active:not(:disabled) {
+  background-color: color-mix(in srgb, var(--color-error) 75%, black);
+  border-color: color-mix(in srgb, var(--color-error) 75%, black);
+  transform: translateY(0);
+}
+
+/* Help */
+.base-splitbutton-help .base-button {
+  background-color: #9333ea;
+  color: #ffffff;
+  border-color: #9333ea;
+}
+
+.base-splitbutton-help .base-button:hover:not(:disabled) {
+  background-color: color-mix(in srgb, #9333ea 85%, black);
+  border-color: color-mix(in srgb, #9333ea 85%, black);
+  transform: translateY(-1px);
+}
+
+.base-splitbutton-help .base-button:active:not(:disabled) {
+  background-color: color-mix(in srgb, #9333ea 75%, black);
+  border-color: color-mix(in srgb, #9333ea 75%, black);
+  transform: translateY(0);
+}
+
+/* =======================
+   Style Variants - Outlined
+   ======================= */
+
+.base-splitbutton-outlined .base-button {
+  background-color: transparent;
+  border-width: 1px;
+  border-style: solid;
+}
+
+.base-splitbutton-outlined .base-splitbutton-menubutton {
+  border-left: 1px solid currentColor;
+}
+
+/* Primary Outlined */
+.base-splitbutton-outlined.base-splitbutton-primary .base-button {
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.base-splitbutton-outlined.base-splitbutton-primary
+  .base-button:hover:not(:disabled) {
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px
+    color-mix(in srgb, var(--color-primary) 30%, transparent);
+}
+
+/* Secondary Outlined */
+.base-splitbutton-outlined.base-splitbutton-secondary .base-button {
+  color: var(--color-secondary);
+  border-color: var(--color-secondary);
+}
+
+.base-splitbutton-outlined.base-splitbutton-secondary
+  .base-button:hover:not(:disabled) {
+  background-color: var(--color-secondary);
+  color: var(--color-on-secondary);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px
+    color-mix(in srgb, var(--color-secondary) 30%, transparent);
+}
+
+/* Success Outlined */
+.base-splitbutton-outlined.base-splitbutton-success .base-button {
+  color: var(--color-success);
+  border-color: var(--color-success);
+}
+
+.base-splitbutton-outlined.base-splitbutton-success
+  .base-button:hover:not(:disabled) {
+  background-color: var(--color-success);
+  color: var(--color-on-success);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px
+    color-mix(in srgb, var(--color-success) 30%, transparent);
+}
+
+/* Info Outlined */
+.base-splitbutton-outlined.base-splitbutton-info .base-button {
+  color: var(--color-info);
+  border-color: var(--color-info);
+}
+
+.base-splitbutton-outlined.base-splitbutton-info
+  .base-button:hover:not(:disabled) {
+  background-color: var(--color-info);
+  color: var(--color-on-info);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--color-info) 30%, transparent);
+}
+
+/* Warning Outlined */
+.base-splitbutton-outlined.base-splitbutton-warning .base-button {
+  color: var(--color-warning);
+  border-color: var(--color-warning);
+}
+
+.base-splitbutton-outlined.base-splitbutton-warning
+  .base-button:hover:not(:disabled) {
+  background-color: var(--color-warning);
+  color: var(--color-on-warning);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px
+    color-mix(in srgb, var(--color-warning) 30%, transparent);
+}
+
+/* Danger Outlined */
+.base-splitbutton-outlined.base-splitbutton-danger .base-button {
+  color: var(--color-error);
+  border-color: var(--color-error);
+}
+
+.base-splitbutton-outlined.base-splitbutton-danger
+  .base-button:hover:not(:disabled) {
+  background-color: var(--color-error);
+  color: var(--color-on-error);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--color-error) 30%, transparent);
+}
+
+/* Help Outlined */
+.base-splitbutton-outlined.base-splitbutton-help .base-button {
+  color: #9333ea;
+  border-color: #9333ea;
+}
+
+.base-splitbutton-outlined.base-splitbutton-help
+  .base-button:hover:not(:disabled) {
+  background-color: #9333ea;
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px color-mix(in srgb, #9333ea 30%, transparent);
+}
+
+/* =======================
+   Style Variants - Text
+   ======================= */
+
+.base-splitbutton-text .base-button {
+  background-color: transparent;
+  border-color: transparent;
+  padding: var(--space-sm) var(--space-md);
+}
+
+.base-splitbutton-text .base-splitbutton-menubutton {
+  border-left: 1px solid rgba(0, 0, 0, 0.1);
+  padding-left: var(--space-sm);
+  padding-right: var(--space-sm);
+}
+
+/* Primary Text */
+.base-splitbutton-text.base-splitbutton-primary .base-button {
+  color: var(--color-primary);
+}
+
+.base-splitbutton-text.base-splitbutton-primary
+  .base-button:hover:not(:disabled) {
+  background-color: color-mix(in srgb, var(--color-primary) 10%, transparent);
+  border-radius: var(--radius-sm);
+}
+
+/* Secondary Text */
+.base-splitbutton-text.base-splitbutton-secondary .base-button {
+  color: var(--color-secondary);
+}
+
+.base-splitbutton-text.base-splitbutton-secondary
+  .base-button:hover:not(:disabled) {
+  background-color: color-mix(in srgb, var(--color-secondary) 10%, transparent);
+  border-radius: var(--radius-sm);
+}
+
+/* Success Text */
+.base-splitbutton-text.base-splitbutton-success .base-button {
+  color: var(--color-success);
+}
+
+.base-splitbutton-text.base-splitbutton-success
+  .base-button:hover:not(:disabled) {
+  background-color: color-mix(in srgb, var(--color-success) 10%, transparent);
+  border-radius: var(--radius-sm);
+}
+
+/* Info Text */
+.base-splitbutton-text.base-splitbutton-info .base-button {
+  color: var(--color-info);
+}
+
+.base-splitbutton-text.base-splitbutton-info .base-button:hover:not(:disabled) {
+  background-color: color-mix(in srgb, var(--color-info) 10%, transparent);
+  border-radius: var(--radius-sm);
+}
+
+/* Warning Text */
+.base-splitbutton-text.base-splitbutton-warning .base-button {
+  color: var(--color-warning);
+}
+
+.base-splitbutton-text.base-splitbutton-warning
+  .base-button:hover:not(:disabled) {
+  background-color: color-mix(in srgb, var(--color-warning) 10%, transparent);
+  border-radius: var(--radius-sm);
+}
+
+/* Danger Text */
+.base-splitbutton-text.base-splitbutton-danger .base-button {
+  color: var(--color-error);
+}
+
+.base-splitbutton-text.base-splitbutton-danger
+  .base-button:hover:not(:disabled) {
+  background-color: color-mix(in srgb, var(--color-error) 10%, transparent);
+  border-radius: var(--radius-sm);
+}
+
+/* Help Text */
+.base-splitbutton-text.base-splitbutton-help .base-button {
+  color: #9333ea;
+}
+
+.base-splitbutton-text.base-splitbutton-help .base-button:hover:not(:disabled) {
+  background-color: color-mix(in srgb, #9333ea 10%, transparent);
+  border-radius: var(--radius-sm);
+}
+
+/* =======================
+   Style Variants - Plain
+   ======================= */
+
+.base-splitbutton-plain .base-button {
+  background-color: var(--color-background);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+}
+
+.base-splitbutton-plain .base-button:hover:not(:disabled) {
   background-color: var(--color-surface);
-  border: var(--border-width) var(--border-style) var(--color-border);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-md);
-  padding: var(--space-xs) 0;
-  /* موقعیت توسط JS تعیین می‌شود (top/bottom + left/right) */
+  border-color: color-mix(in srgb, var(--color-border) 60%, var(--color-text));
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
 }
 
-/* آیتم‌ها */
-.menuItem {
+.base-splitbutton-plain .base-button:active:not(:disabled) {
+  background-color: color-mix(
+    in srgb,
+    var(--color-surface) 85%,
+    var(--color-text)
+  );
+  transform: translateY(0);
+}
+
+.base-splitbutton-plain .base-splitbutton-menubutton {
+  border-left: 1px solid var(--color-border);
+}
+
+/* =======================
+   Loading State
+   ======================= */
+
+.base-splitbutton-loading .base-button {
+  pointer-events: none;
+  position: relative;
+}
+
+.base-splitbutton-loading .base-splitbutton-menubutton {
+  opacity: 0.6;
+}
+
+.base-splitbutton-loading .base-button-label {
+  margin-left: var(--space-sm);
+}
+
+/* Loading Animation */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.pi-spin,
+.base-button .pi-spinner {
+  animation: spin 1s linear infinite;
+}
+
+/* =======================
+   Overlay (Dropdown Menu)
+   ======================= */
+
+.base-splitbutton-overlay {
+  position: absolute;
+  top: calc(100% + var(--space-xs));
+  left: 0;
+  background-color: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  min-width: 12rem;
+  max-width: 20rem;
+  z-index: var(--z-index-dropdown);
+  overflow: hidden;
+  transform-origin: top;
+}
+
+.base-component {
+  /* Additional component base styles if needed */
+}
+
+/* =======================
+   Menu List
+   ======================= */
+
+.base-splitbutton-list {
+  margin: 0;
+  padding: var(--space-xs);
+  list-style: none;
+  outline: none;
+  background: transparent;
+  max-height: 15rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Custom Scrollbar */
+.base-splitbutton-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.base-splitbutton-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.base-splitbutton-list::-webkit-scrollbar-thumb {
+  background-color: var(--color-muted);
+  border-radius: var(--radius-full);
+  opacity: 0.5;
+}
+
+.base-splitbutton-list::-webkit-scrollbar-thumb:hover {
+  background-color: color-mix(in srgb, var(--color-muted) 80%, black);
+  opacity: 0.8;
+}
+
+/* Firefox Scrollbar */
+.base-splitbutton-list {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-muted) transparent;
+}
+
+/* =======================
+   Menu Items
+   ======================= */
+
+.base-menuitem {
   display: flex;
   align-items: center;
   gap: var(--space-sm);
   padding: var(--space-sm) var(--space-md);
-  font-family: var(--font-family-base);
-  font-size: var(--font-size-md);
-  color: var(--color-text);
+  margin: 1px 0;
+  border-radius: var(--radius-sm);
   cursor: pointer;
-  transition: background var(--transition-base), color var(--transition-base);
-  outline: none;
+  transition: all var(--transition-fast);
+  position: relative;
+  color: var(--color-text);
+  text-decoration: none;
+  border: none;
+  background: transparent;
+  width: 100%;
+  text-align: left;
+  font-family: inherit;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-normal);
+  line-height: 1.4;
+  min-height: 2.25rem;
+  overflow: hidden;
 }
 
-.menuItem:hover,
-.menuItem:focus {
-  background-color: color-mix(in srgb, var(--color-primary), var(--color-surface) 90%);
+.base-menuitem:hover:not(.base-menuitem-disabled):not(
+    .base-menuitem-separator
+  ) {
+  background-color: var(--hover-overlay);
+  color: var(--color-text);
+  transform: translateX(2px);
+}
+
+.base-menuitem:active:not(.base-menuitem-disabled):not(
+    .base-menuitem-separator
+  ) {
+  background-color: var(--active-overlay);
+  transform: translateX(1px);
+}
+
+.base-menuitem-focused:not(.base-menuitem-disabled):not(
+    .base-menuitem-separator
+  ) {
+  background-color: var(--hover-overlay);
+  outline: 1px solid var(--focus-ring-color);
+  outline-offset: -1px;
+  z-index: 1;
+}
+
+.base-menuitem-disabled {
+  opacity: var(--opacity-disabled);
+  cursor: not-allowed;
+  pointer-events: none;
+  color: var(--color-disabled-text);
+}
+
+/* Separator Items */
+.base-menuitem-separator {
+  height: 1px;
+  background-color: var(--color-border);
+  margin: var(--space-xs) var(--space-sm);
+  padding: 0;
+  overflow: hidden;
+  cursor: default;
+  pointer-events: none;
+  border-radius: 0;
+  min-height: 1px;
+  display: block;
+}
+
+.base-menuitem-separator:hover {
+  background-color: var(--color-border);
+  transform: none;
+}
+
+/* Menu Item Text */
+.base-menuitem-text {
+  flex: 1;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: inherit;
+}
+
+/* Menu Item Icons */
+.base-menuitem i {
+  width: 1.25rem;
+  height: 1.25rem;
+  font-size: 1rem;
+  color: var(--color-muted);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color var(--transition-fast);
+}
+
+.base-menuitem:hover:not(.base-menuitem-disabled) i,
+.base-menuitem-focused:not(.base-menuitem-disabled) i {
   color: var(--color-text);
 }
 
-.danger:hover,
-.danger:focus {
-  background-color: color-mix(in srgb, var(--color-error), var(--color-surface) 90%);
+/* =======================
+   Transitions & Animations
+   ======================= */
+
+/* Overlay Transitions */
+.overlay-enter-active {
+  transition: all var(--transition-fast);
 }
 
-.disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-.disabled:hover, .disabled:focus {
-  background: transparent;
+.overlay-leave-active {
+  transition: all var(--transition-fast);
 }
 
-.itemIcon { font-size: var(--font-size-sm); }
-
-/* Divider */
-.divider {
-  height: 1px;
-  margin: var(--space-xs) 0;
-  background: var(--color-border);
-}
-
-/* انیمیشن */
-.fade-enter-active, .fade-leave-active {
-  transition: opacity var(--transition-fast), transform var(--transition-fast);
-}
-.fade-enter-from, .fade-leave-to {
+.overlay-enter-from {
   opacity: 0;
-  transform: translateY(-4px);
+  transform: translateY(-8px) scale(0.95);
 }
 
-/* Standardized states */
-:focus-visible{outline:none;box-shadow:0 0 0 var(--focus-ring-offset) var(--color-background),0 0 0 calc(var(--focus-ring-offset) + var(--focus-ring-width)) var(--focus-ring-color);}
+.overlay-leave-to {
+  opacity: 0;
+  transform: translateY(-8px) scale(0.95);
+}
+
+/* Button Animations */
+.base-button {
+  transform: translateY(0);
+}
+
+.base-splitbutton-raised .base-button:hover:not(:disabled) {
+  box-shadow: var(--shadow-lg);
+}
+
+/* Ripple Effect */
+.base-button::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.3s ease, height 0.3s ease, opacity 0.3s ease;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.base-button:active:not(:disabled)::after {
+  width: 120%;
+  height: 120%;
+  opacity: 1;
+  transition: width 0s, height 0s, opacity 0s;
+}
+
+/* Menu Item Slide Animation */
+.base-menuitem {
+  position: relative;
+  overflow: hidden;
+}
+
+.base-menuitem::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.15),
+    transparent
+  );
+  transition: left 0.4s ease;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.base-menuitem:hover:not(.base-menuitem-disabled):not(
+    .base-menuitem-separator
+  )::before {
+  left: 100%;
+}
+
+/* =======================
+   Dark Theme Support
+   ======================= */
+
+[data-theme="dark"] .base-splitbutton-overlay {
+  background-color: var(--color-surface);
+  border-color: var(--color-border);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"]
+  .base-menuitem:hover:not(.base-menuitem-disabled):not(
+    .base-menuitem-separator
+  ) {
+  background-color: rgba(255, 255, 255, 0.08);
+  transform: translateX(2px);
+}
+
+[data-theme="dark"]
+  .base-menuitem:active:not(.base-menuitem-disabled):not(
+    .base-menuitem-separator
+  ) {
+  background-color: rgba(255, 255, 255, 0.12);
+}
+
+[data-theme="dark"]
+  .base-menuitem-focused:not(.base-menuitem-disabled):not(
+    .base-menuitem-separator
+  ) {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="dark"] .base-splitbutton-text .base-splitbutton-menubutton {
+  border-left-color: rgba(255, 255, 255, 0.15);
+}
+
+[data-theme="dark"] .base-splitbutton-plain .base-splitbutton-menubutton {
+  border-left-color: var(--color-border);
+}
+
+[data-theme="dark"] .base-menuitem::before {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+}
+
+/* =======================
+   RTL Support
+   ======================= */
+
+[dir="rtl"] .base-splitbutton-defaultbutton {
+  border-top-right-radius: var(--radius-md);
+  border-bottom-right-radius: var(--radius-md);
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-right: 1px solid transparent;
+  border-left: 1px solid transparent;
+}
+
+[dir="rtl"] .base-splitbutton-menubutton {
+  border-top-left-radius: var(--radius-md);
+  border-bottom-left-radius: var(--radius-md);
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-left: 1px solid transparent;
+  border-right: none;
+}
+
+[dir="rtl"] .base-splitbutton-rounded .base-splitbutton-defaultbutton {
+  border-top-right-radius: var(--radius-full);
+  border-bottom-right-radius: var(--radius-full);
+}
+
+[dir="rtl"] .base-splitbutton-rounded .base-splitbutton-menubutton {
+  border-top-left-radius: var(--radius-full);
+  border-bottom-left-radius: var(--radius-full);
+}
+
+[dir="rtl"]
+  .base-menuitem:hover:not(.base-menuitem-disabled):not(
+    .base-menuitem-separator
+  ) {
+  transform: translateX(-2px);
+}
+
+[dir="rtl"]
+  .base-menuitem:active:not(.base-menuitem-disabled):not(
+    .base-menuitem-separator
+  ) {
+  transform: translateX(-1px);
+}

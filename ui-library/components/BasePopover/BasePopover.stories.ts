@@ -1,13 +1,13 @@
-import type { Meta, StoryObj } from '@storybook/vue3'
-import { ref, reactive } from 'vue'
-import BasePopover from './BasePopover.vue'
-import type { PopoverAction } from './BasePopover.vue'
+import type { Meta, StoryObj } from "@storybook/vue3";
+import { ref, reactive } from "vue";
+import BasePopover from "./BasePopover.vue";
+import type { PopoverAction } from "./BasePopover.vue";
 
 const meta: Meta<typeof BasePopover> = {
-  title: 'Components/BasePopover',
+  title: "UI/BasePopover",
   component: BasePopover,
   parameters: {
-    layout: 'centered',
+    layout: "centered",
     docs: {
       description: {
         component: `
@@ -36,94 +36,104 @@ const meta: Meta<typeof BasePopover> = {
   ]"
 />
 \`\`\`
-        `
-      }
-    }
+        `,
+      },
+    },
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {
     modelValue: {
-      control: 'boolean',
-      description: 'کنترل نمایش popover'
+      control: "boolean",
+      description: "کنترل نمایش popover",
     },
     trigger: {
-      control: { type: 'select' },
-      options: ['click', 'hover', 'focus', 'manual'],
-      description: 'نحوه فعال‌سازی popover'
+      control: { type: "select" },
+      options: ["click", "hover", "focus", "manual"],
+      description: "نحوه فعال‌سازی popover",
     },
     placement: {
-      control: { type: 'select' },
+      control: { type: "select" },
       options: [
-        'auto', 'auto-start', 'auto-end',
-        'top', 'top-start', 'top-end', 
-        'bottom', 'bottom-start', 'bottom-end',
-        'right', 'right-start', 'right-end',
-        'left', 'left-start', 'left-end'
+        "auto",
+        "auto-start",
+        "auto-end",
+        "top",
+        "top-start",
+        "top-end",
+        "bottom",
+        "bottom-start",
+        "bottom-end",
+        "right",
+        "right-start",
+        "right-end",
+        "left",
+        "left-start",
+        "left-end",
       ],
-      description: 'موقعیت popover نسبت به تریگر'
+      description: "موقعیت popover نسبت به تریگر",
     },
     disabled: {
-      control: 'boolean',
-      description: 'غیرفعال کردن تریگر'
+      control: "boolean",
+      description: "غیرفعال کردن تریگر",
     },
     title: {
-      control: 'text',
-      description: 'عنوان popover'
+      control: "text",
+      description: "عنوان popover",
     },
     content: {
-      control: 'text', 
-      description: 'محتوای اصلی popover'
+      control: "text",
+      description: "محتوای اصلی popover",
     },
     triggerText: {
-      control: 'text',
-      description: 'متن دکمه پیش‌فرض'
+      control: "text",
+      description: "متن دکمه پیش‌فرض",
     },
     size: {
-      control: { type: 'select' },
-      options: ['sm', 'md', 'lg'],
-      description: 'اندازه popover'
+      control: { type: "select" },
+      options: ["sm", "md", "lg"],
+      description: "اندازه popover",
     },
     showArrow: {
-      control: 'boolean',
-      description: 'نمایش فلش اشاره‌گر'
+      control: "boolean",
+      description: "نمایش فلش اشاره‌گر",
     },
     showClose: {
-      control: 'boolean', 
-      description: 'نمایش دکمه بستن در هدر'
+      control: "boolean",
+      description: "نمایش دکمه بستن در هدر",
     },
     showBackdrop: {
-      control: 'boolean',
-      description: 'نمایش backdrop مودال'
+      control: "boolean",
+      description: "نمایش backdrop مودال",
     },
     modal: {
-      control: 'boolean',
-      description: 'رفتار مودال با قفل focus'
+      control: "boolean",
+      description: "رفتار مودال با قفل focus",
     },
     closeOnClickOutside: {
-      control: 'boolean',
-      description: 'بستن با کلیک خارج'
+      control: "boolean",
+      description: "بستن با کلیک خارج",
     },
     closeOnEscape: {
-      control: 'boolean',
-      description: 'بستن با کلید Escape'
+      control: "boolean",
+      description: "بستن با کلید Escape",
     },
     openDelay: {
-      control: { type: 'number', min: 0, max: 2000, step: 100 },
-      description: 'تأخیر در باز شدن (ms)'
+      control: { type: "number", min: 0, max: 2000, step: 100 },
+      description: "تأخیر در باز شدن (ms)",
     },
     closeDelay: {
-      control: { type: 'number', min: 0, max: 2000, step: 100 },
-      description: 'تأخیر در بسته شدن (ms)'
+      control: { type: "number", min: 0, max: 2000, step: 100 },
+      description: "تأخیر در بسته شدن (ms)",
     },
     offset: {
-      control: { type: 'number', min: 0, max: 50 },
-      description: 'فاصله از المان تریگر'
-    }
-  }
-}
+      control: { type: "number", min: 0, max: 50 },
+      description: "فاصله از المان تریگر",
+    },
+  },
+};
 
-export default meta
-type Story = StoryObj<typeof BasePopover>
+export default meta;
+type Story = StoryObj<typeof BasePopover>;
 
 // =============================================================================
 // BASIC EXAMPLES
@@ -131,83 +141,83 @@ type Story = StoryObj<typeof BasePopover>
 
 export const Default: Story = {
   args: {
-    title: 'Popover پیش‌فرض',
-    content: 'این یک popover ساده با تنظیمات پیش‌فرض است.',
-    triggerText: 'باز کردن Popover'
-  }
-}
+    title: "Popover پیش‌فرض",
+    content: "این یک popover ساده با تنظیمات پیش‌فرض است.",
+    triggerText: "باز کردن Popover",
+  },
+};
 
 export const ContentOnly: Story = {
-  name: 'فقط محتوا',
+  name: "فقط محتوا",
   args: {
-    content: 'این popover فقط محتوا دارد و عنوان ندارد.',
-    triggerText: 'فقط محتوا'
-  }
-}
+    content: "این popover فقط محتوا دارد و عنوان ندارد.",
+    triggerText: "فقط محتوا",
+  },
+};
 
 export const WithCloseButton: Story = {
-  name: 'با دکمه بستن',
+  name: "با دکمه بستن",
   args: {
-    title: 'Popover قابل بستن',
-    content: 'این popover دکمه بستن در هدر دارد.',
-    triggerText: 'با دکمه بستن',
-    showClose: true
-  }
-}
+    title: "Popover قابل بستن",
+    content: "این popover دکمه بستن در هدر دارد.",
+    triggerText: "با دکمه بستن",
+    showClose: true,
+  },
+};
 
 // =============================================================================
 // TRIGGER TYPES
 // =============================================================================
 
 export const ClickTrigger: Story = {
-  name: 'تریگر کلیک',
+  name: "تریگر کلیک",
   args: {
-    trigger: 'click',
-    title: 'تریگر کلیک',
-    content: 'روی دکمه کلیک کنید تا popover باز/بسته شود.',
-    triggerText: 'کلیک کنید'
-  }
-}
+    trigger: "click",
+    title: "تریگر کلیک",
+    content: "روی دکمه کلیک کنید تا popover باز/بسته شود.",
+    triggerText: "کلیک کنید",
+  },
+};
 
 export const HoverTrigger: Story = {
-  name: 'تریگر هاور',
+  name: "تریگر هاور",
   args: {
-    trigger: 'hover',
-    title: 'تریگر هاور', 
-    content: 'موس را روی دکمه قرار دهید تا popover نمایش داده شود.',
-    triggerText: 'هاور کنید'
-  }
-}
+    trigger: "hover",
+    title: "تریگر هاور",
+    content: "موس را روی دکمه قرار دهید تا popover نمایش داده شود.",
+    triggerText: "هاور کنید",
+  },
+};
 
 export const FocusTrigger: Story = {
-  name: 'تریگر فوکوس',
+  name: "تریگر فوکوس",
   args: {
-    trigger: 'focus',
-    title: 'تریگر فوکوس',
-    content: 'دکمه را فوکوس کنید (Tab یا کلیک) تا popover نمایش داده شود.',
-    triggerText: 'فوکوس کنید'
-  }
-}
+    trigger: "focus",
+    title: "تریگر فوکوس",
+    content: "دکمه را فوکوس کنید (Tab یا کلیک) تا popover نمایش داده شود.",
+    triggerText: "فوکوس کنید",
+  },
+};
 
 export const ManualControl: Story = {
-  name: 'کنترل دستی',
+  name: "کنترل دستی",
   render: (args) => ({
     components: { BasePopover },
     setup() {
-      const isOpen = ref(false)
-      
+      const isOpen = ref(false);
+
       return {
         args: {
           ...args,
-          trigger: 'manual',
+          trigger: "manual",
           modelValue: isOpen.value,
-          'onUpdate:modelValue': (value: boolean) => {
-            isOpen.value = value
-          }
+          "onUpdate:modelValue": (value: boolean) => {
+            isOpen.value = value;
+          },
         },
         isOpen,
-        toggle: () => isOpen.value = !isOpen.value
-      }
+        toggle: () => (isOpen.value = !isOpen.value),
+      };
     },
     template: `
       <div style="display: flex; gap: 1rem; align-items: center;">
@@ -228,54 +238,56 @@ export const ManualControl: Story = {
           </template>
         </BasePopover>
       </div>
-    `
+    `,
   }),
   args: {
-    title: 'کنترل دستی',
-    content: 'این popover از طریق کد کنترل می‌شود.'
-  }
-}
+    title: "کنترل دستی",
+    content: "این popover از طریق کد کنترل می‌شود.",
+  },
+};
 
 // =============================================================================
 // SIZES
 // =============================================================================
 
 export const SmallSize: Story = {
-  name: 'اندازه کوچک',
+  name: "اندازه کوچک",
   args: {
-    size: 'sm',
-    title: 'Popover کوچک',
-    content: 'این popover کوچک است، مناسب برای tooltipها و اطلاعات کوتاه.',
-    triggerText: 'کوچک'
-  }
-}
+    size: "sm",
+    title: "Popover کوچک",
+    content: "این popover کوچک است، مناسب برای tooltipها و اطلاعات کوتاه.",
+    triggerText: "کوچک",
+  },
+};
 
 export const MediumSize: Story = {
-  name: 'اندازه متوسط', 
+  name: "اندازه متوسط",
   args: {
-    size: 'md',
-    title: 'Popover متوسط',
-    content: 'این popover متوسط است، اندازه پیش‌فرض که برای اکثر موارد مناسب است.',
-    triggerText: 'متوسط'
-  }
-}
+    size: "md",
+    title: "Popover متوسط",
+    content:
+      "این popover متوسط است، اندازه پیش‌فرض که برای اکثر موارد مناسب است.",
+    triggerText: "متوسط",
+  },
+};
 
 export const LargeSize: Story = {
-  name: 'اندازه بزرگ',
+  name: "اندازه بزرگ",
   args: {
-    size: 'lg', 
-    title: 'Popover بزرگ',
-    content: 'این popover بزرگ است، مناسب برای اطلاعات تفصیلی، فرم‌ها یا محتوای غنی.',
-    triggerText: 'بزرگ'
-  }
-}
+    size: "lg",
+    title: "Popover بزرگ",
+    content:
+      "این popover بزرگ است، مناسب برای اطلاعات تفصیلی، فرم‌ها یا محتوای غنی.",
+    triggerText: "بزرگ",
+  },
+};
 
 // =============================================================================
 // PLACEMENTS
 // =============================================================================
 
 export const AllPlacements: Story = {
-  name: 'همه موقعیت‌ها',
+  name: "همه موقعیت‌ها",
   render: () => ({
     components: { BasePopover },
     template: `
@@ -310,122 +322,122 @@ export const AllPlacements: Story = {
         <BasePopover placement="bottom" title="پایین" content="موقعیت bottom مرکز" triggerText="⬇️" />
         <BasePopover placement="bottom-end" title="پایین-پایان" content="موقعیت bottom-end" triggerText="↘️" />
       </div>
-    `
-  })
-}
+    `,
+  }),
+};
 
 // =============================================================================
 // ACTIONS
 // =============================================================================
 
 const basicActions: PopoverAction[] = [
-  { text: 'لغو', variant: 'secondary' },
-  { text: 'تأیید', variant: 'primary', handler: () => alert('تأیید شد!') }
-]
+  { text: "لغو", variant: "secondary" },
+  { text: "تأیید", variant: "primary", handler: () => alert("تأیید شد!") },
+];
 
 export const WithActions: Story = {
-  name: 'با اکشن‌ها',
+  name: "با اکشن‌ها",
   args: {
-    title: 'تأیید عملیات',
-    content: 'آیا مطمئن هستید که می‌خواهید ادامه دهید؟',
-    triggerText: 'نمایش اکشن‌ها',
-    actions: basicActions
-  }
-}
+    title: "تأیید عملیات",
+    content: "آیا مطمئن هستید که می‌خواهید ادامه دهید؟",
+    triggerText: "نمایش اکشن‌ها",
+    actions: basicActions,
+  },
+};
 
 const allActionVariants: PopoverAction[] = [
-  { text: 'پیش‌فرض', variant: 'default' },
-  { text: 'اصلی', variant: 'primary' },
-  { text: 'ثانویه', variant: 'secondary' },
-  { text: 'موفقیت', variant: 'success' },
-  { text: 'هشدار', variant: 'warning' },
-  { text: 'خطا', variant: 'error' }
-]
+  { text: "پیش‌فرض", variant: "default" },
+  { text: "اصلی", variant: "primary" },
+  { text: "ثانویه", variant: "secondary" },
+  { text: "موفقیت", variant: "success" },
+  { text: "هشدار", variant: "warning" },
+  { text: "خطا", variant: "error" },
+];
 
 export const ActionVariants: Story = {
-  name: 'انواع دکمه اکشن',
+  name: "انواع دکمه اکشن",
   args: {
-    title: 'انواع اکشن',
-    content: 'استایل‌های مختلف دکمه برای اکشن‌های متنوع.',
-    triggerText: 'همه انواع',
-    actions: allActionVariants
-  }
-}
+    title: "انواع اکشن",
+    content: "استایل‌های مختلف دکمه برای اکشن‌های متنوع.",
+    triggerText: "همه انواع",
+    actions: allActionVariants,
+  },
+};
 
 const disabledActions: PopoverAction[] = [
-  { text: 'فعال', variant: 'primary' },
-  { text: 'غیرفعال', variant: 'secondary', disabled: true },
-  { text: 'فعال دیگر', variant: 'success' }
-]
+  { text: "فعال", variant: "primary" },
+  { text: "غیرفعال", variant: "secondary", disabled: true },
+  { text: "فعال دیگر", variant: "success" },
+];
 
 export const DisabledActions: Story = {
-  name: 'اکشن‌های غیرفعال',
+  name: "اکشن‌های غیرفعال",
   args: {
-    title: 'اکشن‌های غیرفعال',
-    content: 'برخی اکشن‌ها می‌توانند غیرفعال باشند.',
-    triggerText: 'اکشن غیرفعال',
-    actions: disabledActions
-  }
-}
+    title: "اکشن‌های غیرفعال",
+    content: "برخی اکشن‌ها می‌توانند غیرفعال باشند.",
+    triggerText: "اکشن غیرفعال",
+    actions: disabledActions,
+  },
+};
 
 // =============================================================================
-// ADVANCED FEATURES 
+// ADVANCED FEATURES
 // =============================================================================
 
 export const ModalPopover: Story = {
-  name: 'حالت مودال',
+  name: "حالت مودال",
   args: {
-    title: 'Popover مودال',
-    content: 'این popover دارای backdrop و رفتار مودال است.',
-    triggerText: 'باز کردن مودال',
+    title: "Popover مودال",
+    content: "این popover دارای backdrop و رفتار مودال است.",
+    triggerText: "باز کردن مودال",
     showBackdrop: true,
     modal: true,
-    showClose: true
-  }
-}
+    showClose: true,
+  },
+};
 
 export const NoArrow: Story = {
-  name: 'بدون فلش',
+  name: "بدون فلش",
   args: {
-    title: 'بدون فلش',
-    content: 'این popover فلش اشاره‌گر ندارد.',
-    triggerText: 'بدون فلش',
-    showArrow: false
-  }
-}
+    title: "بدون فلش",
+    content: "این popover فلش اشاره‌گر ندارد.",
+    triggerText: "بدون فلش",
+    showArrow: false,
+  },
+};
 
 export const DelayedPopover: Story = {
-  name: 'با تأخیر',
+  name: "با تأخیر",
   args: {
-    trigger: 'hover',
-    title: 'Popover با تأخیر',
-    content: 'این popover تأخیر در نمایش و پنهان شدن دارد.',
-    triggerText: 'هاور (با تأخیر)',
+    trigger: "hover",
+    title: "Popover با تأخیر",
+    content: "این popover تأخیر در نمایش و پنهان شدن دارد.",
+    triggerText: "هاور (با تأخیر)",
     openDelay: 500,
-    closeDelay: 300
-  }
-}
+    closeDelay: 300,
+  },
+};
 
 export const CustomOffset: Story = {
-  name: 'فاصله سفارشی',
+  name: "فاصله سفارشی",
   args: {
-    title: 'فاصله سفارشی',
-    content: 'این popover فاصله بیشتری از تریگر دارد.',
-    triggerText: 'فاصله سفارشی',
-    offset: 20
-  }
-}
+    title: "فاصله سفارشی",
+    content: "این popover فاصله بیشتری از تریگر دارد.",
+    triggerText: "فاصله سفارشی",
+    offset: 20,
+  },
+};
 
 // =============================================================================
 // CUSTOM CONTENT
 // =============================================================================
 
 export const CustomTrigger: Story = {
-  name: 'تریگر سفارشی',
+  name: "تریگر سفارشی",
   render: (args) => ({
     components: { BasePopover },
     setup() {
-      return { args }
+      return { args };
     },
     template: `
       <BasePopover v-bind="args">
@@ -451,27 +463,27 @@ export const CustomTrigger: Story = {
           </button>
         </template>
       </BasePopover>
-    `
+    `,
   }),
   args: {
-    title: 'تریگر سفارشی',
-    content: 'این popover از یک المان تریگر کاملاً سفارشی استفاده می‌کند.'
-  }
-}
+    title: "تریگر سفارشی",
+    content: "این popover از یک المان تریگر کاملاً سفارشی استفاده می‌کند.",
+  },
+};
 
 export const RichContent: Story = {
-  name: 'محتوای غنی',
+  name: "محتوای غنی",
   render: (args) => ({
     components: { BasePopover },
     setup() {
-      const handleSave = () => alert('ذخیره شد!')
+      const handleSave = () => alert("ذخیره شد!");
       const handleDelete = () => {
-        if (confirm('آیا مطمئن هستید؟')) {
-          alert('حذف شد!')
+        if (confirm("آیا مطمئن هستید؟")) {
+          alert("حذف شد!");
         }
-      }
-      
-      return { args, handleSave, handleDelete }
+      };
+
+      return { args, handleSave, handleDelete };
     },
     template: `
       <BasePopover v-bind="args">
@@ -564,35 +576,37 @@ export const RichContent: Story = {
           </button>
         </template>
       </BasePopover>
-    `
+    `,
   }),
   args: {
-    title: 'پروفایل کاربر',
-    triggerText: 'محتوای غنی',
-    size: 'lg',
-    showClose: true
-  }
-}
+    title: "پروفایل کاربر",
+    triggerText: "محتوای غنی",
+    size: "lg",
+    showClose: true,
+  },
+};
 
 export const FormPopover: Story = {
-  name: 'فرم سریع',
+  name: "فرم سریع",
   render: (args) => ({
     components: { BasePopover },
     setup() {
       const formData = reactive({
-        name: '',
-        email: '',
-        priority: 'medium'
-      })
-      
+        name: "",
+        email: "",
+        priority: "medium",
+      });
+
       const handleSubmit = () => {
         if (formData.name && formData.email) {
-          alert(`فرم ارسال شد:\nنام: ${formData.name}\nایمیل: ${formData.email}\nاولویت: ${formData.priority}`)
-          Object.assign(formData, { name: '', email: '', priority: 'medium' })
+          alert(
+            `فرم ارسال شد:\nنام: ${formData.name}\nایمیل: ${formData.email}\nاولویت: ${formData.priority}`
+          );
+          Object.assign(formData, { name: "", email: "", priority: "medium" });
         }
-      }
-      
-      return { args, formData, handleSubmit }
+      };
+
+      return { args, formData, handleSubmit };
     },
     template: `
       <BasePopover v-bind="args">
@@ -699,34 +713,34 @@ export const FormPopover: Story = {
           </button>
         </template>
       </BasePopover>
-    `
+    `,
   }),
   args: {
-    title: 'فرم سریع',
-    triggerText: 'فرم جدید',
-    size: 'lg',
-    closeOnClickOutside: false
-  }
-}
+    title: "فرم سریع",
+    triggerText: "فرم جدید",
+    size: "lg",
+    closeOnClickOutside: false,
+  },
+};
 
 // =============================================================================
 // STATES
 // =============================================================================
 
 export const DisabledState: Story = {
-  name: 'حالت غیرفعال',
+  name: "حالت غیرفعال",
   args: {
-    title: 'غیرفعال',
-    content: 'این تریگر popover غیرفعال است.',
-    triggerText: 'تریگر غیرفعال',
-    disabled: true
-  }
-}
+    title: "غیرفعال",
+    content: "این تریگر popover غیرفعال است.",
+    triggerText: "تریگر غیرفعال",
+    disabled: true,
+  },
+};
 
 export const LongContent: Story = {
-  name: 'محتوای طولانی',
+  name: "محتوای طولانی",
   args: {
-    title: 'مثال محتوای طولانی',
+    title: "مثال محتوای طولانی",
     content: `این یک popover با محتوای طولانی است تا نحوه مدیریت متن‌های بلند توسط کامپوننت نشان داده شود.
 
 Popover باید به طور خودکار عرض و ارتفاع خود را متناسب با محتوا تنظیم کند تا خوانایی و سلسله‌مراتب بصری مناسبی حفظ شود.
@@ -734,17 +748,17 @@ Popover باید به طور خودکار عرض و ارتفاع خود را م�
 لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ است. لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ، و با استفاده از طراحان گرافیک است.
 
 این نشان می‌دهد که کامپوننت چگونه با پاراگراف‌های متعدد کار می‌کند و فاصله‌گذاری مناسب در سراسر محتوا حفظ می‌کند.`,
-    triggerText: 'محتوای طولانی',
-    size: 'lg'
-  }
-}
+    triggerText: "محتوای طولانی",
+    size: "lg",
+  },
+};
 
 // =============================================================================
 // ACCESSIBILITY
 // =============================================================================
 
 export const AccessibilityDemo: Story = {
-  name: 'ویژگی‌های دسترسی‌پذیری',
+  name: "ویژگی‌های دسترسی‌پذیری",
   render: () => ({
     components: { BasePopover },
     template: `
@@ -798,23 +812,23 @@ export const AccessibilityDemo: Story = {
           </ul>
         </div>
       </div>
-    `
-  })
-}
+    `,
+  }),
+};
 
 // =============================================================================
 // PLAYGROUND
 // =============================================================================
 
 export const Playground: Story = {
-  name: 'زمین بازی',
+  name: "زمین بازی",
   args: {
-    title: 'Popover زمین بازی',
-    content: 'با تمام propهای مختلف آزمایش کنید و گزینه‌ها را امتحان کنید.',
-    triggerText: 'زمین بازی',
-    trigger: 'click',
-    placement: 'bottom',
-    size: 'md',
+    title: "Popover زمین بازی",
+    content: "با تمام propهای مختلف آزمایش کنید و گزینه‌ها را امتحان کنید.",
+    triggerText: "زمین بازی",
+    trigger: "click",
+    placement: "bottom",
+    size: "md",
     showArrow: true,
     showClose: false,
     showBackdrop: false,
@@ -825,62 +839,64 @@ export const Playground: Story = {
     closeDelay: 0,
     offset: 8,
     actions: [
-      { text: 'لغو', variant: 'secondary' },
-      { text: 'تأیید', variant: 'primary' }
-    ]
+      { text: "لغو", variant: "secondary" },
+      { text: "تأیید", variant: "primary" },
+    ],
   },
   parameters: {
     docs: {
       description: {
-        story: 'از پنل کنترل‌ها برای آزمایش ترکیب‌های مختلف propها استفاده کنید و ببینید چگونه بر رفتار و ظاهر popover تأثیر می‌گذارند.'
-      }
-    }
-  }
-}
+        story:
+          "از پنل کنترل‌ها برای آزمایش ترکیب‌های مختلف propها استفاده کنید و ببینید چگونه بر رفتار و ظاهر popover تأثیر می‌گذارند.",
+      },
+    },
+  },
+};
 
 // =============================================================================
 // USE CASES
 // =============================================================================
 
 export const ConfirmationDialog: Story = {
-  name: 'دیالوگ تأیید',
+  name: "دیالوگ تأیید",
   args: {
-    title: 'حذف آیتم',
-    content: 'آیا مطمئن هستید که می‌خواهید این آیتم را حذف کنید؟ این عمل قابل بازگشت نیست.',
-    triggerText: 'حذف آیتم',
-    size: 'md',
+    title: "حذف آیتم",
+    content:
+      "آیا مطمئن هستید که می‌خواهید این آیتم را حذف کنید؟ این عمل قابل بازگشت نیست.",
+    triggerText: "حذف آیتم",
+    size: "md",
     actions: [
-      { text: 'لغو', variant: 'secondary' },
-      { text: 'حذف', variant: 'error', handler: () => alert('آیتم حذف شد!') }
-    ]
-  }
-}
+      { text: "لغو", variant: "secondary" },
+      { text: "حذف", variant: "error", handler: () => alert("آیتم حذف شد!") },
+    ],
+  },
+};
 
 export const InfoTooltip: Story = {
-  name: 'Tooltip اطلاعاتی',
+  name: "Tooltip اطلاعاتی",
   args: {
-    trigger: 'hover',
-    size: 'sm',
-    content: 'این اطلاعات تکمیلی در مورد این فیلد است.',
-    triggerText: 'ℹ️',
+    trigger: "hover",
+    size: "sm",
+    content: "این اطلاعات تکمیلی در مورد این فیلد است.",
+    triggerText: "ℹ️",
     showArrow: true,
-    placement: 'top'
-  }
-}
+    placement: "top",
+  },
+};
 
 export const UserMenu: Story = {
-  name: 'منوی کاربر',
+  name: "منوی کاربر",
   render: (args) => ({
     components: { BasePopover },
     setup() {
       const userActions: PopoverAction[] = [
-        { text: 'مشاهده پروفایل', variant: 'default' },
-        { text: 'تنظیمات', variant: 'default' },
-        { text: 'راهنما', variant: 'default' },
-        { text: 'خروج', variant: 'error' }
-      ]
-      
-      return { args, userActions }
+        { text: "مشاهده پروفایل", variant: "default" },
+        { text: "تنظیمات", variant: "default" },
+        { text: "راهنما", variant: "default" },
+        { text: "خروج", variant: "error" },
+      ];
+
+      return { args, userActions };
     },
     template: `
       <BasePopover v-bind="args" :actions="userActions">
@@ -919,21 +935,21 @@ export const UserMenu: Story = {
           </button>
         </template>
       </BasePopover>
-    `
+    `,
   }),
   args: {
-    title: 'حساب کاربری',
-    placement: 'bottom-end',
-    size: 'md'
-  }
-}
+    title: "حساب کاربری",
+    placement: "bottom-end",
+    size: "md",
+  },
+};
 
 export const NotificationPopover: Story = {
-  name: 'Popover اعلان',
+  name: "Popover اعلان",
   render: (args) => ({
     components: { BasePopover },
     setup() {
-      return { args }
+      return { args };
     },
     template: `
       <BasePopover v-bind="args">
@@ -1002,12 +1018,12 @@ export const NotificationPopover: Story = {
           </button>
         </template>
       </BasePopover>
-    `
+    `,
   }),
   args: {
-    title: 'اعلان‌ها',
-    placement: 'bottom-end',
-    size: 'md',
-    showClose: true
-  }
-}
+    title: "اعلان‌ها",
+    placement: "bottom-end",
+    size: "md",
+    showClose: true,
+  },
+};

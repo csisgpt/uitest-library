@@ -35,7 +35,7 @@ const ActivatorButton = defineComponent({
 })
 
 const meta: Meta<typeof BaseTooltip> = {
-  title: 'Components/Overlays/BaseTooltip',
+  title: 'UI/BaseTooltip',
   component: BaseTooltip,
   tags: ['autodocs'],
   parameters: {

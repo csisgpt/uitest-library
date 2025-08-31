@@ -101,20 +101,20 @@ export const Sizes: Story = {
     setup() { return { args, sizes }; },
     template: `
       <div class="sb-stack" style="display:flex ; gap:12px ; align-items: center;"  >
-        <BaseButton v-for="s in sizes" :key="s" v-bind="{...args, size: s}">سایز {{ s }}</BaseButton>
+        <BaseButton v-for="s in sizes" :key="s" v-bind="{...args, size: s}" style="min-width : fit-content">سایز {{ s }}</BaseButton>
       </div>
     `
   })
 };
 
 export const Shapes: Story = {
-  args: { iconOnly: true, ariaLabel: 'تنظیمات' },
+  args: {ariaLabel: 'تنظیمات' },
   render: (args) => ({
     components: { BaseButton },
     setup() { return { args, shapes }; },
     template: `
       <div class="sb-stack" style="display:flex ; gap:12px ; align-items: center;">
-        <BaseButton v-for="sh in shapes" :key="sh" v-bind="{...args, shape: sh}">⚙️</BaseButton>
+        <BaseButton v-for="sh in shapes" :key="sh" v-bind="{...args, shape: sh}"> {{ sh }} </BaseButton>
       </div>
     `
   })
@@ -137,8 +137,11 @@ export const Variants: Story = {
     components: { BaseButton },
     setup() { return { args, variants }; },
     template: `
-      <div class="sb-stack" style="display:flex ; gap:12px ; align-items: center;">
-        <BaseButton v-for="v in variants" :key="v" v-bind="{...args, variant: v}">variant: {{ v }}</BaseButton>
+      <div class="sb-stack" style="display:flex ; gap:12px ; align-items: center; flex-wrap : wrap">
+        <BaseButton v-for="v in variants" :key="v" v-bind="{...args, variant: v}" style="min-width : fit-content ; max-width : 30%">variant: {{ v }}</BaseButton>
+      </div>
+      <div class="sb-stack" style="display:flex ; gap:12px ; align-items: center; flex-wrap : wrap ; margin-top: 3rem">
+        <BaseButton v-for="v in variants" :key="v" v-bind="{...args, variant: v , tone : 'error'}" style="min-width : fit-content ; max-width : 30%">variant: {{ v }}</BaseButton>
       </div>
     `
   })
@@ -149,8 +152,8 @@ export const Tones: Story = {
     components: { BaseButton },
     setup() { return { args, tones }; },
     template: `
-      <div class="sb-stack" style="display:flex ; gap:12px ; align-items: center;">
-        <BaseButton v-for="t in tones" :key="t" v-bind="{...args, tone: t}">tone: {{ t }}</BaseButton>
+      <div class="sb-stack" style="display:flex ; gap:12px ; align-items: center; flex-wrap : wrap">
+        <BaseButton v-for="t in tones" :key="t" v-bind="{...args, tone: t}" style="min-width : fit-content ; max-width : 30%">tone: {{ t }}</BaseButton>
       </div>
     `
   })
@@ -181,7 +184,7 @@ export const States: Story = {
     components: { BaseButton },
     setup() { return { args }; },
     template: `
-      <div class="sb-grid">
+      <div class="sb-grid" style="display:flex ; gap:12px ; align-items: center; flex-wrap : wrap">
         <div class="sb-card">
           <div class="sb-subtle">Default</div>
           <BaseButton v-bind="args">پیش‌فرض</BaseButton>

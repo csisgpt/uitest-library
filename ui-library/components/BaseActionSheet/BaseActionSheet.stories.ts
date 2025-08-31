@@ -18,7 +18,7 @@ const IconShare = defineComponent({
 })
 
 const meta: Meta<typeof BaseActionSheet> = {
-  title: 'Overlays/BaseActionSheet',
+  title: 'FEEDBACK/BaseActionSheet',
   component: BaseActionSheet,
   tags: ['autodocs'],
   parameters: {
