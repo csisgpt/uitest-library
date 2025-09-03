@@ -68,3 +68,17 @@ body {
   scrollbar-width: thin;
   scrollbar-color: var(--color-primary) var(--color-on-primary);
 }
+
+input:focus-visible,
+input:focus,
+input:active {
+  outline: unset !important;
+  border: unset !important;
+  box-shadow: unset !important;
+}
+
+button:focus-visible,
+button:focus,
+button:active {
+  outline: unset !important;
+}

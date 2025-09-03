@@ -3,7 +3,7 @@ import type { Meta, StoryFn } from '@storybook/vue3'
 import BaseTab from './BaseTab.vue'
 
 const meta: Meta<typeof BaseTab> = {
-  title: 'Components/Navigation/BaseTab',
+  title: 'UI/BaseTab',
   component: BaseTab,
   argTypes: {
     variant: {

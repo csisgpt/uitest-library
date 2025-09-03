@@ -343,7 +343,7 @@ const close = () => {
   const doClose = () => {
     emit("before-close");
     isOpen.value = false;
-    destroyPopper();
+    // destroyPopper();
   };
 
   if (props.closeDelay > 0) {
@@ -367,32 +367,21 @@ const createPopperHell = async () => {
 
   popperInstance.value = createPopper(triggerRef.value, popoverRef.value, {
     placement: props.placement,
+    strategy: "fixed", // ✅ اختیاری، اما کمک می‌کند
     modifiers: [
-      {
-        name: "offset",
-        options: {
-          offset: [0, props.offset],
-        },
-      },
+      { name: "offset", options: { offset: [0, props.offset] } },
       {
         name: "arrow",
         enabled: props.showArrow,
-        options: {
-          element: arrowRef.value,
-        },
+        options: { element: arrowRef.value },
       },
       {
         name: "preventOverflow",
-        options: {
-          boundary: props.boundary,
-          padding: 8,
-        },
+        options: { boundary: props.boundary, padding: 8 },
       },
       {
         name: "flip",
-        options: {
-          fallbackPlacements: ["top", "right", "bottom", "left"],
-        },
+        options: { fallbackPlacements: ["top", "right", "bottom", "left"] },
       },
     ],
     onFirstUpdate(state) {
@@ -551,6 +540,7 @@ const onBeforeLeave = () => {
 
 const onAfterLeave = () => {
   emit("after-close");
+  destroyPopper(); // ✅ انتقال از close() به اینجا
 };
 
 // Lifecycle

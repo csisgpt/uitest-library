@@ -234,7 +234,7 @@
 
 /* Adjust padding when header is present */
 .header + .content {
-  padding-top: 0;
+  padding-top: var(--space-md);
 }
 
 /* Adjust padding when actions are present */

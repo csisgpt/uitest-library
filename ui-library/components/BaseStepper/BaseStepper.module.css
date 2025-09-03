@@ -1,0 +1,782 @@
+/* BaseStepper.module.css */
+/* ------------------------------------------------------------
+   Root & Tokens
+------------------------------------------------------------ */
+.stepper {
+  --stepper-padding: var(--space-lg, 16px);
+  --stepper-gap: var(--space-md, 12px);
+  --stepper-icon-size: 20px;
+  --stepper-viewport: 420px; /* ارتفاع ویوپورت در حالت عمودی */
+  display: flex;
+  flex-direction: column;
+  inline-size: 100%;
+  font-family: var(--font-family-base, ui-sans-serif);
+  background: var(--color-background, #fff);
+  border-radius: var(--radius-lg, 12px);
+  overflow: hidden;
+  position: relative;
+  box-shadow: var(--shadow-sm, 0 1px 2px rgba(0, 0, 0, 0.08));
+}
+
+/* سایزبندی */
+.stepper--small {
+  --stepper-padding: var(--space-sm, 12px);
+  --stepper-gap: var(--space-sm, 8px);
+  --stepper-icon-size: 14px;
+}
+.stepper--medium {
+  --stepper-padding: var(--space-lg, 16px);
+  --stepper-gap: var(--space-md, 12px);
+  --stepper-icon-size: 16px;
+}
+.stepper--large {
+  --stepper-padding: var(--space-xl, 20px);
+  --stepper-gap: var(--space-lg, 16px);
+  --stepper-icon-size: 18px;
+}
+
+/* حالت‌ها */
+.stepper--linear
+  .headerStep:not(.headerStep--active):not(.headerStep--completed) {
+  pointer-events: none;
+  opacity: var(--opacity-disabled, 0.5);
+}
+.stepper--readonly .controlButton,
+.stepper--readonly .headerStep,
+.stepper--readonly .stepIndicatorDot {
+  pointer-events: none;
+}
+.stepper--disabled {
+  opacity: var(--opacity-disabled, 0.5);
+  pointer-events: none;
+}
+.stepper--with-header .stepperContent {
+  border-top: none;
+}
+
+/* ------------------------------------------------------------
+   Header Navigation (برای حالت‌های غیر خطی + خط‌های اتصال)
+------------------------------------------------------------ */
+.stepperHeader {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* مناسب برای کانکتورها */
+  gap: 0; /* فاصله را به آیتم‌ها می‌دهیم */
+  padding: var(--stepper-padding);
+  background: var(--color-surface, #fafafa);
+  border-block-end: 1px solid var(--color-border, #e5e7eb);
+  overflow-x: auto; /* اسکرول افقی در صورت لزوم */
+  overflow-y: hidden;
+  white-space: nowrap; /* جلوگیری از شکستن خطوط */
+  isolation: isolate; /* برای کنترل z-index */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.stepperHeader::-webkit-scrollbar {
+  display: none;
+}
+
+/* یک آیتم هدر = دکمه مرحله + کانکتور بعدی */
+.headerItem {
+  display: flex; /* نه inline-flex: ارتفاع دقیق‌تر */
+  align-items: center;
+  flex-grow: 0;
+  justify-content: space-between;
+  max-width: fit-content;
+}
+
+/* دکمهٔ هدر (مرحله) */
+.headerStep {
+  position: relative;
+  z-index: 1; /* بالاتر از خط اتصال */
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm, 8px);
+  padding: var(--space-sm, 8px) var(--space-md, 12px);
+  border: none;
+  background: transparent;
+  border-radius: var(--radius-md, 10px);
+  cursor: pointer;
+  transition: all var(--transition-fast, 0.15s ease);
+  white-space: nowrap;
+  min-inline-size: max-content;
+  font-family: inherit;
+  color: var(--color-muted, #6b7280);
+}
+.headerStep::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: -1px;
+  block-size: 2px;
+  background: transparent;
+  transition: background-color var(--transition-fast, 0.15s ease);
+}
+.headerStep:hover:not(:disabled) {
+  background: var(--hover-overlay, rgba(0, 0, 0, 0.04));
+  color: var(--color-primary, #111827);
+}
+.headerStep:focus-visible {
+  outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, #3b82f6);
+  outline-offset: var(--focus-ring-offset, 2px);
+}
+
+.headerStep--active {
+  background: var(--color-primary, #1e8759);
+  color: var(--color-on-primary, #fff);
+}
+.headerStep--active::before {
+  background: var(--color-primary, #1e8759);
+}
+.headerStep--completed {
+  color: var(--color-success, #16a34a);
+}
+.headerStep--completed::before {
+  background: var(--color-success, #16a34a);
+}
+.headerStep--disabled {
+  opacity: var(--opacity-disabled, 0.5);
+  cursor: not-allowed;
+}
+.headerStep--error {
+  color: var(--color-error, #ef4444);
+}
+.headerStep--error::before {
+  background: var(--color-error, #ef4444);
+}
+.headerStep--optional::after {
+  content: " (اختیاری)";
+  font-size: 0.75em;
+  opacity: 0.7;
+  margin-inline-start: var(--space-xs, 6px);
+}
+
+.headerStep--past {
+  color: color-mix(in srgb, var(--color-text, #111827) 55%, transparent);
+}
+.headerStep--past::before {
+  background: color-mix(in srgb, var(--color-primary, #1e8759) 50%, var(--color-border, #e5e7eb));
+}
+
+/* آیکن داخل دکمه برای گذشته */
+.headerStep--past .headerStepIcon {
+  background: color-mix(in srgb, var(--color-primary, #1e8759) 20%, var(--color-border, #e5e7eb));
+  color: color-mix(in srgb, var(--color-text, #111827) 70%, transparent);
+}
+
+/* کانکتور هدرِ بین مراحل گذشته */
+.headerConnector--past {
+  background: color-mix(in srgb, var(--color-primary, #1e8759) 45%, var(--color-border, #e5e7eb));
+}
+
+/* نقطه‌های اندیکاتور گذشته (در نوار نقطه‌ای) */
+.stepIndicatorDot--past {
+  background: color-mix(in srgb, var(--color-primary, #1e8759) 35%, var(--color-border, #e5e7eb));
+}
+
+/* اندیکاتور عمودی داخل بدنه برای گذشته */
+.stepIconContainer--past {
+  background: color-mix(in srgb, var(--color-primary, #1e8759) 20%, var(--color-border, #e5e7eb));
+  color: var(--color-muted, #6b7280);
+  border-color: color-mix(in srgb, var(--color-primary, #1e8759) 35%, var(--color-border, #e5e7eb));
+}
+.stepConnector--past {
+  background: color-mix(in srgb, var(--color-primary, #1e8759) 40%, var(--color-border, #e5e7eb));
+}
+
+/* آیکن مرحله داخل دکمه */
+.headerStepIcon {
+  display: grid;
+  place-items: center;
+  inline-size: var(--stepper-icon-size);
+  block-size: var(--stepper-icon-size);
+  border-radius: var(--radius-full, 999px);
+  background: var(--color-border, #e5e7eb);
+  color: var(--color-text, #111827);
+  font-weight: var(--font-weight-bold, 700);
+}
+.headerStep--active .headerStepIcon {
+  background: var(--color-primary, #1e8759);
+  color: var(--color-on-primary, #fff);
+}
+.headerStep--completed .headerStepIcon {
+  background: var(--color-success, #16a34a);
+  color: var(--color-on-success, #fff);
+}
+.headerStepLabel {
+  font-weight: var(--font-weight-medium, 600);
+  font-size: var(--font-size-sm, 14px);
+}
+
+/* خط اتصال بین آیتم‌ها */
+.headerConnector {
+  display: block; /* اعمال دقیق اندازه‌ها */
+  flex: 0 0 auto; /* جمع نشود */
+  align-self: center;
+  inline-size: clamp(20px, 6vw, 56px); /* طول واکنش‌گرا */
+  block-size: 2px;
+  margin-inline: var(--space-sm, 8px); /* فاصله از دکمه‌ها */
+  background: var(--color-border, #e5e7eb);
+  border-radius: var(--radius-full, 999px);
+  position: relative;
+  z-index: 0;
+  pointer-events: none; /* کلیک‌ها را نگیرد */
+  transition: background-color var(--transition-fast, 0.15s ease),
+    opacity var(--transition-fast, 0.15s ease);
+}
+.headerConnector::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  opacity: 0.2;
+  pointer-events: none;
+}
+
+/* رنگ/وضعیت کانکتور */
+.headerConnector--active {
+  background: var(--color-primary, #1e8759);
+}
+.headerConnector--completed {
+  background: var(--color-success, #16a34a);
+}
+.headerConnector--error {
+  background: var(--color-error, #ef4444);
+}
+.headerConnector--disabled {
+  opacity: 0.45;
+}
+
+/* وقتی حالت connected روشن است */
+.stepper--header-connected .stepperHeader {
+  padding-block: calc(var(--stepper-padding) - 2px);
+}
+
+/* ریسپانسیو: کوتاه‌تر شدن طول خط در موبایل */
+@media (max-width: 768px) {
+  .headerConnector {
+    inline-size: clamp(16px, 8vw, 40px);
+  }
+}
+@media (max-width: 480px) {
+  .headerConnector {
+    inline-size: clamp(12px, 10vw, 28px);
+  }
+}
+
+/* ------------------------------------------------------------
+   Main Content & Track
+------------------------------------------------------------ */
+.stepperContent {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+  flex: 1;
+}
+
+/* Track مشترک */
+.stepsContainer {
+  display: flex;
+  transition: transform var(--transition-base, 0.25s ease);
+  flex: none; /* نذار قد/عرض Track باعث کشیده‌شدن والد بشه */
+  will-change: transform;
+}
+
+/* افقی */
+.stepper--horizontal .stepsContainer {
+  flex-direction: row-reverse;
+  inline-size: 100%;
+}
+.stepper--horizontal .stepPanel {
+  flex: 0 0 100%;
+  min-block-size: 280px;
+}
+
+/* عمودی – ویوپورت ثابت برای اسلاید */
+.stepper--vertical {
+  flex-direction: column;
+}
+.stepper--vertical .stepsContainer {
+  flex-direction: column;
+  block-size: var(--stepper-viewport); /* ارتفاع ویوپورت */
+}
+.stepper--vertical .stepPanel {
+  block-size: var(--stepper-viewport);
+  flex: 0 0 auto; /* هر پنل دقیقاً اندازه ویوپورت */
+}
+
+/* پنل‌ها */
+.stepPanel {
+  display: flex;
+  flex-direction: column;
+  min-block-size: 100%;
+  position: relative;
+}
+.stepPanel--active {
+  animation: fade-in var(--transition-base, 0.25s ease);
+}
+.stepPanel--error {
+  border-inline-start: 3px solid var(--color-error, #ef4444);
+}
+
+/* برای جلوگیری از تعامل با پنل‌های غیر فعال ولی حفظ Layout */
+.stepPanel[aria-hidden="true"] {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* ------------------------------------------------------------
+   Step Content
+------------------------------------------------------------ */
+.stepContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--stepper-gap);
+  padding: var(--stepper-padding);
+  flex: 1;
+}
+
+.stepHeader {
+  display: flex;
+  gap: var(--space-lg, 16px);
+  align-items: flex-start;
+  margin-block-end: var(--space-lg, 16px);
+}
+
+/* اندیکاتور مرحله + کانکتور عمودی داخل بدنه */
+.stepIndicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+.stepIconContainer {
+  display: flex;
+  place-items: center;
+  justify-content: center;
+  inline-size: var(--stepper-icon-size);
+  block-size: var(--stepper-icon-size);
+  border-radius: var(--radius-full, 999px);
+  background: var(--color-border, #e5e7eb);
+  color: var(--color-muted, #6b7280);
+  font-weight: var(--font-weight-bold, 700);
+  font-size: 0.875em;
+  transition: all var(--transition-fast, 0.15s ease);
+  border: 2px solid transparent;
+  position: relative;
+  z-index: 1;
+}
+.stepIconContainer--active {
+  background: var(--color-primary, #1e8759);
+  color: var(--color-on-primary, #fff);
+  border-color: var(--color-primary, #1e8759);
+  box-shadow: 0 0 0 4px
+    color-mix(in srgb, var(--color-primary, #1e8759) 20%, transparent);
+}
+.stepIconContainer--completed {
+  background: var(--color-success, #16a34a);
+  color: var(--color-on-success, #fff);
+  border-color: var(--color-success, #16a34a);
+}
+.stepIconContainer--disabled {
+  background: var(--color-disabled-bg, #f3f4f6);
+  color: var(--color-disabled-text, #9ca3af);
+}
+.stepIconContainer--error {
+  background: var(--color-error, #ef4444);
+  color: var(--color-on-error, #fff);
+  border-color: var(--color-error, #ef4444);
+  animation: pulse 2s infinite;
+}
+.stepIconContainer--optional {
+  border-style: dashed;
+  border-color: var(--color-muted, #6b7280);
+}
+
+.stepConnector {
+  inline-size: 2px;
+  block-size: 40px;
+  background: var(--color-border, #e5e7eb);
+  margin-block-start: var(--space-xs, 6px);
+  transition: all var(--transition-fast, 0.15s ease);
+  position: relative;
+  border-radius: var(--radius-full, 999px);
+}
+.stepConnector--completed,
+.stepConnector--active {
+  background: linear-gradient(
+    180deg,
+    var(--color-success, #16a34a),
+    var(--color-primary, #1e8759)
+  );
+}
+.stepConnector::before {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 50%;
+  transform: translateX(-50%);
+  inline-size: 6px;
+  block-size: 100%;
+  background: inherit;
+  border-radius: var(--radius-full, 999px);
+  opacity: 0.3;
+}
+
+.stepInfo {
+  flex: 1;
+  text-align: right;
+  direction: rtl;
+}
+.stepTitle {
+  margin: 0 0 var(--space-xs, 6px) 0;
+  font-size: var(--font-size-lg, 18px);
+  font-weight: var(--font-weight-medium, 600);
+  color: var(--color-text, #111827);
+  transition: color var(--transition-fast, 0.15s ease);
+}
+.stepDescription {
+  margin: 0;
+  font-size: var(--font-size-sm, 14px);
+  color: var(--color-muted, #6b7280);
+  line-height: 1.55;
+}
+
+.stepBody {
+  display: flex;
+  flex-direction: column;
+  min-block-size: 200px;
+  padding: var(--space-lg, 16px);
+  direction: rtl;
+  background: transparent;
+}
+
+.defaultStepContent {
+  padding: var(--space-xl, 20px);
+  text-align: center;
+  color: var(--color-muted, #6b7280);
+  background: var(--color-surface, #fafafa);
+  border-radius: var(--radius-md, 10px);
+  border: 1px dashed var(--color-border, #e5e7eb);
+}
+.defaultStepContent h4 {
+  margin: 0 0 var(--space-sm, 8px) 0;
+  color: var(--color-text, #111827);
+  font-weight: var(--font-weight-medium, 600);
+}
+.defaultStepContent p {
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* ------------------------------------------------------------
+   Controls
+------------------------------------------------------------ */
+.stepperControls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md, 12px);
+  padding: var(--stepper-padding);
+  background: var(--color-surface, #fafafa);
+  border-block-start: 1px solid var(--color-border, #e5e7eb);
+  direction: rtl;
+}
+
+.controlsCenter {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.controlButton {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm, 8px);
+  padding: var(--space-sm, 8px) var(--space-lg, 16px);
+  border: 1px solid var(--color-border, #e5e7eb);
+  background: var(--color-background, #fff);
+  color: var(--color-text, #111827);
+  border-radius: var(--radius-md, 10px);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: var(--font-size-sm, 14px);
+  font-weight: var(--font-weight-medium, 600);
+  transition: all var(--transition-fast, 0.15s ease);
+  min-block-size: 40px;
+  position: relative;
+  overflow: hidden;
+}
+.controlButton::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  inset-inline-start: -100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: inset-inline-start var(--transition-base, 0.25s ease);
+}
+.controlButton:hover:not(:disabled) {
+  background: var(--hover-overlay, rgba(0, 0, 0, 0.04));
+  border-color: var(--color-primary, #1e8759);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm, 0 1px 2px rgba(0, 0, 0, 0.08));
+}
+.controlButton:hover:not(:disabled)::before {
+  inset-inline-start: 100%;
+}
+.controlButton:active:not(:disabled) {
+  background: var(--active-overlay, rgba(0, 0, 0, 0.06));
+  transform: translateY(0);
+}
+.controlButton:focus-visible {
+  outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, #3b82f6);
+  outline-offset: var(--focus-ring-offset, 2px);
+}
+.controlButton:disabled {
+  opacity: var(--opacity-disabled, 0.5);
+  cursor: not-allowed;
+  transform: none;
+}
+
+.primaryButton {
+  background: var(--color-primary, #1e8759);
+  color: var(--color-on-primary, #fff);
+  border-color: var(--color-primary, #1e8759);
+}
+.primaryButton:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--color-primary, #1e8759) 92%, black);
+  border-color: color-mix(in srgb, var(--color-primary, #1e8759) 92%, black);
+  box-shadow: var(--shadow-md, 0 4px 8px rgba(0, 0, 0, 0.15));
+}
+
+/* ------------------------------------------------------------
+   Step Indicators (دکمه‌های نقطه‌ای)
+------------------------------------------------------------ */
+.stepIndicators {
+  display: flex;
+  gap: var(--space-sm, 8px);
+  align-items: center;
+  padding: var(--space-xs, 6px);
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: var(--radius-full, 999px);
+  backdrop-filter: blur(8px);
+}
+.stepIndicatorDot {
+  inline-size: 8px;
+  block-size: 8px;
+  border-radius: var(--radius-full, 999px);
+  border: none;
+  background: var(--color-border, #e5e7eb);
+  cursor: pointer;
+  transition: all var(--transition-fast, 0.15s ease);
+  padding: 0;
+  position: relative;
+}
+.stepIndicatorDot::before {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: var(--radius-full, 999px);
+  background: transparent;
+  transition: all var(--transition-fast, 0.15s ease);
+  z-index: -1;
+}
+.stepIndicatorDot:hover:not(:disabled) {
+  background: var(--color-muted, #6b7280);
+}
+.stepIndicatorDot:hover:not(:disabled)::before {
+  background: rgba(0, 0, 0, 0.08);
+}
+.stepIndicatorDot--active {
+  background: var(--color-primary, #1e8759);
+  transform: scale(1.3);
+}
+.stepIndicatorDot--active::before {
+  background: color-mix(
+    in srgb,
+    var(--color-primary, #1e8759) 20%,
+    transparent
+  );
+}
+.stepIndicatorDot--completed {
+  background: var(--color-success, #16a34a);
+}
+.stepIndicatorDot--disabled {
+  opacity: var(--opacity-disabled, 0.5);
+  cursor: not-allowed;
+}
+.stepIndicatorDot:focus-visible {
+  outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, #3b82f6);
+  outline-offset: var(--focus-ring-offset, 2px);
+}
+
+/* ------------------------------------------------------------
+   Progress Bar
+------------------------------------------------------------ */
+.progressContainer {
+  block-size: 4px;
+  background: var(--color-border, #e5e7eb);
+  overflow: hidden;
+  position: relative;
+}
+.progressBar {
+  block-size: 100%;
+  background: linear-gradient(
+    90deg,
+    var(--color-primary, #1e8759),
+    var(--color-success, #16a34a)
+  );
+  transition: inline-size var(--transition-base, 0.25s ease);
+  border-radius: inherit;
+  position: relative;
+}
+.progressBar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.35),
+    transparent
+  );
+  animation: shimmer 2s infinite;
+}
+
+/* ------------------------------------------------------------
+   Orientation Helpers
+------------------------------------------------------------ */
+
+.stepper--vertical .stepHeader {
+  align-items: center;
+}
+
+/* ------------------------------------------------------------
+   Responsive
+------------------------------------------------------------ */
+@media (max-width: 768px) {
+  .stepper {
+    --stepper-padding: var(--space-sm, 12px);
+  }
+  .stepperHeader {
+    padding: var(--space-sm, 12px);
+    gap: 0;
+  }
+  .headerStep {
+    padding: var(--space-xs, 6px) var(--space-sm, 8px);
+    font-size: var(--font-size-sm, 14px);
+  }
+  .headerStepLabel {
+    display: none;
+  }
+  .stepContent {
+    padding: var(--space-sm, 12px);
+  }
+  .stepHeader {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: var(--space-sm, 8px);
+  }
+  .stepInfo {
+    text-align: center;
+  }
+  .stepper--vertical .stepsContainer,
+  .stepper--vertical .stepPanel {
+    block-size: clamp(340px, 50vh, var(--stepper-viewport));
+  }
+}
+@media (max-width: 480px) {
+  .stepperControls {
+    flex-direction: column;
+    gap: var(--space-sm, 8px);
+  }
+  .controlButton {
+    inline-size: 100%;
+    justify-content: center;
+  }
+  .controlsCenter {
+    order: -1;
+  }
+}
+
+/* ------------------------------------------------------------
+   Dark theme
+------------------------------------------------------------ */
+[data-theme="dark"] .stepper {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+[data-theme="dark"] .stepIndicators {
+  background: rgba(0, 0, 0, 0.3);
+}
+[data-theme="dark"] .controlButton::before {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+}
+
+/* ------------------------------------------------------------
+   A11y / HC / Motion
+------------------------------------------------------------ */
+@media (prefers-contrast: high) {
+  .stepIconContainer {
+    border-width: 3px;
+  }
+  .stepConnector {
+    inline-size: 3px;
+  }
+  .controlButton {
+    border-width: 2px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .stepsContainer {
+    transition: none;
+  }
+  .progressBar::after {
+    animation: none;
+  }
+  .stepIndicatorDot:hover:not(:disabled) {
+    transform: none;
+  }
+}
+
+/* ------------------------------------------------------------
+   Animations
+------------------------------------------------------------ */
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
