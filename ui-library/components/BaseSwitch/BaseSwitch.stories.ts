@@ -5,7 +5,7 @@ import { useArgs } from "@storybook/preview-api";
 import { action } from "storybook/actions";
 
 const meta: Meta<typeof BaseSwitch> = {
-  title: "Components/BaseSwitch",
+  title: "FORM/BaseSwitch",
   component: BaseSwitch,
   parameters: {
     layout: "centered",

@@ -6,7 +6,7 @@ import { useToast } from "../BaseToast";
 import ToastContainer from "../BaseToast/ToastContainer.vue";
 
 const meta: Meta<typeof BaseModal> = {
-  title: "Components/BaseModal",
+  title: "UI/BaseModal",
   component: BaseModal,
   parameters: {
     layout: "fullscreen",

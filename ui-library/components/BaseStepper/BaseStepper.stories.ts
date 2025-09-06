@@ -5,7 +5,7 @@ import BaseStepper from "./BaseStepper.vue";
 import type { StepItem } from "./BaseStepper.vue";
 
 const meta: Meta<typeof BaseStepper> = {
-  title: "Components/BaseStepper",
+  title: "FORM/BaseStepper",
   component: BaseStepper,
   args: {
     allowStepValidation: false,
