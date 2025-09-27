@@ -49,14 +49,20 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  @apply mb-[70px] md:mb-0;
+  margin-bottom: 70px;
   background: #f0f0f0;
   border-radius: 9999px;
 }
 
+@media (max-width: 640px) {
+  ::-webkit-scrollbar-track {
+    margin-bottom: 0;
+  }
+}
+
 ::-webkit-scrollbar-thumb {
-  @apply bg-primary-700;
   border-radius: 9999px;
+  background-color: var(--color-primary);
   border: 2px solid #f0f0f0;
 }
 

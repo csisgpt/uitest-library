@@ -1,0 +1,12 @@
+# Node
+node_modules/
+
+# (اختیاری ولی مفید)
+.npm
+.pnpm-store/
+.yarn/*
+!.yarn/patches
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions

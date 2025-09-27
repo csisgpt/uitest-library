@@ -1,6 +1,6 @@
 {
-  "name": "ui-library",
-  "version": "0.1.0",
+  "name": "ui-library-csis",
+  "version": "2.0.3",
   "main": "dist/ui-library.umd.js",
   "module": "dist/ui-library.es.js",
   "types": "types/index.d.ts",
