@@ -78,8 +78,8 @@ const flexClasses = computed(() => {
 });
 
 /** Inline styles based on custom gap/basis properties */
-const flexStyles = computed((): CSSProperties => {
-  const styles: Record<string, string> = {};
+const flexStyles = computed<CSSProperties | undefined>(() => {
+  const styles: CSSProperties = {};
 
   if (props.customGap) styles["--flex-gap-custom"] = props.customGap;
   if (
@@ -89,7 +89,7 @@ const flexStyles = computed((): CSSProperties => {
     styles["--flex-basis-custom"] = props.basis;
   }
 
-  return Object.keys(styles).length > 0 ? styles : undefined;
+  return Object.keys(styles).length ? styles : undefined;
 });
 
 /** Passthrough attributes (for responsiveness) */

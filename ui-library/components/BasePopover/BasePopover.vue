@@ -385,8 +385,11 @@ const createPopperHell = async () => {
       },
     ],
     onFirstUpdate(state) {
-      currentPlacement.value = state.placement;
-      updateArrow(state);
+      const place = (state.placement ??
+        props.placement ??
+        "bottom") as Placement;
+      currentPlacement.value = place;
+      updateArrow({ placement: place });
     },
   });
 };

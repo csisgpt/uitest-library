@@ -2,19 +2,12 @@
   <Teleport to="body">
     <div
       v-if="visibleToasts.length > 0"
-      :class="[
-        $style.container,
-        $style[positionClass]
-      ]"
+      :class="[$style.container, $style[positionClass]]"
       :aria-label="'منطقه اعلانات'"
       role="region"
       aria-live="polite"
     >
-      <TransitionGroup
-        :name="transitionName"
-        tag="div"
-        :class="$style.stack"
-      >
+      <TransitionGroup :name="transitionName" tag="div" :class="$style.stack">
         <BaseToast
           v-for="toast in visibleToasts"
           :key="toast.id"
@@ -28,38 +21,38 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useToast } from './composables/useToast'
-import BaseToast from './BaseToast.vue'
-import type { ToastAction, Toast } from './types'
+import { computed } from "vue";
+import { useToast } from "./composables/useToast";
+import BaseToast from "./BaseToast.vue";
+import type { ToastAction, Toast } from "./types";
 
-const { toasts, position, dismiss } = useToast()
+const { toasts, position, dismiss } = useToast();
 
 // Computed
 const visibleToasts = computed(() => {
-  return toasts.value.filter(toast => toast.position === position.value)
-})
+  return toasts.value.filter((toast: any) => toast.position === position.value);
+});
 
 const positionClass = computed(() => {
-  return position.value.replace('-', '')
-})
+  return position.value.replace("-", "");
+});
 
 const transitionName = computed(() => {
-  if (position.value.includes('right')) return 'toast-slide-right'
-  if (position.value.includes('left')) return 'toast-slide-left'
-  if (position.value.includes('top')) return 'toast-slide-top'
-  return 'toast-slide-bottom'
-})
+  if (position.value.includes("right")) return "toast-slide-right";
+  if (position.value.includes("left")) return "toast-slide-left";
+  if (position.value.includes("top")) return "toast-slide-top";
+  return "toast-slide-bottom";
+});
 
 // Methods
 const handleToastClose = (id: string) => {
-  dismiss(id)
-}
+  dismiss(id);
+};
 
 const handleToastAction = (action: ToastAction, toast: Toast) => {
   // You can add global action handling logic here
-  console.log('Toast action triggered:', action.label, toast.id)
-}
+  console.log("Toast action triggered:", action.label, toast.id);
+};
 </script>
 
 <style module src="./ToastContainer.module.css"></style>

@@ -1,5 +1,5 @@
 <template>
-  <div 
+  <div
     class="base-table-container"
     :class="[
       `base-table--${size}`,
@@ -8,8 +8,8 @@
         'base-table--loading': loading,
         'base-table--border': border,
         'base-table--stripe': stripe,
-        'base-table--sticky-header': stickyHeader
-      }
+        'base-table--sticky-header': stickyHeader,
+      },
     ]"
   >
     <!-- Toolbar -->
@@ -29,7 +29,7 @@
             حذف گروهی
           </button>
         </template>
-        
+
         <!-- Create Button -->
         <button
           v-if="crudConfig.create && crud.canCreate"
@@ -37,28 +37,32 @@
           class="btn btn--primary btn--sm"
         >
           <IconPlus :size="16" />
-          {{ typeof crudConfig.create === 'object' ? crudConfig.create.label : 'جدید' }}
+          {{
+            typeof crudConfig.create === "object"
+              ? crudConfig.create.label
+              : "جدید"
+          }}
         </button>
-        
+
         <!-- Search -->
-        <TableSearch 
+        <TableSearch
           v-if="searchable"
           v-model="searchQuery"
-          @search="handleSearch"
+          @search="q => handleSearch(filteredData, q as string)"
         />
       </div>
-      
+
       <div class="base-table__toolbar-right">
         <!-- Export -->
-        <button 
+        <button
           v-if="exportable"
-          @click="handleExport"
+          @click="() => handleExport()"
           class="btn btn--default btn--sm"
         >
           <IconDownload :size="16" />
           خروجی
         </button>
-        
+
         <!-- Column Settings -->
         <button
           @click="showColumnPanel = !showColumnPanel"
@@ -70,12 +74,12 @@
     </div>
 
     <!-- Main Table -->
-    <div 
+    <div
       ref="tableWrapper"
       class="base-table__wrapper"
       :style="{
         height: height,
-        maxHeight: maxHeight
+        maxHeight: maxHeight,
       }"
     >
       <table class="base-table">
@@ -111,7 +115,7 @@
           @row-edit="crud.editRow"
           @row-delete="crud.deleteRow"
         />
-        
+
         <!-- Footer -->
         <TableFooter
           v-if="showSummary"
@@ -122,17 +126,20 @@
           :has-actions="hasRowActions"
         />
       </table>
-      
+
       <!-- Loading -->
       <div v-if="loading" class="base-table__loading">
         <div class="base-table__spinner" />
         <span>در حال بارگذاری...</span>
       </div>
-      
+
       <!-- Empty -->
-      <div v-if="!loading && processedData.length === 0" class="base-table__empty">
+      <div
+        v-if="!loading && processedData.length === 0"
+        class="base-table__empty"
+      >
         <IconDatabaseOff :size="48" />
-        <span>{{ emptyText || 'داده‌ای یافت نشد' }}</span>
+        <span>{{ emptyText || "داده‌ای یافت نشد" }}</span>
       </div>
     </div>
 
@@ -150,69 +157,72 @@
       :columns="columns"
       @update="handleColumnUpdate"
     />
-    
+
     <!-- CRUD Modal -->
     <CrudModal
       v-if="crud.showCreateModal || crud.showEditModal"
-      v-model="showCrudModal"
+      :model-value="
+        !!(crud.showCreateModal?.value || crud.showEditModal?.value)
+      "
       :title="crudModalTitle"
       :data="crud.formData"
       :columns="editableColumns"
       :mode="crudMode"
-      :loading="crud.loading"
-      @save="handleCrudSave"
+      :loading="!!crud.loading"
       @cancel="handleCrudCancel"
+      @update:modelValue="(v:boolean) => { if (!v) crud.cancelEdit() }"
     />
-    
+
     <!-- Delete Confirm -->
     <ConfirmDialog
-      v-model="crud.showDeleteConfirm"
+      :model-value="!!crud.showDeleteConfirm?.value"
       title="تایید حذف"
       :message="deleteMessage"
       variant="danger"
-      :loading="crud.loading"
+      :loading="!!crud.loading"
       @confirm="crud.performDelete"
       @cancel="crud.cancelDelete"
+      @update:modelValue="(v:boolean) => { if (!v) crud.cancelDelete() }"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, provide, onMounted } from 'vue'
-import { 
-  IconPlus, 
-  IconTrash, 
-  IconDownload, 
+import { ref, computed, watch, provide, onMounted } from "vue";
+import {
+  IconPlus,
+  IconTrash,
+  IconDownload,
   IconColumns,
-  IconDatabaseOff 
-} from '@tabler/icons-vue'
+  IconDatabaseOff,
+} from "@tabler/icons-vue";
 
 // Components
-import TableHeader from './components/TableHeader.vue'
-import TableBody from './components/TableBody.vue'
-import TableFooter from './components/TableFooter.vue'
-import TablePagination from './components/TablePagination.vue'
-import TableSearch from './components/TableSearch.vue'
-import ColumnPanel from './components/ColumnPanel.vue'
-import CrudModal from './components/CrudModal.vue'
-import ConfirmDialog from './components/ConfirmDialog.vue'
+import TableHeader from "./components/TableHeader.vue";
+import TableBody from "./components/TableBody.vue";
+import TableFooter from "./components/TableFooter.vue";
+import TablePagination from "./components/TablePagination.vue";
+import TableSearch from "./components/TableSearch.vue";
+import ColumnPanel from "./components/ColumnPanel.vue";
+import CrudModal from "./components/CrudModal.vue";
+import ConfirmDialog from "./components/ConfirmDialog.vue";
 
 // Composables
-import { useTableCrud } from './composables/useTableCrud'
-import { useTableSort } from './composables/useTableSort'
-import { useTableFilter } from './composables/useTableFilter'
-import { useTableSelection } from './composables/useTableSelection'
-import { useTablePagination } from './composables/useTablePagination'
-import { useTableExport } from './composables/useTableExport'
+import { useTableCrud } from "./composables/useTableCrud";
+import { useTableSort } from "./composables/useTableSort";
+import { useTableFilter } from "./composables/useTableFilter";
+import { useTableSelection } from "./composables/useTableSelection";
+import { useTablePagination } from "./composables/useTablePagination";
+import { useTableExport } from "./composables/useTableExport";
 
 // Types
-import type { TableProps, Column, CrudConfig } from './types'
+import type { TableProps, Column, CrudConfig } from "./types";
 
 // Props
 const props = withDefaults(defineProps<TableProps>(), {
-  size: 'medium',
-  variant: 'default',
-  theme: 'auto',
+  size: "medium",
+  variant: "default",
+  theme: "auto",
   showHeader: true,
   selectable: false,
   searchable: false,
@@ -226,184 +236,205 @@ const props = withDefaults(defineProps<TableProps>(), {
   overscan: 5,
   stickyHeader: false,
   stickyColumn: false,
-  crud: false
-})
+  crud: false,
+});
 
 // Emits
 const emit = defineEmits<{
-  'update:selectedRowKeys': [keys: (string | number)[]]
-  'sort-change': [sort: any]
-  'filter-change': [filters: any[]]
-  'page-change': [page: number]
-  'size-change': [size: number]
-  'row-click': [row: any, index: number]
-  'row-select': [rows: any[]]
-}>()
+  "update:selectedRowKeys": [keys: (string | number)[]];
+  "sort-change": [sort: any];
+  "filter-change": [filters: any[]];
+  "page-change": [page: number];
+  "size-change": [size: number];
+  "row-click": [row: any, index: number];
+  "row-select": [rows: any[]];
+}>();
 
 // Refs
-const tableWrapper = ref<HTMLElement>()
-const searchQuery = ref('')
-const showColumnPanel = ref(false)
-const showCrudModal = computed(() => crud.showCreateModal || crud.showEditModal)
+const tableWrapper = ref<HTMLElement>();
+const searchQuery = ref("");
+const showColumnPanel = ref(false);
+const showCrudModal = computed(
+  () => crud.showCreateModal || crud.showEditModal
+);
 
 // CRUD Configuration
 const crudConfig = computed<CrudConfig>(() => {
-  if (typeof props.crud === 'boolean') {
+  if (typeof props.crud === "boolean") {
     return {
       enabled: props.crud,
-      mode: 'modal',
+      mode: "modal",
       create: true,
       update: true,
       delete: true,
       confirmDelete: true,
       successMessage: true,
-      errorMessage: true
-    }
+      errorMessage: true,
+    };
   }
-  return props.crud as CrudConfig
-})
+  return props.crud as CrudConfig;
+});
 
 // Data ref
-const localData = ref([...props.data])
-watch(() => props.data, (newData) => {
-  localData.value = [...newData]
-})
+const localData = ref([...props.data]);
+watch(
+  () => props.data,
+  (newData) => {
+    localData.value = [...newData];
+  }
+);
 
 // Composables
-const { 
-  selectedRows, 
+const {
+  selectedRows,
   isAllSelected,
   isIndeterminate,
-  handleRowSelect, 
-  handleSelectAll 
-} = useTableSelection(props, emit)
+  handleRowSelect,
+  handleSelectAll,
+} = useTableSelection(props, emit);
 
-const { sortState, sortedData, handleSort } = useTableSort(localData, props.columns)
-const { filteredData, handleFilter, handleSearch } = useTableFilter(sortedData, props.columns)
-const { paginatedData, handlePageChange, handlePageSizeChange } = useTablePagination(
-  filteredData, 
-  props.pagination
-)
-const { handleExport } = useTableExport(processedData, props.columns)
+const { sortState, sortedData, handleSort } = useTableSort(
+  localData,
+  props.columns
+);
+const { filteredData, handleFilter, handleSearch } = useTableFilter(
+  sortedData,
+  props.columns
+);
+const { paginatedData, handlePageChange, handlePageSizeChange } =
+  useTablePagination(filteredData, props.pagination);
 
 // CRUD Composable
 const crud = useTableCrud({
   config: crudConfig.value,
   data: localData,
   selectedRows,
-  columns: props.columns
-})
+  columns: props.columns,
+});
 
 // Computed
-const visibleColumns = computed(() => 
-  props.columns.filter(col => !col.hidden)
-)
+const visibleColumns = computed(() =>
+  props.columns.filter((col) => !col.hidden)
+);
 
 const editableColumns = computed(() =>
-  props.columns.filter(col => col.editable !== false)
-)
+  props.columns.filter((col) => col.editable !== false)
+);
 
-const hasRowActions = computed(() => {
-  return (crudConfig.value.update || crudConfig.value.delete) || props.rowActions?.length > 0
-})
+const hasRowActions = computed<boolean>(() =>
+  Boolean(
+    crudConfig.value.update ||
+      crudConfig.value.delete ||
+      (props.rowActions?.length ?? 0) > 0
+  )
+);
 
 const processedData = computed(() => {
   if (props.pagination) {
-    return paginatedData.value
+    return paginatedData.value;
   }
-  return filteredData.value
-})
+  return filteredData.value;
+});
+
+const { handleExport } = useTableExport(processedData, props.columns);
 
 const showToolbar = computed(() => {
-  return props.searchable || props.exportable || crudConfig.value.create || 
-         props.toolbarActions?.length > 0
-})
+  return (
+    props.searchable ||
+    props.exportable ||
+    crudConfig.value.create ||
+    (props.toolbarActions?.length ?? 0) > 0
+  );
+});
 
 const crudMode = computed(() => {
-  return crud.showCreateModal ? 'create' : 'update'
-})
+  return crud.showCreateModal ? "create" : "update";
+});
 
 const crudModalTitle = computed(() => {
-  return crudMode.value === 'create' ? 'رکورد جدید' : 'ویرایش رکورد'
-})
+  return crudMode.value === "create" ? "رکورد جدید" : "ویرایش رکورد";
+});
 
 const deleteMessage = computed(() => {
-  if (!crud.deleteTarget) return ''
-  
-  if (typeof crudConfig.value.confirmDeleteMessage === 'function') {
-    return crudConfig.value.confirmDeleteMessage(crud.deleteTarget)
+  if (!crud.deleteTarget) return "";
+
+  if (typeof crudConfig.value.confirmDeleteMessage === "function") {
+    return crudConfig.value.confirmDeleteMessage(crud.deleteTarget);
   }
-  
-  return crudConfig.value.confirmDeleteMessage || 'آیا از حذف این رکورد اطمینان دارید؟'
-})
+
+  return (
+    crudConfig.value.confirmDeleteMessage ||
+    "آیا از حذف این رکورد اطمینان دارید؟"
+  );
+});
 
 const defaultPagination = {
   current: 1,
   pageSize: 10,
   total: localData.value.length,
-  pageSizes: [10, 20, 50, 100]
-}
+  pageSizes: [10, 20, 50, 100],
+};
 
 // Methods
 function handleRowClick(row: any, index: number) {
-  emit('row-click', row, index)
-  
+  emit("row-click", row, index);
+
   if (props.selectOnRowClick) {
-    handleRowSelect(row)
+    handleRowSelect(row);
   }
 }
 
 function handleColumnUpdate(columns: Column[]) {
   // Update column visibility and order
   columns.forEach((col, index) => {
-    const originalCol = props.columns.find(c => c.key === col.key)
+    const originalCol = props.columns.find((c) => c.key === col.key);
     if (originalCol) {
-      originalCol.hidden = col.hidden
+      originalCol.hidden = col.hidden;
     }
-  })
+  });
 }
 
 async function handleCellSave(row: any, column: Column, value: any) {
-  const id = getRowKey(row)
-  const data = { ...row, [column.key]: value }
-  await crud.saveEdit(id, data)
+  const id = getRowKey(row);
+  const data = { ...row, [column.key]: value };
+  await crud.saveEdit(id, data);
 }
 
 async function handleCrudSave() {
-  if (crudMode.value === 'create') {
-    await crud.saveCreate(crud.formData)
+  if (crudMode.value === "create") {
+    await crud.saveCreate(crud.formData);
   } else {
-    const id = getRowKey(crud.formData)
-    await crud.saveEdit(id, crud.formData)
+    const id = getRowKey(crud.formData);
+    await crud.saveEdit(id, crud.formData);
   }
 }
 
 function handleCrudCancel() {
-  crud.cancelEdit()
+  crud.cancelEdit();
 }
 
 function getRowKey(row: any): string | number {
-  if (typeof props.rowKey === 'function') {
-    return props.rowKey(row)
+  if (typeof props.rowKey === "function") {
+    return props.rowKey(row);
   }
-  if (typeof props.rowKey === 'string') {
-    return row[props.rowKey]
+  if (typeof props.rowKey === "string") {
+    return row[props.rowKey];
   }
-  return row.id || row._id || row.key
+  return row.id || row._id || row.key;
 }
 
 // Lifecycle
 onMounted(() => {
   if (crudConfig.value.api?.endpoints?.list) {
-    crud.fetchData()
+    crud.fetchData();
   }
-})
+});
 
 // Provide context
-provide('tableProps', props)
-provide('tableCrud', crud)
+provide("tableProps", props);
+provide("tableCrud", crud);
 </script>
 
 <style scoped>
-@import './styles/table.css';
+@import "./styles/table.css";
 </style>

@@ -1,4 +1,9 @@
 {
+  "private": true,
+  "name": "uitest-library-monorepo",
+  "workspaces": [
+    "ui-library"
+  ],
   "dependencies": {
     "@floating-ui/dom": "^1.7.3"
   }

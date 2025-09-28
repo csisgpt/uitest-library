@@ -52,7 +52,7 @@ export function useTableCrud(options: CrudOptions) {
   async function apiCall(url: string, options: RequestInit = {}) {
     const headers = {
       'Content-Type': 'application/json',
-      ...options.config.api?.headers,
+      ...( (options as any).config?.api?.headers ),
       ...options.headers
     }
     

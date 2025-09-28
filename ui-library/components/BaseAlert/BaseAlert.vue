@@ -141,7 +141,7 @@
                     <div :class="$style.inputWrapper">
                       <input
                         :id="`input-${index}`"
-                        v-model="inputValues[input.name || index]"
+                        v-model="inputValues[String(input.name || index)]"
                         :type="input.type"
                         :placeholder="input.placeholder"
                         :disabled="input.disabled"
@@ -149,13 +149,13 @@
                         :max="input.max"
                         :step="input.step"
                         :class="$style.input"
-                        @input="handleInputChange(input.name || index, $event)"
+                        @input="handleInputChange(String(input.name ?? index), $event)"
                       />
                       <div
-                        v-if="inputErrors[input.name || index]"
+                        v-if="inputErrors[String(input.name || index)]"
                         :class="$style.inputError"
                       >
-                        {{ inputErrors[input.name || index] }}
+                        {{ inputErrors[String(input.name || index)] }}
                       </div>
                     </div>
                   </div>
@@ -174,18 +174,18 @@
                     <div :class="$style.inputWrapper">
                       <textarea
                         :id="`input-${index}`"
-                        v-model="inputValues[input.name || index]"
+                        v-model="inputValues[String(input.name || index)]"
                         :placeholder="input.placeholder"
                         :disabled="input.disabled"
                         :rows="input.rows || 3"
                         :class="$style.textarea"
-                        @input="handleInputChange(input.name || index, $event)"
+                        @input="handleInputChange(String(input.name ?? index), $event)"
                       />
                       <div
-                        v-if="inputErrors[input.name || index]"
+                        v-if="inputErrors[String(input.name || index)]"
                         :class="$style.inputError"
                       >
-                        {{ inputErrors[input.name || index] }}
+                        {{ inputErrors[String(input.name || index)] }}
                       </div>
                     </div>
                   </div>
@@ -208,11 +208,11 @@
                         type="radio"
                         :value="option.value"
                         :checked="
-                          inputValues[input.name || index] === option.value
+                          inputValues[String(input.name || index)] === option.value
                         "
                         :disabled="input.disabled || option.disabled"
                         :class="$style.radioInput"
-                        @change="handleInputChange(input.name || index, $event)"
+                        @change="handleInputChange(String(input.name ?? index), $event)"
                       />
                       <span
                         :class="$style.radioButton"
@@ -239,17 +239,17 @@
                         type="checkbox"
                         :value="option.value"
                         :checked="
-                          Array.isArray(inputValues[input.name || index])
-                            ? inputValues[input.name || index].includes(
+                          Array.isArray(inputValues[String(input.name || index)])
+                            ? inputValues[String(input.name || index)].includes(
                                 option.value
                               )
-                            : inputValues[input.name || index] === option.value
+                            : inputValues[String(input.name || index)] === option.value
                         "
                         :disabled="input.disabled || option.disabled"
                         :class="$style.checkboxInput"
                         @change="
                           handleCheckboxChange(
-                            input.name || index,
+                            String(input.name || index),
                             option.value,
                             $event
                           )

@@ -1,12 +1,3 @@
-export { default as BaseButton } from '../components/BaseButton/BaseButton.vue';
-export { default as BaseCheckbox } from '../components/BaseCheckbox/BaseCheckbox.vue';
-export { default as BaseDropdown } from '../components/BaseDropdown/BaseDropdown.vue';
-export { default as BaseInput } from '../components/BaseInput/BaseInput.vue';
-export { default as BaseModal } from '../components/BaseModal/BaseModal.vue';
-export { default as BaseSelect } from '../components/BaseSelect/BaseSelect.vue';
-export { default as BaseRadio } from '../components/BaseRadio/BaseRadio.vue';
-export { default as BaseSwitch } from '../components/BaseSwitch/BaseSwitch.vue';
-export { default as BaseTab } from '../components/BaseTab/BaseTab.vue';
-export { default as BaseTextarea } from '../components/BaseTextarea/BaseTextarea.vue';
-export { default as BaseTooltip } from '../components/BaseTooltip/BaseTooltip.vue';
-export { default as RichTextEditor } from '../components/RichTextEditor/RichTextEditor.vue';
+import "./theme/index.css";
+export * from "./components";
+export * from "./composables";

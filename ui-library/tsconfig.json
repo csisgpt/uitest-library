@@ -10,11 +10,10 @@
     "types": ["vite/client", "node"],
     "baseUrl": ".",
     "paths": {
+      // اگر استفاده خاصی نداری، این‌ها را هم می‌توانی حذف کنی
       "ui-library": ["./index.ts"],
       "ui-library/*": ["./*"]
     },
-    "declaration": true,
-    "declarationDir": "types",
     "skipLibCheck": true
   },
   "include": [
@@ -23,9 +22,10 @@
     "composables/**/*.ts",
     "theme/**/*.ts",
     "index.ts",
-    "types/**/*.d.ts",
     ".storybook/**/*.ts",
-    ".storybook/**/*.mts"
+    ".storybook/**/*.mts",
+    "typings/css-modules.d.ts",
+    "typings/vue-shim.d.ts"
   ],
-  "exclude": ["node_modules", "dist", "demo", "storybook-static"]
+  "exclude": ["node_modules", "dist", "dist-types", "demo", "storybook-static", "types"]
 }

@@ -1,0 +1,33 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "declarationDir": "dist-types",
+    "declarationMap": false,
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
+    "rootDir": "."
+  },
+  "vueCompilerOptions": {
+    "skipTemplateCodegen": true
+  },
+  "include": [
+    "index.ts",
+    "components/**/*.ts",
+    "components/**/*.vue",
+    "composables/**/*.ts",
+    "typings/**/*.d.ts",
+    "typings/index.ts"
+  ],
+  "exclude": [
+    "dist",
+    "node_modules",
+    "types/**",
+    "dist-types/**",
+    "**/*.stories.*",
+    "__tests__/**",
+    "storybook/**",
+    ".storybook/**"
+  ]
+}
