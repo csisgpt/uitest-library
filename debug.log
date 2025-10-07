@@ -8,3 +8,5 @@
 [0827/154925.317:ERROR:registration_protocol_win.cc(108)] CreateFile: The system cannot find the file specified. (0x2)
 [0827/154930.312:ERROR:registration_protocol_win.cc(108)] CreateFile: The system cannot find the file specified. (0x2)
 [0827/155141.686:ERROR:registration_protocol_win.cc(108)] CreateFile: The system cannot find the file specified. (0x2)
+[0930/115204.367:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: The system cannot find the file specified. (0x2)
+[0930/115224.734:ERROR:third_party\crashpad\crashpad\util\win\registration_protocol_win.cc:108] CreateFile: The system cannot find the file specified. (0x2)

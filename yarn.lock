@@ -2677,7 +2677,7 @@ uglify-js@^3.1.4:
   integrity sha512-v3Xu+yuwBXisp6QYTcH4UbH+xYJXqnq2m/LtQVWKWzYc1iehYnLixoQDN9FH6/j9/oybfd6W9Ghwkl8+UMKTKQ==
 
 "ui-library-csis@file:D:\\Git\\uitest-library\\ui-library":
-  version "2.0.24"
+  version "2.0.25"
   resolved "file:ui-library"
   dependencies:
     "@popperjs/core" "^2.11.8"

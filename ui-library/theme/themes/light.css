@@ -1,7 +1,7 @@
 /* Light theme (default). Only theme-specific tokens (colors, optional shadows) here */
 :root {
   /* 🎨 Colors */
-  --color-primary: #1e8759;       /* AA with white text */
+  --color-primary: rgb(12, 103, 189); /* AA with white text */
   --color-on-primary: #ffffff;
   --color-secondary: #35495e;
   --color-on-secondary: #ffffff;

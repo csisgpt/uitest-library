@@ -2,7 +2,7 @@
 [data-theme="dark"] {
   color-scheme: dark;
 
-  --color-primary: #047857;  /* AA with white */
+  --color-primary: rgb(12, 103, 189);  /* AA with white */
   --color-on-primary: #ffffff;
 
   --color-secondary: #1e293b;
